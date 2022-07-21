@@ -28,7 +28,7 @@ export default function List() {
     <>
       <Header />
       <section className="list mt-4">
-        <div class="container">
+        <div className="container">
           <div className="row">
             <div className="col text-center">
               <p className="judul-1 text-cyan">Pilihan Kegiatanmu</p>
@@ -38,13 +38,13 @@ export default function List() {
               </div>
             </div>
           </div>
-          <div class="row align-items-center">
-            <div class="col-auto">
+          <div className="row align-items-center">
+            <div className="col-auto">
               <Button isPrimary className="rounded-3" style={{ paddingTop: "10px", paddingBottom: "10px" }}>
                 Tambah Acara
               </Button>
             </div>
-            <div class="col">
+            <div className="col">
               <div className="input-group w-100">
                 <input type="text" id="search-pesanan" className="form-control " placeholder="Cari Ikan atau Toko" aria-label="Recipient's username" aria-describedby="basic-addon2" style={{ fontSize: "13px" }} required />
                 <button type="submit" className="input-group-text btn border border-2" id="basic-addon2" onClick={GotoSearch}>
@@ -53,9 +53,9 @@ export default function List() {
               </div>
             </div>
           </div>
-          <div class="row mt-4">
-            <div class="col-7"></div>
-            <div class="col-5 d-flex">
+          <div className="row mt-4">
+            <div className="col-7"></div>
+            <div className="col-5 d-flex">
               <select name="kategori" id="kategori" className="form-select me-4">
                 <option value="">Pilih Kategori</option>
                 <option value="rpl">Rekayasa Perangkat Lunak</option>
@@ -69,29 +69,29 @@ export default function List() {
               </select>
             </div>
           </div>
-          <div class="container-grid mt-5">
-            <div class="item column-3 row-1">
+          <div className="container-grid mt-5">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
-            <div class="item column-3 row-1">
+            <div className="item column-3 row-1">
               <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
             </div>
           </div>

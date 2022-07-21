@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Regist from "./pages/Regist";
 import List from "./pages/List";
 import Detail from "./pages/Detail";
+import EventRegist from "./pages/EventRegist";
 function App() {
   return (
     <>
@@ -17,6 +18,7 @@ function App() {
           <Route exact path="/regist" element={<Regist />}></Route>
           <Route exact path="/search" element={<List />}></Route>
           <Route exact path="/detail/:id" element={<Detail />}></Route>
+          <Route exact path="/addevent" element={<EventRegist />}></Route>
         </Routes>
       </Router>
     </>

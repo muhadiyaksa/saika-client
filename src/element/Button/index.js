@@ -59,7 +59,7 @@ export default function Button(props) {
 }
 
 Button.propTypes = {
-  type: propTypes.oneOf(["button", "link"]), //button hanya menerima format button / link saja
+  type: propTypes.oneOf(["button", "link", "submit"]), //button hanya menerima format button / link saja
   onClick: propTypes.func, //button hanya menerima function untuk atribut onClick
   href: propTypes.string, //button hanya menerima string untuk target link href
   target: propTypes.string, //button hanya menerima string untuk target link
