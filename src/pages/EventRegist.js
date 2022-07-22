@@ -10,6 +10,26 @@ import ModalElement from "../element/ModalElement";
 
 export default function EventRegist() {
   const [ketFoto, setKetFoto] = useState({ ket: "", status: "hide", file: null });
+  const [dataDetail, setDataDetail] = useState({
+    eventName: "",
+    eventImage: "",
+    eventCategory: "",
+    benefits: "",
+    description: "",
+    eventDate: "",
+    jamMulai: "",
+    jamSelesai: "",
+    paymentType: "",
+    price: "",
+    registrationLink: "",
+    instagram: "",
+    facebook: "",
+    twitter: "",
+    occurenceType: "",
+    mediaMeet: "",
+    location: "",
+    address: "",
+  });
   const navigate = useNavigate();
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -18,179 +38,161 @@ export default function EventRegist() {
       const areaFoto = document.querySelector("p.area-foto");
       const data = new FormData();
       data.append("file", file);
+      reader.readAsDataURL(file);
 
       reader.onabort = () => console.log("file reading was aborted");
       reader.onerror = () => console.log("file reading has failed");
       reader.onload = () => {
         // Do whatever you want with the file contents
         let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
-        const binaryStr = reader.result;
 
         if (validExtensions.includes(file.type) && file.size <= 2000000) {
           setKetFoto({ ket: `${file.name}`, status: "show", file: data });
+          setDataDetail({ ...dataDetail, eventImage: reader.result });
         } else {
           areaFoto.innerHTML = "Foto Harus Berformat .png , .jpg , .jpeg dan Dibawah 2MB";
           setKetFoto({ ket: `Foto Harus Berformat .png , .jpg , .jpeg dan Dibawah 2MB`, status: "hide", file: null });
         }
       };
-      reader.readAsArrayBuffer(file);
+      // reader.readAsArrayBuffer(file);
     });
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   //---------------------------------------------------------------------
-  const [dataGeneral, setDataGeneral] = useState({});
-  const [showGeneral, setShowGeneral] = useState({ button: "", show: "" });
-
+  //---------------------------------------------------------------------
+  const [showGeneral, setShowGeneral] = useState({ button: "", show: "", hideres: "" });
   const [showWarning, setShowWarning] = useState("d-none");
+
   const setGeneralInfo = () => {
-    if (ketFoto.file && dataGeneral.namaevent && dataGeneral.kategori && dataGeneral.benefit && dataGeneral.deskripsi) {
+    if (ketFoto.file && dataDetail.eventName && dataDetail.eventCategory && dataDetail.benefits && dataDetail.description) {
       setShowWarning("d-none");
-      setShowGeneral({ button: "", show: "d-none" });
-      setShowJadwal({ button: "", show: "" });
+      setShowGeneral({ button: "", show: "d-none", hideres: "sembunyi" });
+      setShowJadwal({ button: "", show: "", hideres: "" });
     } else {
       setShowWarning("");
-      setShowGeneral({ button: "", show: "" });
-      setShowJadwal({ button: "null", show: "d-none" });
+      setShowGeneral({ button: "", show: "", hideres: "" });
+      setShowJadwal({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
   };
 
   //---------------------------------------------------------------------
-  const [dataJadwal, setDataJadwal] = useState({});
-  const [showJadwal, setShowJadwal] = useState({ button: "null", show: "d-none" });
-
+  //---------------------------------------------------------------------
+  const [showJadwal, setShowJadwal] = useState({ button: "null", show: "d-none", hideres: "sembunyi" });
   const [showWarningJadwal, setShowWarningJadwal] = useState("d-none");
+
   const setGeneralJadwal = () => {
-    if (dataJadwal.tanggalevent && dataJadwal.jammulai && dataJadwal.jamselesai) {
+    if (dataDetail.eventDate && dataDetail.jamMulai && dataDetail.jamSelesai) {
       setShowWarningJadwal("d-none");
-      setShowJadwal({ button: "", show: "d-none" });
-      setShowPendaftaran({ button: "", show: "" });
+      setShowJadwal({ button: "", show: "d-none", hideres: "sembunyi" });
+      setShowPendaftaran({ button: "", show: "", hideres: "" });
     } else {
       setShowWarningJadwal("");
-      setShowJadwal({ button: "", show: "" });
-      setShowPendaftaran({ button: "null", show: "d-none" });
+      setShowJadwal({ button: "", show: "", hideres: "" });
+      setShowPendaftaran({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
   };
 
   const backtoGeneral = () => {
-    if (dataJadwal.tanggalevent && dataJadwal.jammulai && dataJadwal.jamselesai) {
-      setShowJadwal({ button: "", show: "d-none" });
+    if (dataDetail.eventDate && dataDetail.jamMulai && dataDetail.jamSelesai) {
+      setShowJadwal({ button: "", show: "d-none", hideres: "sembunyi" });
     } else {
-      setShowJadwal({ button: "null", show: "d-none" });
+      setShowJadwal({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
     setShowWarningJadwal("d-none");
-    setShowGeneral({ button: "", show: "" });
+    setShowGeneral({ button: "", show: "", hideres: "" });
   };
   //---------------------------------------------------------------------
-  const [dataPendaftaran, setDataPendaftaran] = useState({});
-  const [showPendaftaran, setShowPendaftaran] = useState({ button: "null", show: "d-none" });
-
+  //---------------------------------------------------------------------
+  const [showPendaftaran, setShowPendaftaran] = useState({ button: "null", show: "d-none", hideres: "sembunyi" });
   const [showWarningPendaftaran, setShowWarningPendaftaran] = useState("d-none");
+
   const setGeneralPendaftaran = () => {
-    console.log(dataPendaftaran.biaya);
-    if (dataPendaftaran.tipeacara && dataPendaftaran.linkdaftar) {
-      if (dataPendaftaran.tipeacara === "bayar" && dataPendaftaran.biaya) {
+    if (dataDetail.paymentType && dataDetail.registrationLink) {
+      if (dataDetail.paymentType === "bayar" && dataDetail.price) {
         setShowWarningPendaftaran("d-none");
-        setShowPendaftaran({ button: "", show: "d-none" });
-        setShowLokasi({ button: "", show: "" });
+        setShowPendaftaran({ button: "", show: "d-none", hideres: "sembunyi" });
+        setShowLokasi({ button: "", show: "", hideres: "" });
       } else {
-        if (dataPendaftaran.tipeacara === "gratis") {
+        if (dataDetail.paymentType === "gratis") {
           setShowWarningPendaftaran("d-none");
-          setShowPendaftaran({ button: "", show: "d-none" });
-          setShowLokasi({ button: "", show: "" });
+          setShowPendaftaran({ button: "", show: "d-none", hideres: "sembunyi" });
+          setShowLokasi({ button: "", show: "", hideres: "" });
         } else {
           setShowWarningPendaftaran("");
-          setShowPendaftaran({ button: "", show: "" });
-          setShowLokasi({ button: "null", show: "d-none" });
+          setShowPendaftaran({ button: "", show: "", hideres: "" });
+          setShowLokasi({ button: "null", show: "d-none", hideres: "sembunyi" });
         }
       }
     } else {
       setShowWarningPendaftaran("");
-      setShowPendaftaran({ button: "", show: "" });
-      setShowLokasi({ button: "null", show: "d-none" });
+      setShowPendaftaran({ button: "", show: "", hideres: "" });
+      setShowLokasi({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
   };
 
   const backtoJadwal = () => {
-    if (dataPendaftaran.tipeacara && dataPendaftaran.linkdaftar) {
-      if (dataPendaftaran.tipeacara === "bayar" && dataPendaftaran.biaya) {
-        setShowPendaftaran({ button: "", show: "d-none" });
+    if (dataDetail.paymentType && dataDetail.registrationLink) {
+      if (dataDetail.paymentType === "bayar" && dataDetail.price) {
+        setShowPendaftaran({ button: "", show: "d-none", hideres: "sembunyi" });
       } else {
-        if (dataPendaftaran.tipeacara === "gratis") {
-          setShowPendaftaran({ button: "", show: "d-none" });
+        if (dataDetail.paymentType === "gratis") {
+          setShowPendaftaran({ button: "", show: "d-none", hideres: "sembunyi" });
         } else {
-          setShowPendaftaran({ button: "null", show: "d-none" });
+          setShowPendaftaran({ button: "null", show: "d-none", hideres: "sembunyi" });
         }
       }
     } else {
-      setShowPendaftaran({ button: "null", show: "d-none" });
+      setShowPendaftaran({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
     setShowWarningPendaftaran("d-none");
-    setShowJadwal({ button: "", show: "" });
+    setShowJadwal({ button: "", show: "", hideres: "" });
   };
 
   //---------------------------------------------------------------------
-  const [dataLokasi, setDataLokasi] = useState({});
-  const [showLokasi, setShowLokasi] = useState({ button: "null", show: "d-none" });
-
+  //---------------------------------------------------------------------
+  const [showLokasi, setShowLokasi] = useState({ button: "null", show: "d-none", hideres: "sembunyi" });
   const [showWarningLokasi, setShowWarningLokasi] = useState("d-none");
+
   const setGeneralLokasi = () => {
-    if (dataLokasi.kategori === "online" && dataLokasi.mediameet) {
+    if (dataDetail.occurenceType === "online" && dataDetail.mediaMeet) {
       setShowWarningLokasi("d-none");
-      setShowLokasi({ button: "", show: "d-none" });
-      setShowReview({ button: "", show: "" });
-    } else if (dataLokasi.kategori === "offline" && dataLokasi.tempat && dataLokasi.alamat) {
+      setShowLokasi({ button: "", show: "d-none", hideres: "sembunyi" });
+      setShowReview({ button: "", show: "", hideres: "" });
+    } else if (dataDetail.occurenceType === "offline" && dataDetail.location && dataDetail.address) {
       setShowWarningLokasi("d-none");
-      setShowLokasi({ button: "", show: "d-none" });
-      setShowReview({ button: "", show: "" });
+      setShowLokasi({ button: "", show: "d-none", hideres: "sembunyi" });
+      setShowReview({ button: "", show: "", hideres: "" });
     } else {
       setShowWarningLokasi("");
-      setShowLokasi({ button: "", show: "" });
-      setShowReview({ button: "null", show: "d-none" });
+      setShowLokasi({ button: "", show: "", hideres: "" });
+      setShowReview({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
   };
   const backtoPendaftaran = () => {
-    if (dataLokasi.kategori === "online" && dataLokasi.mediameet) {
-      setShowLokasi({ button: "", show: "d-none" });
-    } else if (dataLokasi.kategori === "offline" && dataLokasi.tempat && dataLokasi.alamat) {
-      setShowLokasi({ button: "", show: "d-none" });
+    if (dataDetail.occurenceType === "online" && dataDetail.mediaMeet) {
+      setShowLokasi({ button: "", show: "d-none", hideres: "sembunyi" });
+    } else if (dataDetail.occurenceType === "offline" && dataDetail.location && dataDetail.address) {
+      setShowLokasi({ button: "", show: "d-none", hideres: "sembunyi" });
     } else {
-      setShowLokasi({ button: "null", show: "d-none" });
+      setShowLokasi({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
     setShowWarningLokasi("d-none");
-    setShowPendaftaran({ button: "", show: "" });
+    setShowPendaftaran({ button: "", show: "", hideres: "" });
   };
 
   //---------------------------------------------------------------------
-  const [showReview, setShowReview] = useState({ button: "null", show: "d-none" });
+  //---------------------------------------------------------------------
+  const [showReview, setShowReview] = useState({ button: "null", show: "d-none", hideres: "sembunyi" });
 
   const uploadToDatabase = () => {
-    const data = {
-      eventName: dataGeneral.namaevent,
-      eventImage: ketFoto.file,
-      eventCategory: dataGeneral.kategori,
-      benefits: dataGeneral.benefit,
-      description: dataGeneral.deskripsi,
-      eventDate: dataJadwal.tanggalevent,
-      jamMulai: dataJadwal.jammulai,
-      jamSelesai: dataJadwal.jamselesai,
-      paymentType: dataPendaftaran.kategori,
-      price: dataPendaftaran.biaya,
-      registrationLink: dataPendaftaran.linkdaftar,
-      instagram: dataPendaftaran.linkinstagram,
-      facebook: dataPendaftaran.linkfacebook,
-      twitter: dataPendaftaran.linktwitter,
-      occurenceType: dataLokasi.kategori,
-      mediaMeet: dataLokasi.mediameet,
-      location: dataLokasi.tempat,
-      address: dataLokasi.alamat,
-    };
-    console.log(data);
+    console.log(dataDetail);
   };
+
   const backtoLokasi = () => {
-    setShowReview({ button: "", show: "d-none" });
-    setShowLokasi({ button: "", show: "" });
+    setShowReview({ button: "", show: "d-none", hideres: "sembunyi" });
+    setShowLokasi({ button: "", show: "", hideres: "" });
   };
 
   const [show, setShow] = useState(false);
@@ -214,25 +216,25 @@ export default function EventRegist() {
             Tambah Acara
           </p>
           <div className="navtabs-button d-flex justify-content-between">
-            <div className={`item d-flex align-items-center ${showGeneral.button === "" ? "active" : ""}`}>
+            <div className={`item d-flex align-items-center  ${showGeneral.hideres} ${showGeneral.button === "" ? "active" : ""}`}>
               <span>1</span>
-              <p>General Info</p>
+              <p className={` ${showGeneral.hideres} `}>General Info</p>
             </div>
-            <div className={`item d-flex align-items-center ${showJadwal.button === "" ? "active" : ""}`}>
+            <div className={`item d-flex align-items-center ${showJadwal.hideres}  ${showJadwal.button === "" ? "active" : ""}`}>
               <span>2</span>
-              <p>Jadwal</p>
+              <p className={` ${showJadwal.hideres} `}>Jadwal</p>
             </div>
-            <div className={`item d-flex align-items-center ${showPendaftaran.button === "" ? "active" : ""}`}>
+            <div className={`item d-flex align-items-center ${showPendaftaran.hideres} ${showPendaftaran.button === "" ? "active" : ""}`}>
               <span>3</span>
-              <p>Pendaftaran</p>
+              <p className={` ${showPendaftaran.hideres} `}>Pendaftaran</p>
             </div>
-            <div className={`item d-flex align-items-center ${showLokasi.button === "" ? "active" : ""}`}>
+            <div className={`item d-flex align-items-center ${showLokasi.hideres} ${showLokasi.button === "" ? "active" : ""}`}>
               <span>4</span>
-              <p>Lokasi</p>
+              <p className={` ${showLokasi.hideres} `}>Lokasi</p>
             </div>
-            <div className={`item d-flex align-items-center ${showReview.button === "" ? "active" : ""}`}>
+            <div className={`item d-flex align-items-center ${showReview.hideres} ${showReview.button === "" ? "active" : ""}`}>
               <span>5</span>
-              <p>Review</p>
+              <p className={` ${showReview.hideres} `}>Review</p>
             </div>
           </div>
 
@@ -255,10 +257,10 @@ export default function EventRegist() {
                 </div>
                 <div className="col-md-7">
                   <label htmlFor="namaLengkap">Nama Event</label>
-                  <input type="text" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" placeholder="Nama Event" onChange={(e) => setDataGeneral({ ...dataGeneral, namaevent: e.target.value })} />
+                  <input type="text" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" placeholder="Nama Event" onChange={(e) => setDataDetail({ ...dataDetail, eventName: e.target.value })} />
 
                   <label htmlFor="kategori">Kategori Acara</label>
-                  <select name="kategori" id="kategori" className="form-select mb-3" onChange={(e) => setDataGeneral({ ...dataGeneral, kategori: e.target.value })}>
+                  <select name="kategori" id="kategori" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, eventCategory: e.target.value })}>
                     <option value="">Pilih Kategori</option>
                     <option value="rpl">Rekayasa Perangkat Lunak</option>
                     <option value="jarkom">Jaringan Komputer</option>
@@ -275,7 +277,7 @@ export default function EventRegist() {
                     id="benefits"
                     name="benefits"
                     placeholder="Contoh: Ilmu, Snack, Relasi, Doorprize"
-                    onChange={(e) => setDataGeneral({ ...dataGeneral, benefit: e.target.value })}
+                    onChange={(e) => setDataDetail({ ...dataDetail, benefits: e.target.value })}
                   />
 
                   <label htmlFor="deskripsi">Deskripsi</label>
@@ -286,7 +288,7 @@ export default function EventRegist() {
                     name="deskripsi"
                     placeholder="Berikan Gambaran Event Maksimal 150 Kata"
                     maxLength="250"
-                    onChange={(e) => setDataGeneral({ ...dataGeneral, deskripsi: e.target.value })}
+                    onChange={(e) => setDataDetail({ ...dataDetail, description: e.target.value })}
                   />
 
                   <div className={`alert alert-danger ${showWarning}`} role="alert" style={{ fontSize: "13px" }}>
@@ -308,13 +310,13 @@ export default function EventRegist() {
               <p className="judul-1 mb-4">Jadwal</p>
 
               <label htmlFor="tanggalevent">Tanggal Pelaksanaan</label>
-              <input type="date" className="form-control shadow-none mb-3" id="tanggalevent" name="tanggalevent" onChange={(e) => setDataJadwal({ ...dataJadwal, tanggalevent: e.target.value })} />
+              <input type="date" className="form-control shadow-none mb-3" id="tanggalevent" name="tanggalevent" onChange={(e) => setDataDetail({ ...dataDetail, eventDate: e.target.value })} />
 
               <label htmlFor="jammulai">Jam Mulai</label>
-              <input type="time" className="form-control shadow-none mb-3" id="jammulai" name="jammulai" onChange={(e) => setDataJadwal({ ...dataJadwal, jammulai: e.target.value })} />
+              <input type="time" className="form-control shadow-none mb-3" id="jammulai" name="jammulai" onChange={(e) => setDataDetail({ ...dataDetail, jamMulai: e.target.value })} />
 
               <label htmlFor="jamselesai">Jam Selesai</label>
-              <input type="time" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" onChange={(e) => setDataJadwal({ ...dataJadwal, jamselesai: e.target.value })} />
+              <input type="time" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" onChange={(e) => setDataDetail({ ...dataDetail, jamSelesai: e.target.value })} />
               <div className={`alert alert-danger ${showWarningJadwal}`} role="alert" style={{ fontSize: "13px" }}>
                 Terdapat Data yang belum diisi!
               </div>
@@ -332,16 +334,16 @@ export default function EventRegist() {
               <p className="judul-1 mb-4">Pendaftaran</p>
               <label>Pilih Tipe Acara</label>
               <br />
-              <input type="radio" id="gratis" name="fav_language" value="gratis" onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, tipeacara: e.target.value })} /> 
+              <input type="radio" id="gratis" name="fav_language" value="gratis" onChange={(e) => setDataDetail({ ...dataDetail, paymentType: e.target.value })} /> 
               <label htmlFor="gratis" className="me-4">
                 Gratis
               </label>
-              <input type="radio" id="bayar" name="fav_language" value="bayar" className="mb-3" onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, tipeacara: e.target.value })} />  <label htmlFor="bayar">Berbayar</label>
+              <input type="radio" id="bayar" name="fav_language" value="bayar" className="mb-3" onChange={(e) => setDataDetail({ ...dataDetail, paymentType: e.target.value })} />  <label htmlFor="bayar">Berbayar</label>
               <br />
-              {dataPendaftaran.tipeacara === "bayar" ? (
+              {dataDetail.paymentType === "bayar" ? (
                 <>
                   <label htmlFor="harga">Harga Tiket</label>
-                  <input type="number" className="form-control shadow-none mb-3" id="harga" name="harga" placeholder="Harga Tiket" onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, biaya: e.target.value })} />
+                  <input type="number" className="form-control shadow-none mb-3" id="harga" name="harga" placeholder="Harga Tiket" onChange={(e) => setDataDetail({ ...dataDetail, price: e.target.value })} />
                 </>
               ) : (
                 ""
@@ -353,21 +355,14 @@ export default function EventRegist() {
                 id="linkpendaftaran"
                 name="linkpendaftaran"
                 placeholder="Link Pendaftaran : bit.ly atau forms.gle dll"
-                onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, linkdaftar: e.target.value })}
+                onChange={(e) => setDataDetail({ ...dataDetail, registrationLink: e.target.value })}
               />
               <label htmlFor="instagram">Link Instagram</label>
-              <input
-                type="text"
-                className="form-control shadow-none mb-3"
-                id="instagram"
-                name="instagram"
-                placeholder="Link Instagram (Optional)"
-                onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, linkinstagram: e.target.value })}
-              />
+              <input type="text" className="form-control shadow-none mb-3" id="instagram" name="instagram" placeholder="Link Instagram (Optional)" onChange={(e) => setDataDetail({ ...dataDetail, instagram: e.target.value })} />
               <label htmlFor="facebook">Link Facebook</label>
-              <input type="text" className="form-control shadow-none mb-3" id="facebook" name="facebook" placeholder="Link Facebook (Optional)" onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, linkfacebook: e.target.value })} />
+              <input type="text" className="form-control shadow-none mb-3" id="facebook" name="facebook" placeholder="Link Facebook (Optional)" onChange={(e) => setDataDetail({ ...dataDetail, facebook: e.target.value })} />
               <label htmlFor="twitter">Link Twitter</label>
-              <input type="text" className="form-control shadow-none mb-3" id="twitter" name="twitter" placeholder="Link Twitter (Optional)" onChange={(e) => setDataPendaftaran({ ...dataPendaftaran, linktwitter: e.target.value })} />
+              <input type="text" className="form-control shadow-none mb-3" id="twitter" name="twitter" placeholder="Link Twitter (Optional)" onChange={(e) => setDataDetail({ ...dataDetail, twitter: e.target.value })} />
               <div className={`alert alert-danger ${showWarningPendaftaran}`} role="alert" style={{ fontSize: "13px" }}>
                 Terdapat Data yang belum diisi!
               </div>
@@ -384,15 +379,15 @@ export default function EventRegist() {
             <div className={`lokasiinfo ${showLokasi.show}`}>
               <p className="judul-1 mb-4">Lokasi</p>
               <label htmlFor="tipe">Tipe Acara</label>
-              <select name="tipe" id="tipe" className="form-select mb-3" onChange={(e) => setDataLokasi({ ...dataLokasi, kategori: e.target.value })}>
+              <select name="tipe" id="tipe" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, occurenceType: e.target.value })}>
                 <option value="">Pilih Tipe Acara</option>
                 <option value="online">Online</option>
                 <option value="offline">Offline</option>
               </select>
-              {dataLokasi.kategori === "online" ? (
+              {dataDetail.occurenceType === "online" ? (
                 <>
                   <label htmlFor="harga">Pemilihan Tempat Meeting Online</label>
-                  <select name="tipe" id="tipe" className="form-select mb-3" onChange={(e) => setDataLokasi({ ...dataLokasi, mediameet: e.target.value })}>
+                  <select name="tipe" id="tipe" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, mediaMeet: e.target.value })}>
                     <option value="zoom">Zoom</option>
                     <option value="googlemeet">Google Meet</option>
                   </select>
@@ -400,9 +395,9 @@ export default function EventRegist() {
               ) : (
                 <>
                   <label htmlFor="tempat">Tempat</label>
-                  <input type="text" className="form-control shadow-none mb-3" id="tempat" name="tempat" placeholder="Ex: Gedung A Lantai 10" onChange={(e) => setDataLokasi({ ...dataLokasi, tempat: e.target.value })} />
+                  <input type="text" className="form-control shadow-none mb-3" id="tempat" name="tempat" placeholder="Ex: Gedung A Lantai 10" onChange={(e) => setDataDetail({ ...dataDetail, location: e.target.value })} />
                   <label htmlFor="alamat">Alamat Lengkap Dari Tempat Acara</label>
-                  <input type="text" className="form-control shadow-none mb-3" id="alamat" name="alamat" placeholder="Ex: Jalan Raya No 1, RT.01/01" onChange={(e) => setDataLokasi({ ...dataLokasi, alamat: e.target.value })} />
+                  <input type="text" className="form-control shadow-none mb-3" id="alamat" name="alamat" placeholder="Ex: Jalan Raya No 1, RT.01/01" onChange={(e) => setDataDetail({ ...dataDetail, address: e.target.value })} />
                 </>
               )}
               <div className={`alert alert-danger ${showWarningLokasi}`} role="alert" style={{ fontSize: "13px" }}>
@@ -420,7 +415,7 @@ export default function EventRegist() {
 
             <div className={`reviewinfo ${showReview.show}`}>
               <div className="detail">
-                <DetailEvent />
+                <DetailEvent dataDetail={dataDetail} />
               </div>
               <div className="d-flex align-items-center justify-content-center">
                 <Button className="text-cyan me-4 bg-white border-0 text-decoration-underline" onClick={backtoLokasi}>
@@ -432,7 +427,7 @@ export default function EventRegist() {
               </div>
               <ModalElement show={show} funcModal={handleClose} heading={"Konfirmasi"}>
                 <div className="text-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-check-circle text-cyan" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" className="bi bi-check-circle text-cyan" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                     <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z" />
                   </svg>

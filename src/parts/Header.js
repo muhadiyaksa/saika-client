@@ -54,13 +54,13 @@ export default function Header() {
   return (
     <nav className="navbar navbar-expand-sm">
       <div className="container">
-        <Button type="link" className="navbar-brand text-center " href="#">
+        <Button type="link" className="navbar-brand text-center " href="/">
           <span className="judul">SAIKA</span>
           <br />
           <span className="d-none d-md-block fw-light">Sahabat Informatika</span>
         </Button>
         <div className="navbar-account ms-auto d-sm-none">
-          <Button type="link" href="" className="position-relative">
+          <Button type="link" href="/user" className="position-relative">
             <img src={IconNotif} className="icon-notif" />
             <div className="notif"></div>
           </Button>
@@ -76,17 +76,17 @@ export default function Header() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav mx-auto mb-lg-0 flex-sm-row  d-flex ">
             <li className="nav-item ">
-              <Button type="link" className="nav-link active" aria-current="page" href="#">
+              <Button type="link" className="nav-link active" aria-current="page" href="/">
                 Beranda
               </Button>
             </li>
             <li className="nav-item">
-              <Button type="link" className="nav-link text-white" href="#">
+              <Button type="link" className="nav-link text-white" href="/search">
                 Acara
               </Button>
             </li>
             <li className="nav-item">
-              <Button type="link" className="nav-link text-white" href="#">
+              <Button type="link" className="nav-link text-white" href="/friends">
                 Teman
               </Button>
             </li>

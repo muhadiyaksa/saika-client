@@ -86,7 +86,7 @@ export default function Landingpage() {
         </div>
       </section>
 
-      <section id="section-4 mb-5">
+      <section id="section-4">
         <div className="container">
           <div className="row">
             <div className="col text-center">

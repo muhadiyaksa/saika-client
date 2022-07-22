@@ -40,13 +40,13 @@ export default function List() {
           </div>
           <div className="row align-items-center">
             <div className="col-auto">
-              <Button isPrimary className="rounded-3" style={{ paddingTop: "10px", paddingBottom: "10px" }}>
+              <Button isPrimary className="rounded-3 text-white text-decoration-none" style={{ paddingTop: "10px", paddingBottom: "10px" }} type="link" href="/addevent">
                 Tambah Acara
               </Button>
             </div>
             <div className="col">
               <div className="input-group w-100">
-                <input type="text" id="search-pesanan" className="form-control " placeholder="Cari Ikan atau Toko" aria-label="Recipient's username" aria-describedby="basic-addon2" style={{ fontSize: "13px" }} required />
+                <input type="text" id="search-pesanan" className="form-control " placeholder="Cari Judul Acara atau Penyelenggara" aria-label="Recipient's username" aria-describedby="basic-addon2" style={{ fontSize: "13px" }} required />
                 <button type="submit" className="input-group-text btn border border-2" id="basic-addon2" onClick={GotoSearch}>
                   <img src={iconSearch} alt="Search" />
                 </button>
