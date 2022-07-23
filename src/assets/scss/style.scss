@@ -448,3 +448,117 @@ footer {
     }
   }
 }
+
+.findfriend {
+  .tema {
+    border-radius: 10px;
+    transition: 0.3s;
+    button {
+      margin-left: 20px;
+      padding: 10px 15px;
+    }
+    img {
+      max-height: 150px;
+    }
+    &:hover {
+      p {
+        color: white;
+      }
+      background-color: rgba($cyan, 0.6);
+    }
+    @media (min-width: 768px) {
+      button {
+        margin-left: 0px;
+        padding: 10px 35px;
+      }
+      img {
+        max-height: 350px;
+      }
+    }
+  }
+}
+
+.chats {
+  // padding-top: 40px;
+  background-color: $gray-100;
+  height: 100vh;
+  .container {
+    position: relative;
+    height: 100%;
+    .box {
+      .red {
+        height: 30px;
+        width: 30px;
+        background-color: $red;
+        border-radius: 50%;
+        margin-right: 10px;
+      }
+
+      width: 68%;
+      background-color: $white;
+      position: absolute;
+      left: 0;
+      padding: 15px;
+      border-radius: 15px;
+      top: 5%;
+      bottom: 5%;
+    }
+    .friends {
+      color: $gray-800;
+      padding: 15px;
+      position: absolute;
+      border-radius: 15px;
+      width: 30%;
+      right: 0;
+      top: 5%;
+      bottom: 5%;
+      background-color: $white;
+
+      .list-friends {
+        overflow-y: scroll;
+        max-height: 200px;
+        padding: 10px;
+        &::-webkit-scrollbar {
+          height: 8px;
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #c4c4c4;
+          height: 4px !important;
+          border-radius: 8px;
+        }
+        .item-friends {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 15px;
+          .image {
+            height: 50px;
+            width: 50px;
+            background-color: $gray-200;
+            border-radius: 50%;
+            overflow: hidden;
+            img {
+              height: 100%;
+              width: 100%;
+              object-fit: cover;
+            }
+          }
+          .add {
+            .btn-outline-cyan {
+              border: 1px solid $cyan;
+              color: $cyan;
+              font-weight: 600;
+              transition: 0.3s;
+              &:hover {
+                background-color: $cyan;
+                color: white;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

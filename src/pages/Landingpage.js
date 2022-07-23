@@ -22,7 +22,7 @@ export default function Landingpage() {
               </p>
               <p className="keterangan-section1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor officiis pariatur explicabo vero laudantium eos consectetur natus modi fugiat sed.</p>
 
-              <Button isPrimary isAnimation className="mb-3">
+              <Button isPrimary isAnimation className="mb-3 text-decoration-none text-white" type="link" href="/find">
                 Cari Teman
               </Button>
             </div>

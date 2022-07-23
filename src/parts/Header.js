@@ -4,7 +4,7 @@ import IconNotif from "../assets/icon/notif.png";
 import avaUser from "../assets/icon/ava_user.jpg";
 
 export default function Header() {
-  const isLoggedIn = false;
+  const isLoggedIn = true;
   const dataUser = {
     nama: "Muhamad Adi yaksa",
     email: "muhadiyaksa@gmail.com",
