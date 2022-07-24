@@ -568,7 +568,7 @@ footer {
             border-radius: 8px;
           }
           .chat-item {
-            max-width: 60%;
+            max-width: 80%;
             min-width: 40%;
             margin-right: auto;
             background-color: rgba($cyan, 0.4);
@@ -601,6 +601,7 @@ footer {
               text-align: end;
             }
             @media (min-width: 576px) {
+              max-width: 70%;
               p {
                 &.user {
                   font-size: 12px;
@@ -614,6 +615,7 @@ footer {
               }
             }
             @media (min-width: 992px) {
+              max-width: 60%;
               padding: 10px;
               border-radius: 12px 12px 12px 0px;
               &.me {
@@ -735,6 +737,7 @@ footer {
         left: 0;
         right: 0;
         height: 50%;
+        border-bottom: 2px solid white;
         .judul-1 {
           color: white;
         }
