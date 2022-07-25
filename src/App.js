@@ -22,7 +22,7 @@ function App() {
           <Route exact path="/detail/:id" element={<Detail />}></Route>
           <Route exact path="/addevent" element={<EventRegist />}></Route>
           <Route exact path="/find" element={<SearchFriends />}></Route>
-          <Route exact path="/live" element={<Chats />}></Route>
+          <Route exact path="/live/:idroom" element={<Chats />}></Route>
         </Routes>
       </Router>
     </>

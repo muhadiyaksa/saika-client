@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../parts/Header";
 import Card from "../element/Card";
 import Button from "../element/Button";
 import Footer from "../parts/Footer";
+
 export default function Landingpage() {
   return (
     <>

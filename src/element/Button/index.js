@@ -71,7 +71,7 @@ Button.propTypes = {
   isBlock: propTypes.bool, //button hanya menerima true atau false untuk proses milih ini button block atau engga
   isExternal: propTypes.bool, //button hanya menerima true atau false untuk proses milih ini mengarah ke link external atau engga
   isWhite: propTypes.bool,
-  isGray: propTypes.bool,
+  typeKategori: propTypes.oneOf(["mm", "rpl", "jarkom"]),
   isPrimary: propTypes.bool,
   isAnimation: propTypes.bool,
 };

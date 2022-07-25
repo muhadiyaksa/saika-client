@@ -1,19 +1,63 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../element/Button";
 import IconNotif from "../assets/icon/notif.png";
 import avaUser from "../assets/icon/ava_user.jpg";
-
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../features/user/userSlice";
+import Axios from "axios";
+import { useNavigate } from "react-router-dom";
 export default function Header() {
-  const isLoggedIn = true;
-  const dataUser = {
-    nama: "Muhamad Adi yaksa",
-    email: "muhadiyaksa@gmail.com",
+  // const isLoggedIn = true;
+  // const dataUser = {
+  //   nama: "Muhamad Adi yaksa",
+  //   email: "muhadiyaksa@gmail.com",
 
-    fotoUser: {
-      fotoUrl: "",
-      fotoNama: "",
-    },
+  //   fotoUser: {
+  //     fotoUrl: "",
+  //     fotoNama: "",
+  //   },
+  // };
+  const userObj = JSON.parse(localStorage.getItem("userSaika"));
+  let navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const userData = useSelector((state) => state.user.user);
+
+  const [dataUser, setDataUser] = useState({});
+
+  const handleLogout = () => {
+    dispatch(logout());
+    window.location.reload();
   };
+
+  useEffect(() => {
+    fetchtoAPI();
+  }, []);
+
+  const fetchtoAPI = async () => {
+    if (isLoggedIn) {
+      const dataIDUser = new Promise((fulfill, reject) => {
+        if (userData._id) {
+          return fulfill(userData._id);
+        }
+      });
+
+      dataIDUser.then((res) => {
+        Axios({
+          method: "GET",
+          withCredentials: true,
+          url: `http://localhost:3001/user/${res}`,
+          headers: {
+            Authorization: `Bearer ${userObj.token}`,
+          },
+        }).then((result) => {
+          setDataUser(result.data);
+        });
+      });
+    }
+  };
+
   const showUser = () => {
     if (isLoggedIn) {
       return (
@@ -28,7 +72,7 @@ export default function Header() {
                 <span>{dataUser.email}</span>
               </li>
               <li className="list-group-item">
-                <Button className="btn d-inline-flex w-100 align-items-center">
+                <Button className="btn d-inline-flex w-100 align-items-center" onClick={handleLogout}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-right me-2" viewBox="0 0 16 16">
                     <path
                       fillRule="evenodd"

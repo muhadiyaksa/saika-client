@@ -1,20 +1,37 @@
 import React, { useState } from "react";
 import Button from "../element/Button";
 import SignupBanner from "../assets/image/Signup.svg";
+import Axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 export default function Regist() {
   const [show, setShow] = useState("password");
   const [show2, setShow2] = useState("password");
   const [dataUser, setDataUser] = useState({});
-
+  const [errors, setErrors] = useState([]);
   const showhideclick = () => {
     show === "password" ? setShow("text") : setShow("password");
   };
   const showhideclick2 = () => {
     show2 === "password" ? setShow2("text") : setShow2("password");
   };
+  const navigate = useNavigate();
 
   const submitRegist = () => {
-    console.log(dataUser);
+    Axios({
+      method: "POST",
+      data: dataUser,
+      withCredentials: true,
+      url: "http://localhost:3001/register",
+    }).then((res) => {
+      if (!res.data.errors) {
+        navigate("/login");
+        return "Success";
+      } else {
+        let error = res.data.errors.map((el) => el.msg);
+        setErrors([...error]);
+      }
+    });
   };
   return (
     <section className="regist">
@@ -52,6 +69,13 @@ export default function Regist() {
               <span className="show-hide" onClick={showhideclick2}></span>
               <br />
               <br />
+              <div className={`alert alert-danger pb-0 ${errors.length === 0 ? "d-none" : ""}`} role="alert" style={{ fontSize: "13px" }}>
+                <ul>
+                  {errors.map((el, i) => {
+                    return <li key={`error-${i}`}>{el}</li>;
+                  })}
+                </ul>
+              </div>
               <Button isPrimary className="w-100 rounded-3 mb-4" onClick={submitRegist}>
                 Daftar
               </Button>
