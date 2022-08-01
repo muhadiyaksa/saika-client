@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import DetailEvent from "../parts/DetailEvent";
 import iconUpload from "../assets/icon/upload.png";
 import ModalElement from "../element/ModalElement";
-
+import Axios from "axios";
 export default function EventRegist() {
   const [ketFoto, setKetFoto] = useState({ ket: "", status: "hide", file: null });
   const [dataDetail, setDataDetail] = useState({
@@ -188,6 +188,17 @@ export default function EventRegist() {
 
   const uploadToDatabase = () => {
     console.log(dataDetail);
+    Axios({
+      method: "POST",
+      data: dataDetail,
+      withCredentials: true,
+      url: "http://localhost:5000/event",
+      // headers: {
+      //   Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpYXNheWFuZ2JhbmdldHNhbWFhYnV0MkBnbWFpbC5jb20iLCJ1c2VySWQiOiI2MmUzOTQ2NTg0MTZlMGEyNTFjZjU2NmEiLCJpYXQiOjE2NTkwOTkyNTUsImV4cCI6MTY2MTY5MTI1NX0.GWMcALmOYy6XdBO3vb-F9TPvCz7G388hceRhuwB5pyw`,
+      // },
+    }).then((res) => {
+      console.log(res);
+    });
   };
 
   const backtoLokasi = () => {

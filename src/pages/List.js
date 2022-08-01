@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../parts/Header";
 import Footer from "../parts/Footer";
 import { useNavigate, useLocation } from "react-router-dom";
 import Button from "../element/Button";
 import iconSearch from "../assets/icon/icon-search.png";
 import Card from "../element/Card";
-
+import Axios from "axios";
 export default function List() {
   let navigate = useNavigate();
 
@@ -14,14 +14,42 @@ export default function List() {
 
     return React.useMemo(() => new URLSearchParams(search), [search]);
   }
-  const TampilData = () => {
-    let query = useQuery();
-    console.log(query);
-  };
+  const [dataEvent, setDataEvent] = useState([]);
+  useEffect(() => {
+    const TampilData = () => {
+      // let query = useQuery();
+      Axios({
+        method: "GET",
+        withCredentials: true,
+        url: `http://localhost:5000/event`,
+      }).then((result) => {
+        console.log(result.data.Event);
+        setDataEvent(result.data.Event);
+      });
+    };
+    TampilData();
+  }, []);
+
+  console.log(dataEvent);
+
   const GotoSearch = () => {
     const inputSearch = document.querySelector(".list .input-group input");
     if (inputSearch.value !== "") {
       navigate(`/search?some=${inputSearch.value.toLowerCase()}`);
+    }
+  };
+
+  const tampilEvent = () => {
+    if (dataEvent.length !== 0) {
+      let data = dataEvent.map((el) => {
+        return (
+          <div className="item column-3 row-1">
+            <Card linkUrl={`/detail/${el._id}`} imgSrc={"/image/section2-1.png"} judul={el.eventName} penyelenggara={el.eventCategory} waktu={el.eventDate} />
+          </div>
+        );
+      });
+      console.log(data);
+      return data;
     }
   };
   return (
@@ -69,32 +97,7 @@ export default function List() {
               </select>
             </div>
           </div>
-          <div className="container-grid mt-5">
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-          </div>
+          <div className="container-grid mt-5">{tampilEvent()}</div>
         </div>
       </section>
       <Footer />

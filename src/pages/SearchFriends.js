@@ -66,6 +66,7 @@ export default function SearchFriends() {
               </div>
             </div>
           </div>
+
           <div class="row">
             <div class="col-md">
               <div class="tema text-center shadow  py-4 mb-3">

@@ -12,6 +12,7 @@ export default function Login() {
   const [dataLogin, setDataLogin] = useState({ email: "", password: "" });
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
+  console.log(isLoggedIn);
   const showhideclick = () => {
     show === "password" ? setShow("text") : setShow("password");
   };
@@ -24,7 +25,7 @@ export default function Login() {
       withCredentials: true,
       url: "http://localhost:3001/login",
     }).then(async (res) => {
-      console.log(res);
+      // console.log(res.data);
       if (!res.data.message) {
         const actionResult = await dispatch(login(res.data));
         const result = unwrapResult(actionResult);

@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../parts/Header";
 import Footer from "../parts/Footer";
 import Card from "../element/Card";
 import DetailEvent from "../parts/DetailEvent.js";
+import { useParams } from "react-router-dom";
+import Axios from "axios";
 export default function Detail() {
+  const param = useParams();
+  console.log(param);
+  // const [dataDetail, setDataDetail] = useState({});
+  // useEffect(() => {
+  //   Axios({
+  //     method: "GET",
+  //     withCredentials: true,
+  //     url: `http://localhost:5000/event/62e40106f55b5764dad36f74`,
+  //   }).then((res) => {
+  //     console.log(res);
+  //     setDataDetail(res.data.eventDetail);
+  //   });
+  // }, []);
+
   const data = {
     eventName: "How To Be Good UI/UX Designer",
     eventImage: "/image/section2-1.png",
