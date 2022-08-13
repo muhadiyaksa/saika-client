@@ -1,10 +1,14 @@
 import React from "react";
 import propTypes from "prop-types";
+import "./index.scss";
 
 export default function Card(props) {
   return (
     <a href={props.linkUrl} className="text-decoration-none text-dark">
       <div className="card mb-3">
+        <div class="kategori">
+          <span>RPL</span>
+        </div>
         <img src={props.imgSrc} className="card-img-top" />
         <div className="card-body">
           <p>

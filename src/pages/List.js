@@ -21,7 +21,7 @@ export default function List() {
       Axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:5000/event`,
+        url: `http://localhost:3001/event`,
       }).then((result) => {
         console.log(result.data.Event);
         setDataEvent(result.data.Event);

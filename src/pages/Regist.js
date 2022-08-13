@@ -22,7 +22,7 @@ export default function Regist() {
       method: "POST",
       data: dataUser,
       withCredentials: true,
-      url: "http://localhost:3000/register",
+      url: "http://localhost:3001/register",
     }).then((res) => {
       if (!res.data.errors) {
         navigate("/login");

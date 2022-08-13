@@ -1,8 +1,39 @@
 /* CARD */
+@import "../../assets/scss/colorVariabel.scss";
+
 .card {
+  position: relative;
   color: $gray-800;
   overflow: hidden;
   border: none;
-  border-radius: 20px;
-  margin-bottom: 50px;
+  border-radius: 15px !important;
+  p {
+    font-size: 13px;
+    @media (min-width: 992px) {
+      font-size: 16px;
+    }
+  }
+  .kategori {
+    background-color: $white;
+    border: 2px solid $cyan;
+    color: $cyan;
+    width: 40px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    padding: 3px 0px;
+    position: absolute;
+    display: block;
+    z-index: 1;
+    right: 4%;
+    top: 2%;
+    font-size: 13px;
+    @media (min-width: 992px) {
+      border-radius: 10px;
+      right: 5%;
+      top: 5%;
+      width: 80px;
+      font-size: 16px;
+    }
+  }
 }

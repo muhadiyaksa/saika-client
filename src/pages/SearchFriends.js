@@ -8,8 +8,11 @@ import Button from "../element/Button";
 import { useSelector } from "react-redux";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import io from "socket.io-client";
 
 export default function SearchFriends() {
+  const socket = io.connect("http://localhost:3001");
+
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -42,6 +45,7 @@ export default function SearchFriends() {
         fotoUser: "",
         namauser: dataUser.nama,
         usernameuser: dataUser.username ? dataUser.username : "@anonymous",
+        percobaan: 0,
       },
       withCredentials: true,
       url: `http://localhost:3001/chats`,
@@ -49,14 +53,16 @@ export default function SearchFriends() {
         Authorization: `Bearer ${userObj.token}`,
       },
     }).then((res) => {
-      navigate(`/live/${res.data}`);
+      if (res.data.status === "waiting") {
+        navigate(`/waiting?kategori=${param}`);
+      }
     });
   };
   return (
     <>
       <Header />
       <section className="findfriend py-5">
-        <div class="container">
+        <div className="container">
           <div className="row">
             <div className="col text-center">
               <p className="judul-1 text-cyan">Pilihan Teman Informatika</p>
@@ -67,9 +73,9 @@ export default function SearchFriends() {
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md">
-              <div class="tema text-center shadow  py-4 mb-3">
+          <div className="row">
+            <div className="col-md">
+              <div className="tema text-center shadow  py-4 mb-3">
                 <p className="judul-1 text-cyan">Multimedia</p>
                 <img src={mm} alt="Multimedia" />
                 <Button isPrimary isAnimation onClick={() => findFriends("mm")}>
@@ -77,8 +83,8 @@ export default function SearchFriends() {
                 </Button>
               </div>
             </div>
-            <div class="col-md">
-              <div class="tema text-center shadow  py-4 mb-3">
+            <div className="col-md">
+              <div className="tema text-center shadow  py-4 mb-3">
                 <p className="judul-1 text-cyan">Rekayasa Perangkat Lunak</p>
                 <img src={rpl} alt="Rekayasa Perangkat Lunak" />
                 <Button isPrimary isAnimation onClick={() => findFriends("rpl")}>
@@ -86,8 +92,8 @@ export default function SearchFriends() {
                 </Button>
               </div>
             </div>
-            <div class="col-md">
-              <div class="tema text-center shadow  py-4 mb-3">
+            <div className="col-md">
+              <div className="tema text-center shadow  py-4 mb-3">
                 <p className="judul-1 text-cyan">Jaringan Komputer</p>
                 <img src={jarkom} alt="Jaringan Komputer" />
                 <Button isPrimary isAnimation onClick={() => findFriends("jarkom")}>
