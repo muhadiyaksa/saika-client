@@ -72,7 +72,7 @@
   right: 0;
   button {
     position: absolute;
-    top: 0;
+    // top: 0;
     bottom: 0;
     right: 0;
     display: inline-flex;
@@ -83,9 +83,24 @@
   }
   input {
     font-size: 12px;
+    padding-right: 50px;
+    // max-height: 80px;
+    box-shadow: none;
+  }
+  textarea {
+    font-size: 12px;
+    padding-right: 50px;
+    height: 80px;
+    // background-color: rgba($cyan, 0.1);
+    background-color: $gray-100;
+    // position: absolute;
+    // bottom: 0;
   }
   @media (min-width: 576px) {
     input {
+      font-size: 13px;
+    }
+    textarea {
       font-size: 13px;
     }
   }
@@ -93,6 +108,10 @@
     input {
       font-size: 14px;
     }
+    textarea {
+      font-size: 14px;
+    }
+
     button {
       img {
         max-height: 25px;
@@ -103,8 +122,7 @@
 
 @mixin listChats() {
   position: absolute;
-  top: 10%;
-  bottom: 9%;
+
   left: 0;
   right: 0;
 
@@ -114,7 +132,7 @@
     display: flex;
     flex-direction: column-reverse;
     overflow-y: scroll;
-    max-height: 95%;
+    max-height: 100%;
     width: 100%;
     padding: 10px;
 
@@ -146,8 +164,7 @@
         min-width: 40%;
       }
       &.notif-masuk {
-        background-color: $gray-300;
-
+        background-color: $gray-200;
         font-size: 11px;
         color: $gray-800;
         margin: 7px auto;
@@ -167,7 +184,7 @@
         max-width: 90%;
       }
       &.me {
-        background-color: $gray-300;
+        background-color: $gray-200;
         margin-left: auto;
         margin-right: 0;
         border-radius: 10px 10px 0px 10px;
@@ -875,6 +892,11 @@ footer {
         }
       }
       .list-chats {
+        background-image: url("../image/bg-primary2.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        top: 50px;
+        bottom: 80px;
         @include listChats();
       }
       .input-chats {
@@ -1057,6 +1079,19 @@ footer {
             }
           }
           .add {
+            button {
+              position: relative;
+              &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+
+                display: block;
+              }
+            }
             .wait {
               background-color: $cyan;
               min-height: 35px;
@@ -1125,8 +1160,8 @@ footer {
     left: 0;
     right: 0;
   }
-  margin-top: 10vh;
-  height: 90vh;
+  margin-top: 11vh;
+  height: 89vh;
   background-color: $gray-100;
   padding-top: 0px;
   padding-bottom: 0px;
@@ -1147,6 +1182,7 @@ footer {
     overflow: hidden;
     .friends {
       position: absolute;
+
       top: 10px;
       bottom: 0;
       left: 0;
@@ -1207,6 +1243,18 @@ footer {
           height: 4px !important;
           border-radius: 8px;
         }
+        .ketnull {
+          font-size: 13px;
+          @media (min-width: 576px) {
+            font-size: 12px;
+          }
+          @media (min-width: 768px) {
+            font-size: 13px;
+          }
+          @media (min-width: 1200px) {
+            font-size: 16px;
+          }
+        }
         .item-friends {
           justify-content: space-between;
           padding: 15px 20px;
@@ -1265,6 +1313,18 @@ footer {
           .info {
             position: relative;
             padding-right: 5px;
+            button {
+              position: relative;
+              &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: block;
+              }
+            }
             .red {
               position: absolute;
               top: 0;
@@ -1299,13 +1359,83 @@ footer {
 
     .box {
       position: absolute;
+
       top: 0;
       bottom: 0;
       right: 0;
       width: 100%;
       background-color: white;
-      padding: 15px;
+      overflow: hidden;
+      // padding: 15px;
       border-radius: 0px;
+      .profile-friend {
+        background-color: white;
+        // display: flex;
+        // justify-content: center;
+        // align-items: center;
+        .subjudul {
+          font-size: 18px;
+          border-bottom: 1px solid $cyan;
+          padding-bottom: 10px;
+          @media (min-width: 576px) {
+            border-bottom: 0px solid $cyan;
+          }
+        }
+        .image {
+          height: 150px;
+          width: 150px;
+          margin-right: 30px;
+          border-radius: 20px;
+          overflow: hidden;
+          background-color: $white;
+          &.user {
+            margin-left: auto;
+            margin-right: auto;
+            background-color: $gray-100;
+            width: 180px;
+            height: 180px;
+            @media (min-width: 992px) {
+              width: 230px;
+              height: 230px;
+              margin-left: auto;
+              margin-right: 0;
+            }
+          }
+          img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+          }
+        }
+        .btn {
+          &.back {
+            background-color: $white;
+          }
+          background-color: $cyan;
+          border-radius: 10px;
+          color: white;
+          font-weight: 600;
+        }
+      }
+      .animasi-load {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        @media (min-width: 576px) {
+          border-radius: 15px;
+          top: 5%;
+          bottom: 5%;
+        }
+        @include fungsiAnimasi();
+      }
       @media (min-width: 576px) {
         border-radius: 10px;
         width: 48%;
@@ -1332,8 +1462,8 @@ footer {
         }
       }
       .header-chats {
-        border-bottom: 2px solid $gray-300;
-        padding-bottom: 10px;
+        background-color: $white;
+        padding: 10px;
         .image {
           height: 50px;
           width: 50px;
@@ -1357,9 +1487,16 @@ footer {
         }
       }
       .list-chats {
+        background-image: url("../image/bg-primary2.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        top: 70px;
+        bottom: 100px;
         @include listChats();
       }
       .input-chats {
+        padding: 10px;
+        // background-color: $cyan;
         @include inputChats();
       }
     }
