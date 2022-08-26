@@ -51,16 +51,16 @@ export default function Detail() {
             <p className="border-bottom pt-4 pb-2 fw-bold">Rekomendasi Acara Lain</p>
             <div className="container-grid">
               <div className="item column-3 row-1">
-                <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+                <Card linkUrl={"/detail/123123"} imgSrc={"/image/section2-1.png"} judul={"It Security Fundamentals UNUSIA"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
               </div>
               <div className="item column-3 row-1">
-                <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+                <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara2.png"} judul={"Peranan K3 Menghadapi Era Industri 4.0"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
               </div>
               <div className="item column-3 row-1">
-                <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+                <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara3.png"} judul={"Creative With Technology, To Become Enterpreneuer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
               </div>
-              <div className="item column-3 row-1">
-                <Card linkUrl={"/detail/asdadwkmwae"} imgSrc={"/image/section2-1.png"} judul={"IT Front End Developer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+              <div className="item column-3 row-1 d-md-none d-lg-block">
+                <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara4.png"} judul={"Strategi Startup dan Industri di masa Pandemi"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
               </div>
             </div>
           </div>

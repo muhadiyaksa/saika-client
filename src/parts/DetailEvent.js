@@ -18,12 +18,12 @@ export default function DetailEvent({ dataDetail }) {
       </p>
       <div className="row">
         <div className="col-md-4">
-          <div className="image">
+          <div className="image detail mb-3">
             <img src={dataDetail.eventImage} alt="" />
           </div>
         </div>
-        <div className="col-md">
-          <p className="judul-1">{dataDetail.eventName}</p>
+        <div className="col-md p-3">
+          <p className="judul-1 text-center text-sm-start ">{dataDetail.eventName}</p>
           <div className="row mt-3">
             <div className="col-md">
               <p className="fw-bold mb-0 pb-0">Kategori Acara</p>

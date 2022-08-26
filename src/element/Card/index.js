@@ -9,13 +9,15 @@ export default function Card(props) {
         <div className="kategori">
           <span>RPL</span>
         </div>
-        <img src={props.imgSrc} className="card-img-top" />
+        <div class="image">
+          <img src={props.imgSrc} className="card-img-top" />
+        </div>
         <div className="card-body">
           <p>
-            <b>{props.judul}</b>
+            <b>{props.judul} </b>
           </p>
           <p>
-            {props.penyelenggara} | {props.waktu}
+            {props.penyelenggara} | <span class="text-cyan ">{props.waktu}</span>
           </p>
         </div>
       </div>

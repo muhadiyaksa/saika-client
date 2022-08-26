@@ -344,11 +344,14 @@ body {
       overflow: hidden;
       border-radius: 8px;
       position: absolute;
-      right: -90px;
+      right: 0px;
       margin-top: 5px;
       z-index: 99;
       font-size: 13px;
       width: 220px;
+      @media (min-width: 1200px) {
+        right: -90px;
+      }
       p {
         margin: 0;
         font-size: 14px;
@@ -389,6 +392,51 @@ body {
           height: 40px;
           width: 40px;
         }
+      }
+    }
+  }
+  .navbar-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    display: flex;
+    background-color: $white;
+    padding: 0px 5px;
+    border-radius: 10px 10px 0px 0px;
+    justify-content: space-around;
+    box-shadow: 0px 0px 15px rgba($cyan, 0.4);
+    a {
+      color: $cyan;
+      display: block;
+      padding: 10px 0px !important;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // background-color: #152355;
+      width: 100%;
+      position: relative;
+      &.active {
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 30%;
+          margin: 0 auto;
+          height: 5px;
+          background-color: $cyan;
+        }
+      }
+
+      svg {
+        width: 21px;
+        height: 21px;
+      }
+      span {
+        font-size: 10px;
       }
     }
   }
@@ -497,7 +545,7 @@ body {
 
 #section-3 {
   padding-top: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 100px;
   span {
     color: $cyan;
   }
@@ -540,6 +588,10 @@ body {
 
 footer {
   background-color: #152355;
+  display: none;
+  @media (min-width: 576px) {
+    display: block;
+  }
   .container {
     color: white;
   }
@@ -554,14 +606,19 @@ footer {
     }
   }
   img {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
+    @media (min-width: 576px) {
+      width: 20px;
+      height: 20px;
+    }
   }
   p {
     margin-bottom: 0;
   }
   .footer-cr {
     font-size: 13px;
+
     @media (min-width: 992px) {
       font-size: 16px;
     }
@@ -575,17 +632,34 @@ footer {
   &:not(.primary) {
     background-color: $white;
   }
-  .image {
-    height: 450px;
-    width: 100%;
+  p.fw-bold {
+    font-size: 14px;
+    @media (min-width: 992px) {
+      font-size: 15px;
+    }
+  }
+  .image.detail {
+    height: 280px;
+    width: 250px;
+    margin: 0 auto;
     background-color: $white;
     border: 1px solid $gray-300;
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
     img {
       object-fit: contain;
       height: 100%;
       width: 100%;
+    }
+    @media (min-width: 576px) {
+      width: 100%;
+
+      height: 350px;
+    }
+    @media (min-width: 1200px) {
+      width: 100%;
+
+      height: 450px;
     }
   }
 
@@ -1066,6 +1140,7 @@ footer {
             a {
               color: white;
             }
+
             font-size: 11px;
             @media (min-width: 576px) {
               color: $gray-800;
@@ -1160,15 +1235,12 @@ footer {
     left: 0;
     right: 0;
   }
-  margin-top: 11vh;
+  margin-top: 10vh;
   height: 89vh;
   background-color: $gray-100;
   padding-top: 0px;
   padding-bottom: 0px;
   @media (min-width: 576px) {
-    .navbar {
-      height: auto;
-    }
     height: 600px;
     padding-top: 50px;
     padding-bottom: 30px;
@@ -1179,11 +1251,11 @@ footer {
   .container {
     position: relative;
     height: 100%;
-    overflow: hidden;
+    // overflow: hidden;
     .friends {
       position: absolute;
 
-      top: 10px;
+      top: 0;
       bottom: 0;
       left: 0;
       width: 100%;
@@ -1217,8 +1289,12 @@ footer {
           border-radius: 0px;
           height: 50px;
           &.active {
-            color: white;
-            background-color: $cyan;
+            color: $gray-900;
+            background-color: rgba($cyan, 0.3);
+            @media (min-width: 576px) {
+              color: $white;
+              background-color: $cyan;
+            }
           }
           font-size: 14px;
           @media (min-width: 576px) {
@@ -1268,7 +1344,7 @@ footer {
             border-radius: 50%;
             background-color: $gray-200;
             overflow: hidden;
-            margin-right: 14px;
+            margin-right: 24px;
             img {
               height: 100%;
               width: 100%;
@@ -1289,7 +1365,7 @@ footer {
             p {
               font-size: 14px;
             }
-            a {
+            button {
               color: $gray-800;
               text-decoration: none;
             }
@@ -1297,7 +1373,7 @@ footer {
               p {
                 font-size: 13px;
               }
-              a {
+              button {
                 font-size: 13px;
               }
             }
@@ -1305,7 +1381,7 @@ footer {
               p {
                 font-size: 16px;
               }
-              a {
+              button {
                 font-size: 16px;
               }
             }
@@ -1347,10 +1423,6 @@ footer {
               border-radius: 3px;
               padding: 5px;
               color: white;
-              &:hover {
-                background-color: white;
-                color: $cyan;
-              }
             }
           }
         }
@@ -1361,7 +1433,7 @@ footer {
       position: absolute;
 
       top: 0;
-      bottom: 0;
+      bottom: 10%;
       right: 0;
       width: 100%;
       background-color: white;
@@ -1411,7 +1483,9 @@ footer {
           &.back {
             background-color: $white;
           }
-          background-color: $cyan;
+          &.btn-cyan {
+            background-color: $cyan;
+          }
           border-radius: 10px;
           color: white;
           font-weight: 600;
@@ -1554,5 +1628,41 @@ footer {
   }
   100% {
     transform: translateX(0%) skewX(45deg);
+  }
+}
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 15px;
+  height: 15px;
+  margin-left: 10px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  margin: 2px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

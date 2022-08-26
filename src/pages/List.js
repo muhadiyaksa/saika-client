@@ -97,7 +97,24 @@ export default function List() {
               </select>
             </div>
           </div>
-          <div className="container-grid mt-5">{tampilEvent()}</div>
+          <div className="container-grid mt-5">
+            <div className="item column-12 row-1 text-center">
+              <p>Ini Hanya Event Dummy</p>
+            </div>
+            <div className="item column-3 row-1">
+              <Card linkUrl={"/detail/123123"} imgSrc={"/image/section2-1.png"} judul={"It Security Fundamentals UNUSIA"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+            </div>
+            <div className="item column-3 row-1">
+              <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara2.png"} judul={"Peranan K3 Menghadapi Era Industri 4.0"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+            </div>
+            <div className="item column-3 row-1">
+              <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara3.png"} judul={"Creative With Technology, To Become Enterpreneuer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+            </div>
+            <div className="item column-3 row-1 d-md-none d-lg-block">
+              <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara4.png"} judul={"Strategi Startup dan Industri di masa Pandemi"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
+            </div>
+            {tampilEvent()}
+          </div>
         </div>
       </section>
       <Footer />

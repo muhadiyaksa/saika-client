@@ -54,6 +54,16 @@ export default function Button(props) {
   return (
     <button className={className.join(" ")} style={props.style} onClick={onClick}>
       {props.children}
+      {props.isSpinner ? (
+        <div class="lds-ring d-inline-props">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      ) : (
+        ""
+      )}
     </button>
   );
 }
@@ -74,4 +84,5 @@ Button.propTypes = {
   typeKategori: propTypes.oneOf(["mm", "rpl", "jarkom"]),
   isPrimary: propTypes.bool,
   isAnimation: propTypes.bool,
+  isSpinner: propTypes.bool,
 };
