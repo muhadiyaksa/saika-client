@@ -7,8 +7,11 @@ import { logout } from "../features/user/userSlice";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ModalElement from "../element/ModalElement";
+import io from "socket.io-client";
 
 export default function Header() {
+  const socket = io.connect("http://localhost:3001");
+
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   let navigate = useNavigate();
 
@@ -17,7 +20,8 @@ export default function Header() {
   const userData = useSelector((state) => state.user.user);
 
   const [dataUser, setDataUser] = useState({});
-
+  const [activeChat, setActiveChat] = useState([]);
+  const [activeNotifRed, setActiveNotifRed] = useState([]);
   const handleLogout = () => {
     setSpinnerLogout(true);
     dispatch(logout());
@@ -26,8 +30,50 @@ export default function Header() {
 
   useEffect(() => {
     fetchtoAPI();
-  }, []);
 
+    const getDataAllChat = () => {
+      Axios({
+        method: "GET",
+        withCredentials: true,
+        url: `http://localhost:3001/chat/all/${userData._id}`,
+        headers: {
+          Authorization: `Bearer ${userObj.token}`,
+        },
+      }).then((res) => {
+        console.log(res.data);
+        setActiveChat(res.data);
+      });
+    };
+    getDataAllChat();
+  }, []);
+  useEffect(() => {
+    socket.on("pesan_terima_pc", (data) => {
+      console.log(data);
+      // setDataChat(data);
+    });
+
+    socket.on("pesan_aktif", (data) => {
+      console.log(data);
+      let dataFilter = data.filter((el) => el.chat !== userData._id).filter((el) => el.statusNotif === "active");
+      setActiveNotifRed(dataFilter);
+      setActiveChat(data);
+    });
+  }, [socket]);
+
+  const updateStatusNotif = (e) => {
+    Axios({
+      method: "PUT",
+      withCredentials: true,
+      url: `http://localhost:3001/chat/notifstatus/${e.target.getAttribute("idchat")}`,
+      headers: {
+        Authorization: `Bearer ${userObj.token}`,
+      },
+    }).then((res) => {
+      if (res.data.status === "success") {
+        navigate("/chat");
+      }
+    });
+  };
   const fetchtoAPI = async () => {
     if (isLoggedIn) {
       const dataIDUser = new Promise((fulfill, reject) => {
@@ -46,6 +92,7 @@ export default function Header() {
           },
         }).then((result) => {
           setDataUser(result.data);
+          socket.emit("data_user", userData._id);
         });
       });
     }
@@ -95,6 +142,10 @@ export default function Header() {
     setShowModalProfile(false);
   };
 
+  const [showModalNotif, setShowModalNotif] = useState(false);
+  const handleShowModalNotif = () => setShowModalNotif(true);
+  const handleCloseModalNotif = () => setShowModalNotif(false);
+
   const [spinnerProfil, setSpinnerProfil] = useState(false);
   const [spinnerPassword, setSpinnerPassword] = useState(false);
   const [spinnerLogout, setSpinnerLogout] = useState(false);
@@ -106,6 +157,52 @@ export default function Header() {
       return " active";
     } else {
       return "";
+    }
+  };
+
+  const showNotif = () => {
+    if (activeChat?.length > 0) {
+      let dataFilter = activeChat.filter((el) => el.chat !== userData._id);
+      let data = dataFilter.map((el, i) => {
+        return (
+          <button idchat={el.idchat} className={`btn d-flex shadow-none text-start w-100 align-items-center ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-envelope-paper-fill text-cyan me-3" viewBox="0 0 16 16">
+              <path
+                fill-rule="evenodd"
+                d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
+              />
+            </svg>
+            <p>
+              Yuhuuu, kamu Memiliki pesan baru dari <strong>@{el.username}</strong>
+            </p>
+            {el.statusNotif === "active" ? <span class="red"></span> : ""}
+          </button>
+        );
+      });
+      console.log(data);
+      if (data.length > 0) {
+        return data;
+      } else {
+        return (
+          <div class="text-center p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
+              <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
+              <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
+            </svg>
+            <p>Kamu belum memiliki notifikasi apapun</p>
+          </div>
+        );
+      }
+    } else {
+      return (
+        <div class="text-center p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
+            <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
+            <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
+          </svg>
+          <p>Kamu belum memiliki notifikasi apapun</p>
+        </div>
+      );
     }
   };
 
@@ -173,9 +270,9 @@ export default function Header() {
           <span className="d-none d-md-block fw-light">Sahabat Informatika</span>
         </Button>
         <div className="navbar-account ms-auto d-sm-none  shadow-none">
-          <Button type="link" href="/user" className="position-relative">
+          <Button className="position-relative btn p-0 shadow-none" onClick={handleShowModalNotif}>
             <img src={IconNotif} className="icon-notif" />
-            <div className="notif"></div>
+            {activeNotifRed?.length > 0 ? <div className="notif"></div> : ""}
           </Button>
           <Button className="btn border ava-user rounded-circle p-0" onClick={handleShowModalProfile}>
             <img src={dataUser.fotoUser ? `${dataUser.fotoUser.fotoUrl === "" ? avaUser : dataUser.fotoUser.fotoUrl}` : `${avaUser}`} alt="User" />
@@ -201,10 +298,16 @@ export default function Header() {
             </li>
           </ul>
           <div className="navbar-account ms-auto d-none d-sm-flex ">
-            <Button type="link" href="" className="position-relative  shadow-none">
-              <img src={IconNotif} />
-              <div className="notif"></div>
-            </Button>
+            <div class="notification">
+              <Button className="position-relative button-notif btn p-0 shadow-none">
+                <img src={IconNotif} />
+                {activeNotifRed?.length > 0 ? <div className="notif"></div> : ""}
+              </Button>
+              <div class="area-notif ">
+                <p className="text-center my-2 fw-bold text-cyan">Notifikasi SAIKA</p>
+                {showNotif()}
+              </div>
+            </div>
 
             <div className=" text-end user mx-xl-3 mx-lg-2 mx-md-1 mx-sm-3 mx-2 d-inline-block">{showUser()}</div>
           </div>
@@ -295,6 +398,17 @@ export default function Header() {
             </Button>
             <Button className="btn btn-danger rounded-pill  shadow-none" isSpinner={spinnerLogout} onClick={handleLogout}>
               Ya, Logout
+            </Button>
+          </div>
+        </div>
+      </ModalElement>
+      <ModalElement isHeader={false} show={showModalNotif} funcModal={handleCloseModalNotif} isCentered={true}>
+        <div class="area-notif ">
+          <p className="text-center my-2 fw-bold text-cyan">Notifikasi SAIKA</p>
+          {showNotif()}
+          <div class="text-center">
+            <Button onClick={handleCloseModalNotif} className="btn btn-secondary ">
+              Close
             </Button>
           </div>
         </div>

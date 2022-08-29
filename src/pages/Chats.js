@@ -38,6 +38,9 @@ export default function Chats() {
   const [isSisaAnggota, setIsSisaAnggota] = useState(true);
   const [isKeluar, setIsKeluar] = useState(false);
   const [dataUser, setDataUser] = useState({});
+  const [dataProfilFriend, setDataProfilFriend] = useState({});
+  const [showFriend, setShowFriend] = useState(false);
+  const [spinnerFriend, setSpinnerFriend] = useState(false);
   useEffect(() => {
     const getDataUser = () => {
       Axios({
@@ -167,6 +170,27 @@ export default function Chats() {
       }
     });
   };
+  const checkProfileUser = (e) => {
+    setShowFriend(true);
+    if (dataProfilFriend.iduser !== e.target.getAttribute("iduser")) {
+      setSpinnerFriend(true);
+      Axios({
+        method: "GET",
+        withCredentials: true,
+        url: `http://localhost:3001/user/friend/${e.target.getAttribute("iduser")}`,
+        headers: {
+          Authorization: `Bearer ${userObj.token}`,
+        },
+      }).then((res) => {
+        setDataProfilFriend(res.data);
+        setSpinnerFriend(false);
+      });
+    }
+  };
+
+  const handleCloseFriend = () => {
+    setShowFriend(false);
+  };
 
   const tolakTeman = (e) => {
     Axios({
@@ -186,6 +210,18 @@ export default function Chats() {
     });
   };
 
+  const hapusRoom = () => {
+    Axios({
+      method: "DELETE",
+      withCredentials: true,
+      url: `http://localhost:3001/chat/${param.idroom}`,
+      headers: {
+        Authorization: `Bearer ${userObj.token}`,
+      },
+    }).then(() => {
+      navigate("/find");
+    });
+  };
   const tampilTeman = () => {
     if (dataMasuk.anggota !== undefined) {
       let dataFilter = dataMasuk.anggota.filter((el) => el.iduser !== userData._id);
@@ -203,9 +239,9 @@ export default function Chats() {
               </div>
               <div className="friend">
                 <p className="p-0 m-0 text-capitalize ">{el.namauser}</p>
-                <Button type="link" href="/">
+                <button iduser={el.iduser} className="btn p-0 text-decoration-underline shadow-none" onClick={checkProfileUser}>
                   @{el.usernameuser}
-                </Button>
+                </button>
               </div>
             </div>
             <div className="add">
@@ -297,19 +333,6 @@ export default function Chats() {
   //BUAT TAMPIL ANGGOTA CHAT NOTIF
   //TERUS DIGABUNG TAMPILnggotakeluar ama masuk
   //abis itu dibuat object yang data anggota keluarnya
-
-  const hapusRoom = () => {
-    Axios({
-      method: "DELETE",
-      withCredentials: true,
-      url: `http://localhost:3001/chat/${param.idroom}`,
-      headers: {
-        Authorization: `Bearer ${userObj.token}`,
-      },
-    }).then(() => {
-      navigate("/find");
-    });
-  };
 
   return (
     <section className="chats">
@@ -434,6 +457,35 @@ export default function Chats() {
             <Button isPrimary className="w-100  fs-6" onClick={handleCloseNotif}>
               Terimakasih Mimin Saika
             </Button>
+          </div>
+        </ModalElement>
+        <ModalElement show={showFriend} funcModal={handleCloseFriend} isHeader={false} isCentered={true}>
+          <div className="row justify-content-center align-items-center mb-3">
+            {spinnerFriend === true ? (
+              <div className="position-relative h-100">
+                <div className="animasi-load mx-auto text-center">
+                  <img src={IconProcess} alt="Icon Process" />
+                  <p className="mt-4 mb-3">Mohon Ditunggu Beberapa Saat . . .</p>
+                  <div className="sahabat">
+                    <p>Loading</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div class="row align-items-center mt-3">
+                <div className="col-md mb-3">
+                  <div className="image user mx-auto">
+                    <img src={dataProfilFriend?.fotoUrl} alt="Icon Process" />
+                  </div>
+                </div>
+                <div className="col-md text-center text-lg-start ">
+                  <p className="fs-5 fw-bold text-cyan">{dataProfilFriend?.jumlahTeman} Teman</p>
+                  <p className="text-capitalize mb-0 ">{dataProfilFriend?.nama}</p>
+                  <p className="mb-0">@{dataProfilFriend?.username}</p>
+                  <p>{dataProfilFriend?.email}</p>
+                </div>
+              </div>
+            )}
           </div>
         </ModalElement>
       </div>
