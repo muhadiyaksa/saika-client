@@ -47,6 +47,12 @@ export default function PersonalChat() {
   const handleCloseModalInfo = () => {
     setShowModalInfo(false);
   };
+  // const actionResult = await dispatch(getDataUser(userData._id));
+  // const result = unwrapResult(actionResult);
+  // console.log(result);
+  // setDataUser(result);
+  // socket.emit("data_user", userData._id);
+  // setPesanKirim("");
   useEffect(() => {
     const getDataUser = () => {
       Axios({
@@ -475,12 +481,12 @@ export default function PersonalChat() {
         <Footer />
       </div>
       <ModalElement show={showModal} funcModal={handleCloseModal} heading={"Konfirmasi"}>
-        <div className="text-center">
+        <div className="text-center py-2">
           <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-exclamation-circle text-danger" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
             <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
           </svg>
-          <p className="w-75 mx-auto mt-3">Apakah Kamu Yakin Untuk menghapus Pertemanan ini?</p>
+          <p className="w-75 mx-auto mt-3 mb-3">Apakah Kamu Yakin Untuk menghapus Pertemanan ini?</p>
           <Button className="py-2 px-3 rounded-pill fs-6 btn btn-danger mb-4" onClick={deleteFriend}>
             Ya, Saya Yakin
           </Button>
@@ -492,8 +498,8 @@ export default function PersonalChat() {
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
             <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
           </svg>
-          <p className="w-75 mx-auto mt-3">Apakah Kamu Yakin Untuk menghapus Pertemanan ini?</p>
-          <Button className="py-2 px-3 rounded-pill fs-6 btn btn-danger mb-4" onClick={deleteFriend}>
+          <p className="w-75 mx-auto mt-3 ">Apakah Kamu Yakin Untuk menghapus Pertemanan ini?</p>
+          <Button className="py-2 px-3 rounded-pill fs-6 btn btn-danger mb-4 " onClick={deleteFriend}>
             Ya, Saya Yakin
           </Button>
         </div>

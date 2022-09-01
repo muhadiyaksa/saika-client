@@ -5,6 +5,13 @@ import Button from "../element/Button";
 import Footer from "../parts/Footer";
 import ImgLandingPage from "../assets/image/landingpage.png";
 export default function Landingpage() {
+  const data = [{ s: "pokok" }, { s: "pokok" }, { s: "pokok" }, { s: "pokok" }, { s: "pokok" }, { s: "coba" }, { s: "coba" }, { s: "coba" }, { s: "coba" }, { s: "coba" }];
+
+  const urut = () => {};
+  useEffect(() => {
+    urut();
+  }, []);
+  console.log(data);
   return (
     <>
       <Header />

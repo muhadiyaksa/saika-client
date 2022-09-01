@@ -3,7 +3,8 @@ import Button from "../element/Button";
 import IconNotif from "../assets/icon/notif.png";
 import avaUser from "../assets/icon/ava_user.jpg";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../features/user/userSlice";
+import { getDataUser, logout } from "../features/user/userSlice";
+import { unwrapResult } from "@reduxjs/toolkit";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ModalElement from "../element/ModalElement";
@@ -11,6 +12,7 @@ import io from "socket.io-client";
 
 export default function Header() {
   const socket = io.connect("http://localhost:3001");
+  // .catch((err) => console.log(err));
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   let navigate = useNavigate();
@@ -22,6 +24,8 @@ export default function Header() {
   const [dataUser, setDataUser] = useState({});
   const [activeChat, setActiveChat] = useState([]);
   const [activeNotifRed, setActiveNotifRed] = useState([]);
+  const [errorConnection, setErrorConnetion] = useState(false);
+
   const handleLogout = () => {
     setSpinnerLogout(true);
     dispatch(logout());
@@ -39,24 +43,43 @@ export default function Header() {
         headers: {
           Authorization: `Bearer ${userObj.token}`,
         },
-      }).then((res) => {
-        console.log(res.data);
-        setActiveChat(res.data);
-      });
+      })
+        .then((res) => {
+          console.log(res.data);
+          setActiveChat(res.data);
+        })
+        .catch((error) => {
+          if (!error.response) {
+            // network error
+            this.errorStatus = "Error: Network Error";
+          } else {
+            this.errorStatus = error.response.data.message;
+          }
+        });
     };
     getDataAllChat();
   }, []);
+
   useEffect(() => {
-    socket.on("pesan_terima_pc", (data) => {
+    // io.on("connection", (socket) => {
+    //   // console.log("connected");
+    // });
+    socket.on("pesan_terima_pc", (data, err) => {
       console.log(data);
       // setDataChat(data);
+      if (err) {
+        console.log("socket gagal nyambung");
+      }
     });
 
-    socket.on("pesan_aktif", (data) => {
+    socket.on("pesan_aktif", (data, err) => {
       console.log(data);
       let dataFilter = data.filter((el) => el.chat !== userData._id).filter((el) => el.statusNotif === "active");
       setActiveNotifRed(dataFilter);
       setActiveChat(data);
+      if (err) {
+        console.log("socket gagal nyambung");
+      }
     });
   }, [socket]);
 
@@ -68,11 +91,20 @@ export default function Header() {
       headers: {
         Authorization: `Bearer ${userObj.token}`,
       },
-    }).then((res) => {
-      if (res.data.status === "success") {
-        navigate("/chat");
-      }
-    });
+    })
+      .then((res) => {
+        if (res.data.status === "success") {
+          navigate("/chat");
+        }
+      })
+      .catch((error) => {
+        if (!error.response) {
+          // network error
+          this.errorStatus = "Error: Network Error";
+        } else {
+          this.errorStatus = error.response.data.message;
+        }
+      });
   };
   const fetchtoAPI = async () => {
     if (isLoggedIn) {
@@ -82,18 +114,11 @@ export default function Header() {
         }
       });
 
-      dataIDUser.then((res) => {
-        Axios({
-          method: "GET",
-          withCredentials: true,
-          url: `http://localhost:3001/user/${res}`,
-          headers: {
-            Authorization: `Bearer ${userObj.token}`,
-          },
-        }).then((result) => {
-          setDataUser(result.data);
-          socket.emit("data_user", userData._id);
-        });
+      dataIDUser.then(async (res) => {
+        const actionResult = await dispatch(getDataUser(res));
+        const result = unwrapResult(actionResult);
+        setDataUser(result);
+        socket.emit("data_user", userData._id);
       });
     }
   };
