@@ -31,7 +31,6 @@ export default function Chats() {
   };
 
   const [dataMasuk, setdataMasuk] = useState({});
-  // const [dataAnggota, setdataAnggota] = useState([]);
   const [pesanKirim, setPesanKirim] = useState("");
 
   const [isLoading, setIsLoading] = useState(true);
@@ -95,6 +94,9 @@ export default function Chats() {
     socket.emit("anggota_keluar", dataKirim);
   };
   useEffect(() => {
+    socket.on("userLeft", function (data) {
+      console.log(data);
+    });
     socket.on("data_user_send", (data) => {
       console.log(data);
       setDataUser(data);
@@ -223,7 +225,7 @@ export default function Chats() {
     });
   };
   const tampilTeman = () => {
-    if (dataMasuk.anggota !== undefined) {
+    if (dataMasuk?.anggota !== undefined) {
       let dataFilter = dataMasuk.anggota.filter((el) => el.iduser !== userData._id);
       let dataFilterListFriends = dataUser.listFriends ? dataUser.listFriends.map((el) => el.iduser) : [];
       let dataFilterListWaitingSend = dataUser.listWaitingSend ? dataUser.listWaitingSend.map((el) => el.iduser) : [];
@@ -288,7 +290,7 @@ export default function Chats() {
   };
 
   const tampilPesan = () => {
-    if (dataMasuk.chats !== undefined) {
+    if (dataMasuk?.chats !== undefined) {
       let data = dataMasuk.chats.map((el) => {
         if (el.pesan) {
           if (el.iduser === userData._id) {
@@ -412,9 +414,9 @@ export default function Chats() {
                             </button>
                           </div>
                           <div className=" d-flex flex-column flex-lg-row align-items-center justify-content-center">
-                            <img src={dataMasuk.kategori === "mm" ? mm : dataMasuk.kategori === "jarkom" ? jarkom : rpl} alt="" className="img-fluid topik me-3" />
+                            <img src={dataMasuk?.kategori === "mm" ? mm : dataMasuk?.kategori === "jarkom" ? jarkom : rpl} alt="" className="img-fluid topik me-3" />
                             <p className="judul-1 text-cyan text-center text-lg-start tema">
-                              Tema : <br /> {dataMasuk.kategori === "mm" ? "Multimedia" : dataMasuk.kategori === "jarkom" ? "Jaringan Komputer" : "Rekayasa Perangkat Lunak"}
+                              Tema : <br /> {dataMasuk?.kategori === "mm" ? "Multimedia" : dataMasuk?.kategori === "jarkom" ? "Jaringan Komputer" : "Rekayasa Perangkat Lunak"}
                             </p>
                           </div>
                         </div>

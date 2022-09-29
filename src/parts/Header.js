@@ -22,10 +22,11 @@ export default function Header() {
   const userData = useSelector((state) => state.user.user);
 
   const [dataUser, setDataUser] = useState({});
+  const [dataPassword, setDataPassword] = useState({});
   const [activeChat, setActiveChat] = useState([]);
   const [activeNotifRed, setActiveNotifRed] = useState([]);
-  const [errorConnection, setErrorConnetion] = useState(false);
-
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
+  const [errors, setErrors] = useState([]);
   const handleLogout = () => {
     setSpinnerLogout(true);
     dispatch(logout());
@@ -50,7 +51,6 @@ export default function Header() {
         })
         .catch((error) => {
           if (!error.response) {
-            // network error
             this.errorStatus = "Error: Network Error";
           } else {
             this.errorStatus = error.response.data.message;
@@ -61,19 +61,11 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    // io.on("connection", (socket) => {
-    //   // console.log("connected");
+    // socket.on("pesan_terima_pc", (data) => {
+    //   // setDataChat(data);
     // });
-    socket.on("pesan_terima_pc", (data, err) => {
-      console.log(data);
-      // setDataChat(data);
-      if (err) {
-        console.log("socket gagal nyambung");
-      }
-    });
 
     socket.on("pesan_aktif", (data, err) => {
-      console.log(data);
       let dataFilter = data.filter((el) => el.chat !== userData._id).filter((el) => el.statusNotif === "active");
       setActiveNotifRed(dataFilter);
       setActiveChat(data);
@@ -108,6 +100,7 @@ export default function Header() {
   };
   const fetchtoAPI = async () => {
     if (isLoggedIn) {
+      setIsLoadingPage(true);
       const dataIDUser = new Promise((fulfill, reject) => {
         if (userData._id) {
           return fulfill(userData._id);
@@ -119,24 +112,60 @@ export default function Header() {
         const result = unwrapResult(actionResult);
         setDataUser(result);
         socket.emit("data_user", userData._id);
+        setIsLoadingPage(false);
       });
     }
   };
   const updateProfil = () => {
     setSpinnerProfil(true);
-    setTimeout(() => {
-      setSpinnerProfil(false);
-      setShow(false);
-      setShowModalInfo(true);
-    }, 2000);
+    Axios({
+      method: "PUT",
+      withCredentials: true,
+      data: {
+        iduserreq: userData._id,
+        nama: dataUser?.nama,
+        username: dataUser?.username,
+      },
+      url: `http://localhost:3001/user/profil`,
+      headers: {
+        Authorization: `Bearer ${userObj.token}`,
+      },
+    }).then((res) => {
+      if (res.data.message === "success") {
+        fetchtoAPI();
+        setSpinnerProfil(false);
+        setShow(false);
+        setShowModalInfo(true);
+      }
+    });
   };
   const updatePassword = () => {
+    console.log(dataPassword);
     setSpinnerPassword(true);
-    setTimeout(() => {
-      setSpinnerPassword(false);
-      setShowModalPassword(false);
-      setShowModalInfo(true);
-    }, 2000);
+    Axios({
+      method: "PUT",
+      withCredentials: true,
+      body: {
+        iduserreq: userData._id,
+        passwordOld: dataPassword?.passwordOld,
+        passwordNew: dataPassword?.passwordNew,
+        passwordConfirm: dataPassword?.passwordConfirm,
+      },
+      url: `http://localhost:3001/user/password`,
+      headers: {
+        Authorization: `Bearer ${userObj.token}`,
+      },
+    }).then((res) => {
+      if (!res.data.errors) {
+        setSpinnerPassword(false);
+        setShowModalPassword(false);
+        setShowModalInfo(true);
+        setErrors([]);
+      } else {
+        let error = res.data.errors.map((el) => el.msg);
+        setErrors([...error]);
+      }
+    });
   };
 
   const [show, setShow] = useState(false);
@@ -245,8 +274,14 @@ export default function Header() {
                   <img src={dataUser.fotoUser ? `${dataUser.fotoUser.fotoUrl === "" ? avaUser : dataUser.fotoUser.fotoUrl}` : `${avaUser}`} alt="User" />
                 </div>
                 <div>
-                  <p className="fw-bold text-nowrap text-capitalize">{dataUser.nama}</p>
-                  <span>{dataUser.email}</span>
+                  {isLoadingPage === true ? (
+                    <div>Loading ...</div>
+                  ) : (
+                    <>
+                      <p className="fw-bold text-nowrap text-capitalize">{dataUser.nama}</p>
+                      <span>{dataUser.email}</span>
+                    </>
+                  )}
                 </div>
               </li>
               <li className="list-group-item">
@@ -380,20 +415,23 @@ export default function Header() {
           </Button>
         </div>
         <label htmlFor="username">Username</label>
-        <input id="username" type="text" className="form-control shadow-none mb-3" placeholder="username" defaultValue={dataUser.username} />
+        <input id="username" type="text" className="form-control shadow-none mb-3" placeholder="username" defaultValue={dataUser.username} onChange={(e) => setDataUser({ ...dataUser, username: e.target.value })} />
         <label htmlFor="name">Nama Lengkap</label>
-        <input id="nama" type="text" className="form-control shadow-none mb-3" placeholder="Nama Lengkap" defaultValue={dataUser.nama} />
+        <input id="nama" type="text" className="form-control shadow-none mb-3" placeholder="Nama Lengkap" defaultValue={dataUser.nama} onChange={(e) => setDataUser({ ...dataUser, nama: e.target.value })} />
         <Button isPrimary className="w-100  fs-6  shadow-none" isSpinner={spinnerProfil} onClick={updateProfil}>
           Simpan
         </Button>
       </ModalElement>
       <ModalElement isHeader={true} show={showModalPassword} isCentered={true} funcModal={handleCloseNotif2} heading={"Ubah Password"}>
         <label htmlFor="lama">Password Lama</label>
-        <input id="lama" type="password" className="form-control shadow-none mb-3" placeholder="Isi Password lama" />
+        <input id="lama" type="password" className="form-control shadow-none mb-3" placeholder="Isi Password lama" onChange={(e) => setDataPassword({ ...dataPassword, passwordOld: e.target.value })} />
         <label htmlFor="baru">Password Baru</label>
-        <input id="baru" type="password" className="form-control shadow-none mb-3" placeholder="Isi Password Baru" />
+        <input id="baru" type="password" className="form-control shadow-none mb-3" placeholder="Isi Password Baru" onChange={(e) => setDataPassword({ ...dataPassword, passwordNew: e.target.value })} />
         <label htmlFor="konfirmbaru">Konfirmasi Password Baru</label>
-        <input id="konfirmbaru" type="password" className="form-control shadow-none mb-3" placeholder="Isi Konfirmasi Password" />
+        <input id="konfirmbaru" type="password" className="form-control shadow-none mb-3" placeholder="Isi Konfirmasi Password" onChange={(e) => setDataPassword({ ...dataPassword, passwordConfirm: e.target.value })} />
+        {errors?.map((el) => {
+          <div class="alert-danger">{el}</div>;
+        })}
         <Button isPrimary className="w-100  fs-6  shadow-none" isSpinner={spinnerPassword} onClick={updatePassword}>
           Simpan
         </Button>
