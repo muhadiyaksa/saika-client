@@ -12,7 +12,6 @@ import io from "socket.io-client";
 
 export default function Header() {
   const socket = io.connect("http://localhost:3001");
-  // .catch((err) => console.log(err));
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   let navigate = useNavigate();
@@ -46,7 +45,6 @@ export default function Header() {
         },
       })
         .then((res) => {
-          console.log(res.data);
           setActiveChat(res.data);
         })
         .catch((error) => {
@@ -65,13 +63,10 @@ export default function Header() {
     //   // setDataChat(data);
     // });
 
-    socket.on("pesan_aktif", (data, err) => {
+    socket.on("pesan_aktif", (data) => {
       let dataFilter = data.filter((el) => el.chat !== userData._id).filter((el) => el.statusNotif === "active");
       setActiveNotifRed(dataFilter);
       setActiveChat(data);
-      if (err) {
-        console.log("socket gagal nyambung");
-      }
     });
   }, [socket]);
 
@@ -140,16 +135,15 @@ export default function Header() {
     });
   };
   const updatePassword = () => {
-    console.log(dataPassword);
     setSpinnerPassword(true);
     Axios({
       method: "PUT",
       withCredentials: true,
-      body: {
+      data: {
         iduserreq: userData._id,
-        passwordOld: dataPassword?.passwordOld,
-        passwordNew: dataPassword?.passwordNew,
-        passwordConfirm: dataPassword?.passwordConfirm,
+        passwordOld: dataPassword.passwordOld,
+        passwordNew: dataPassword.passwordNew,
+        passwordConfirm: dataPassword.passwordConfirm,
       },
       url: `http://localhost:3001/user/password`,
       headers: {
@@ -162,8 +156,9 @@ export default function Header() {
         setShowModalInfo(true);
         setErrors([]);
       } else {
+        setSpinnerPassword(false);
         let error = res.data.errors.map((el) => el.msg);
-        setErrors([...error]);
+        setErrors(error);
       }
     });
   };
@@ -176,7 +171,11 @@ export default function Header() {
   };
 
   const [showModalPassword, setShowModalPassword] = useState(false);
-  const handleCloseNotif2 = () => setShowModalPassword(false);
+  const handleCloseNotif2 = () => {
+    setShowModalPassword(false);
+    setErrors([]);
+    setDataPassword({});
+  };
   const handleShowNotif2 = () => {
     setShowModalPassword(true);
     setShowModalProfile(false);
@@ -220,7 +219,7 @@ export default function Header() {
       let data = dataFilter.map((el, i) => {
         return (
           <button idchat={el.idchat} className={`btn d-flex shadow-none text-start w-100 align-items-center ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-envelope-paper-fill text-cyan me-3" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-cyan me-3" viewBox="0 0 16 16">
               <path
                 fill-rule="evenodd"
                 d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
@@ -229,17 +228,17 @@ export default function Header() {
             <p>
               Yuhuuu, kamu Memiliki pesan baru dari <strong>@{el.username}</strong>
             </p>
-            {el.statusNotif === "active" ? <span class="red"></span> : ""}
+            {el.statusNotif === "active" ? <span className="red"></span> : ""}
           </button>
         );
       });
-      console.log(data);
+
       if (data.length > 0) {
         return data;
       } else {
         return (
-          <div class="text-center p-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
+          <div className="text-center p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
               <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
               <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
             </svg>
@@ -249,8 +248,8 @@ export default function Header() {
       }
     } else {
       return (
-        <div class="text-center p-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
+        <div className="text-center p-3">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
             <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
             <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
           </svg>
@@ -270,7 +269,7 @@ export default function Header() {
           <div className="hover-item text-start ">
             <ul className="list-group  ">
               <li className="list-group-item d-flex align-items-center">
-                <div class="image d-sm-none">
+                <div className="image d-sm-none">
                   <img src={dataUser.fotoUser ? `${dataUser.fotoUser.fotoUrl === "" ? avaUser : dataUser.fotoUser.fotoUrl}` : `${avaUser}`} alt="User" />
                 </div>
                 <div>
@@ -358,12 +357,12 @@ export default function Header() {
             </li>
           </ul>
           <div className="navbar-account ms-auto d-none d-sm-flex ">
-            <div class="notification">
+            <div className="notification">
               <Button className="position-relative button-notif btn p-0 shadow-none">
                 <img src={IconNotif} />
                 {activeNotifRed?.length > 0 ? <div className="notif"></div> : ""}
               </Button>
-              <div class="area-notif ">
+              <div className="area-notif ">
                 <p className="text-center my-2 fw-bold text-cyan">Notifikasi SAIKA</p>
                 {showNotif()}
               </div>
@@ -372,28 +371,28 @@ export default function Header() {
             <div className=" text-end user mx-xl-3 mx-lg-2 mx-md-1 mx-sm-3 mx-2 d-inline-block">{showUser()}</div>
           </div>
         </div>
-        <div class="navbar-bottom d-sm-none">
+        <div className="navbar-bottom d-sm-none">
           <Button className={`btn  shadow-none ${getNavLinkClass("/")}`} type="link" href="/">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-house-door" viewBox="0 0 16 16">
               <path d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4H2.5z" />
             </svg>
             <span>Beranda</span>
           </Button>
           <Button className={`btn  shadow-none ${getNavLinkClass("/find")}`} type="link" href="/find">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-chat-right-dots" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-chat-right-dots" viewBox="0 0 16 16">
               <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
               <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
             </svg>
             <span>Pesan</span>
           </Button>
           <Button className={`btn  shadow-none  p-0 ${getNavLinkClass("/chat")}`} type="link" href="/chat">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
               <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
             </svg>
             <span>Teman</span>
           </Button>
           <Button className={`btn  shadow-none p-0 ${getNavLinkClass("/search")}`} type="link" href="/search">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-calendar4-event " viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-calendar4-event " viewBox="0 0 16 16">
               <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
               <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
             </svg>
@@ -429,9 +428,15 @@ export default function Header() {
         <input id="baru" type="password" className="form-control shadow-none mb-3" placeholder="Isi Password Baru" onChange={(e) => setDataPassword({ ...dataPassword, passwordNew: e.target.value })} />
         <label htmlFor="konfirmbaru">Konfirmasi Password Baru</label>
         <input id="konfirmbaru" type="password" className="form-control shadow-none mb-3" placeholder="Isi Konfirmasi Password" onChange={(e) => setDataPassword({ ...dataPassword, passwordConfirm: e.target.value })} />
-        {errors?.map((el) => {
-          <div class="alert-danger">{el}</div>;
-        })}
+        <ul style={{ fontSize: "12px" }}>
+          {errors?.map((el, i) => {
+            return (
+              <li className="text-danger" key={`msg-${i}`}>
+                {el}
+              </li>
+            );
+          })}
+        </ul>
         <Button isPrimary className="w-100  fs-6  shadow-none" isSpinner={spinnerPassword} onClick={updatePassword}>
           Simpan
         </Button>
@@ -440,8 +445,8 @@ export default function Header() {
         {showUser()}
       </ModalElement>
       <ModalElement isHeader={false} isCentered={true} show={showModalInfo} funcModal={handleCloseModalInfo} heading={"Profil"}>
-        <div class="d-flex align-items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-exclamation-circle me-3 text-success" viewBox="0 0 16 16">
+        <div className="d-flex align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-exclamation-circle me-3 text-success" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
             <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
           </svg>
@@ -449,13 +454,13 @@ export default function Header() {
         </div>
       </ModalElement>
       <ModalElement isHeader={false} show={showModalLogout} funcModal={handleCloseModalLogout} heading={"Logout"} isCentered={false}>
-        <div class="text-center d-flex flex-column align-items-center py-4 ">
-          <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor" class="bi bi-exclamation-triangle text-danger" viewBox="0 0 16 16">
+        <div className="text-center d-flex flex-column align-items-center py-4 ">
+          <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor" className="bi bi-exclamation-triangle text-danger" viewBox="0 0 16 16">
             <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z" />
             <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z" />
           </svg>
           <span className="mt-3 mb-4">Apakah Anda Yakin Untuk Logout?</span>
-          <div class="d-flex">
+          <div className="d-flex">
             <Button className="btn btn-light border rounded-pill me-3  shadow-none" onClick={handleCloseModalLogout}>
               Batal
             </Button>
@@ -466,10 +471,10 @@ export default function Header() {
         </div>
       </ModalElement>
       <ModalElement isHeader={false} show={showModalNotif} funcModal={handleCloseModalNotif} isCentered={true}>
-        <div class="area-notif ">
+        <div className="area-notif ">
           <p className="text-center my-2 fw-bold text-cyan">Notifikasi SAIKA</p>
           {showNotif()}
-          <div class="text-center">
+          <div className="text-center">
             <Button onClick={handleCloseModalNotif} className="btn btn-secondary ">
               Close
             </Button>

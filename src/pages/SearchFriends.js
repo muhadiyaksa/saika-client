@@ -77,28 +77,40 @@ export default function SearchFriends() {
             <div className="col-md">
               <div className="tema text-center shadow  py-4 mb-3">
                 <p className="judul-1 text-cyan">Multimedia</p>
-                <img src={mm} alt="Multimedia" />
-                <Button isPrimary isAnimation onClick={() => findFriends("mm")}>
-                  Cari Teman
-                </Button>
+                <div class="d-flex d-md-block align-items-center justify-content-center">
+                  <div class="image">
+                    <img src={mm} alt="Multimedia" />
+                  </div>
+                  <Button isPrimary isAnimation onClick={() => findFriends("mm")}>
+                    Cari Teman
+                  </Button>
+                </div>
               </div>
             </div>
             <div className="col-md">
               <div className="tema text-center shadow  py-4 mb-3">
                 <p className="judul-1 text-cyan">Rekayasa Perangkat Lunak</p>
-                <img src={rpl} alt="Rekayasa Perangkat Lunak" />
-                <Button isPrimary isAnimation onClick={() => findFriends("rpl")}>
-                  Cari Teman
-                </Button>
+                <div class="d-flex d-md-block align-items-center justify-content-center">
+                  <div class="image">
+                    <img src={rpl} alt="Rekayasa Perangkat Lunak" />
+                  </div>
+                  <Button isPrimary isAnimation onClick={() => findFriends("rpl")}>
+                    Cari Teman
+                  </Button>
+                </div>
               </div>
             </div>
             <div className="col-md">
               <div className="tema text-center shadow  py-4 mb-3">
                 <p className="judul-1 text-cyan">Jaringan Komputer</p>
-                <img src={jarkom} alt="Jaringan Komputer" />
-                <Button isPrimary isAnimation onClick={() => findFriends("jarkom")}>
-                  Cari Teman
-                </Button>
+                <div class="d-flex d-md-block align-items-center justify-content-center">
+                  <div class="image">
+                    <img src={jarkom} alt="Jaringan Komputer" />
+                  </div>
+                  <Button isPrimary isAnimation onClick={() => findFriends("jarkom")}>
+                    Cari Teman
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

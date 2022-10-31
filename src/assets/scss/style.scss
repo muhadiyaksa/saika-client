@@ -154,7 +154,8 @@
       padding: 8px;
       border-radius: 10px 10px 10px 0px;
       position: relative;
-      margin-bottom: 8px;
+      margin-bottom: 7px;
+      margin-top: 7px;
       @media (min-width: 576px) {
         max-width: 90%;
         min-width: 60%;
@@ -168,18 +169,17 @@
         font-size: 11px;
         color: $gray-800;
         margin: 7px auto;
-        border-radius: 10px;
+        border-radius: 6px;
         min-width: 80%;
         max-width: 90%;
         margin-top: 8px;
       }
       &.notif-keluar {
         background-color: rgba($red, 0.2);
-
         font-size: 11px;
         color: $red;
         margin: 7px auto;
-        border-radius: 10px;
+        border-radius: 6px;
         min-width: 80%;
         max-width: 90%;
       }
@@ -240,6 +240,15 @@
         }
       }
     }
+  }
+}
+.btn-close-layer {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
   }
 }
 
@@ -913,9 +922,22 @@ footer {
       margin-left: 20px;
       padding: 10px 15px;
     }
-    img {
-      max-height: 150px;
+    p {
+      height: 30px;
     }
+    .image {
+      height: 150px;
+      width: 150px;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+      }
+    }
+    // img {
+    //   max-height: 150px;
+    // }
     &:hover {
       p {
         color: white;
@@ -927,8 +949,12 @@ footer {
         margin-left: 0px;
         padding: 10px 35px;
       }
-      img {
-        max-height: 350px;
+      p {
+        height: 50px;
+      }
+      .image {
+        height: 250px;
+        width: 100%;
       }
     }
   }

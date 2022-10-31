@@ -16,7 +16,6 @@ import Disconnected from "../assets/image/disconnected.png";
 
 export default function Chats() {
   const socket = io.connect("http://localhost:3001");
-  console.log(socket);
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   const userData = useSelector((state) => state.user.user);
@@ -157,11 +156,16 @@ export default function Chats() {
     socket.on("data_anggota", (data) => {
       setdataMasuk(data);
       // setIsLoading(false);
+      let dataAnggota = data.anggota.map((el) => el.iduser);
       if (data.anggota.length === 1) {
         setShow(false);
         setIsSisaAnggota(false);
       } else {
-        setShow(true);
+        if (dataAnggota.includes(userData._id)) {
+          setShow(true);
+        } else {
+          setShow(false);
+        }
         setIsSisaAnggota(true);
       }
     });
@@ -258,6 +262,10 @@ export default function Chats() {
     });
   };
 
+  const [showAfterJoin, setAfterJoinButEmpty] = useState(false);
+  const handleAfterJoinButEmpty = () => {
+    setAfterJoinButEmpty(false);
+  };
   const joinRoom = () => {
     Axios({
       method: "POST",
@@ -272,15 +280,21 @@ export default function Chats() {
       headers: {
         Authorization: `Bearer ${userObj.token}`,
       },
-    }).then((res) => {
-      if (res.data.status === "finish") {
-        socket.emit("data_anggota", res.data.idroom);
-        socket.emit("anggota_masuk", { idroom: res.data.idroom, iduser: userData._id });
-        setIsNotAnggota(false);
-        setIsLoading(false);
-        setIsKeluar(false);
-      }
-    });
+    })
+      .then((res) => {
+        if (res.data.status === "finish") {
+          socket.emit("data_anggota", res.data.idroom);
+          socket.emit("anggota_masuk", { idroom: res.data.idroom, iduser: userData._id });
+          setIsNotAnggota(false);
+          setIsLoading(false);
+          setIsKeluar(false);
+        }
+      })
+      .catch((err) => {
+        if (err.response.status === 404) {
+          setAfterJoinButEmpty(true);
+        }
+      });
   };
   const tampilTeman = () => {
     if (dataMasuk?.anggota !== undefined) {
@@ -289,7 +303,6 @@ export default function Chats() {
       let dataFilterListWaitingSend = dataUser.listWaitingSend ? dataUser.listWaitingSend.map((el) => el.iduser) : [];
       let dataFilterListWaitingReceive = dataUser.listWaitingReceive ? dataUser.listWaitingReceive.map((el) => el.iduser) : [];
 
-      console.log(dataFilter);
       let data = dataFilter.map((el) => {
         return (
           <div className="item-friends" key={el.iduser}>
@@ -370,8 +383,8 @@ export default function Chats() {
         } else {
           if (el.kondisi === "keluar") {
             return (
-              <div className="chat-item notif-keluar">
-                <p className="text-capitalize pb-0">
+              <div className="chat-item notif-keluar ">
+                <p className="text-capitalize pb-0 ">
                   <strong>{el.namauser}</strong> Keluar dari Room
                 </p>
               </div>
@@ -525,6 +538,15 @@ export default function Chats() {
             )}
           </>
         )}
+        <ModalElement show={showAfterJoin} funcModal={handleAfterJoinButEmpty} isHeader={false} isCentered={true}>
+          <div className="d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-exclamation-circle text-danger me-3" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+              <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+            </svg>
+            <span>Room sudah tidak ada</span>
+          </div>
+        </ModalElement>
 
         <ModalElement show={show} funcModal={handleCloseNotif} heading={"Surat Spesial"}>
           <div className="text-center">
@@ -550,7 +572,7 @@ export default function Chats() {
                 </div>
               </div>
             ) : (
-              <div class="row align-items-center mt-3">
+              <div className="row align-items-center mt-3">
                 <div className="col-md mb-3">
                   <div className="image user mx-auto">
                     <img src={dataProfilFriend?.fotoUrl} alt="Icon Process" />

@@ -102,7 +102,6 @@ export default function PersonalChat() {
     setIsLoading(true);
     setPesanKirim("");
 
-    //jalankan axios pang gil dataChat
     if (e.target.getAttribute("idchat") !== "null") {
       Axios({
         method: "PUT",
@@ -122,6 +121,8 @@ export default function PersonalChat() {
         }
       });
     }
+    console.log(userData._id);
+    console.log(e.target.getAttribute("iduserreq"));
     Axios({
       method: "POST",
       withCredentials: true,
@@ -147,6 +148,7 @@ export default function PersonalChat() {
       });
     });
   };
+
   const hiddenChats = () => {
     setGeser(false);
   };
@@ -200,7 +202,16 @@ export default function PersonalChat() {
       setShowModalInfo(true);
     }, 3000);
   };
-
+  const setIdChat = (param) => {
+    let data = activeChat?.map((el) => {
+      if (el.idfriend === param) {
+        return el.idchat;
+      } else {
+        return "null";
+      }
+    });
+    return data[0];
+  };
   const showHideListFriends = () => {
     const showActiveChat = (param) => {
       let data = activeChat?.map((el) => {
@@ -214,16 +225,7 @@ export default function PersonalChat() {
       });
       return data;
     };
-    const setIdChat = (param) => {
-      let data = activeChat?.map((el) => {
-        if (el.idfriend === param) {
-          return el.idchat;
-        } else {
-          return "null";
-        }
-      });
-      return data[0];
-    };
+
     if (showList === false) {
       if (dataUser.listFriends !== undefined) {
         if (dataUser.listFriends.length > 0) {
@@ -320,6 +322,7 @@ export default function PersonalChat() {
       }
     }
   };
+  console.log(dataFriend);
   const tampilPesan = () => {
     if (dataChat?.chats.length > 0) {
       let data = dataChat.chats.map((el) => {
@@ -414,7 +417,7 @@ export default function PersonalChat() {
                               <p className="mb-0">@{dataFriend?.username}</p>
                               <p>{dataFriend?.email}</p>
                               <div class="d-flex">
-                                <button className="btn btn-cyan" iduserreq={dataFriend?.iduser} onClick={showChats}>
+                                <button className="btn btn-cyan btn-close-layer" idchat="null" iduserreq={dataFriend.iduser} onClick={showChats}>
                                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-send text-light me-3" viewBox="0 0 16 16">
                                     <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
                                   </svg>

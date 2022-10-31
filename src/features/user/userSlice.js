@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import Axios from "axios";
+
 const userObj = JSON.parse(localStorage.getItem("userSaika"));
 const isLoggedIn = userObj ? true : false;
 
