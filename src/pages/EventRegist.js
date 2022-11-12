@@ -8,6 +8,8 @@ import DetailEvent from "../parts/DetailEvent";
 import iconUpload from "../assets/icon/upload.png";
 import ModalElement from "../element/ModalElement";
 import Axios from "axios";
+import { rupiahFormats } from "../utils/numberFormat";
+
 export default function EventRegist() {
   const [ketFoto, setKetFoto] = useState({ ket: "", status: "hide", file: null });
   const [dataDetail, setDataDetail] = useState({
@@ -92,6 +94,8 @@ export default function EventRegist() {
       setShowJadwal({ button: "", show: "", hideres: "" });
       setShowPendaftaran({ button: "null", show: "d-none", hideres: "sembunyi" });
     }
+    console.log(dataDetail.eventDate);
+    console.log(new Date(dataDetail.eventDate).getTime());
   };
 
   const backtoGeneral = () => {
@@ -148,6 +152,15 @@ export default function EventRegist() {
     }
     setShowWarningPendaftaran("d-none");
     setShowJadwal({ button: "", show: "", hideres: "" });
+  };
+  // let [nilaiRupiah, setNilaiRupiah] = useState("");
+  const rupiah = (e) => {
+    let nilai = rupiahFormats(e.target.value, "Rp. ");
+    setDataDetail({
+      ...dataDetail,
+      price: e.target.value.replace(/[^,\d]/g, "").toString(),
+    });
+    e.target.value = nilai;
   };
 
   //---------------------------------------------------------------------
@@ -267,10 +280,14 @@ export default function EventRegist() {
                   </div>
                 </div>
                 <div className="col-md-7">
-                  <label htmlFor="namaLengkap">Nama Event</label>
+                  <label htmlFor="namaLengkap">
+                    Nama Event<span className="text-danger">*</span>
+                  </label>
                   <input type="text" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" placeholder="Nama Event" onChange={(e) => setDataDetail({ ...dataDetail, eventName: e.target.value })} />
 
-                  <label htmlFor="kategori">Kategori Acara</label>
+                  <label htmlFor="kategori">
+                    Kategori Acara<span className="text-danger">*</span>
+                  </label>
                   <select name="kategori" id="kategori" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, eventCategory: e.target.value })}>
                     <option value="">Pilih Kategori</option>
                     <option value="rpl">Rekayasa Perangkat Lunak</option>
@@ -278,7 +295,9 @@ export default function EventRegist() {
                     <option value="mm">Multimedia</option>
                   </select>
 
-                  <label htmlFor="benefits">Benefits</label>
+                  <label htmlFor="benefits">
+                    Benefits<span className="text-danger">*</span>
+                  </label>
                   <span className="d-block" style={{ fontSize: "11px" }}>
                     Pisahkan dengan <strong> Koma ','</strong> apabila benefits lebih dari 1
                   </span>
@@ -291,7 +310,9 @@ export default function EventRegist() {
                     onChange={(e) => setDataDetail({ ...dataDetail, benefits: e.target.value })}
                   />
 
-                  <label htmlFor="deskripsi">Deskripsi</label>
+                  <label htmlFor="deskripsi">
+                    Deskripsi<span className="text-danger">*</span>
+                  </label>
                   <textarea
                     type="text"
                     className="form-control shadow-none mb-3"
@@ -320,13 +341,19 @@ export default function EventRegist() {
             <div className={`jadwalinfo ${showJadwal.show}`}>
               <p className="judul-1 mb-4">Jadwal</p>
 
-              <label htmlFor="tanggalevent">Tanggal Pelaksanaan</label>
+              <label htmlFor="tanggalevent">
+                Tanggal Pelaksanaan<span className="text-danger">*</span>
+              </label>
               <input type="date" className="form-control shadow-none mb-3" id="tanggalevent" name="tanggalevent" onChange={(e) => setDataDetail({ ...dataDetail, eventDate: e.target.value })} />
 
-              <label htmlFor="jammulai">Jam Mulai</label>
+              <label htmlFor="jammulai">
+                Jam Mulai<span className="text-danger">*</span>
+              </label>
               <input type="time" className="form-control shadow-none mb-3" id="jammulai" name="jammulai" onChange={(e) => setDataDetail({ ...dataDetail, jamMulai: e.target.value })} />
 
-              <label htmlFor="jamselesai">Jam Selesai</label>
+              <label htmlFor="jamselesai">
+                Jam Selesai<span className="text-danger">*</span>
+              </label>
               <input type="time" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" onChange={(e) => setDataDetail({ ...dataDetail, jamSelesai: e.target.value })} />
               <div className={`alert alert-danger ${showWarningJadwal}`} role="alert" style={{ fontSize: "13px" }}>
                 Terdapat Data yang belum diisi!
@@ -353,13 +380,17 @@ export default function EventRegist() {
               <br />
               {dataDetail.paymentType === "bayar" ? (
                 <>
-                  <label htmlFor="harga">Harga Tiket</label>
-                  <input type="number" className="form-control shadow-none mb-3" id="harga" name="harga" placeholder="Harga Tiket" onChange={(e) => setDataDetail({ ...dataDetail, price: e.target.value })} />
+                  <label htmlFor="harga">
+                    Harga Tiket<span className="text-danger">*</span>
+                  </label>
+                  <input type="text" className="form-control shadow-none mb-3" id="harga" name="harga" placeholder="Harga Tiket" onKeyUp={(e) => rupiah(e)} />
                 </>
               ) : (
                 ""
               )}
-              <label htmlFor="linkpendaftaran">Link Pendaftaran</label>
+              <label htmlFor="linkpendaftaran">
+                Link Pendaftaran<span className="text-danger">*</span>
+              </label>
               <input
                 type="text"
                 className="form-control shadow-none mb-3"
@@ -390,7 +421,7 @@ export default function EventRegist() {
             <div className={`lokasiinfo ${showLokasi.show}`}>
               <p className="judul-1 mb-4">Lokasi</p>
               <label htmlFor="tipe">Tipe Acara</label>
-              <select name="tipe" id="tipe" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, occurenceType: e.target.value })}>
+              <select name="tipe" id="tipe" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, occurenceType: e.target.value, mediaMeet: e.target.value === "online" ? "zoom" : "" })}>
                 <option value="">Pilih Tipe Acara</option>
                 <option value="online">Online</option>
                 <option value="offline">Offline</option>

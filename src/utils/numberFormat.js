@@ -18,4 +18,21 @@ function getNamesMonth(indeks, zona) {
 
   return bulan;
 }
-module.exports = { numberFormat, namesOfMonth, getNamesMonth };
+
+function rupiahFormats(angka, prefix) {
+  let number_string = angka.replace(/[^,\d]/g, "").toString(), //ngereplace isian yang bukan angka jadi kosong
+    split = number_string.split(","), // ["12344"]
+    sisa = split[0].length % 3,
+    rupiah = split[0].substr(0, sisa), // 12
+    ribuan = split[0].substr(sisa).match(/\d{3}/gi); //344 // carikan gua angka , lalu pecah jadi 3 length dan buat dia dalam array
+
+  // tambahkan titik jika yang di input sudah menjadi angka ribuan
+  if (ribuan) {
+    let separator = sisa ? "." : "";
+    rupiah += separator + ribuan.join(".");
+  }
+
+  rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+  return prefix === undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+}
+module.exports = { numberFormat, namesOfMonth, getNamesMonth, rupiahFormats };
