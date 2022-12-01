@@ -32,14 +32,13 @@ export default function EventRegist() {
     location: "",
     address: "",
   });
-  const navigate = useNavigate();
+  const userObj = JSON.parse(localStorage.getItem("userSaika"));
 
   const onDrop = useCallback((acceptedFiles) => {
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
       const areaFoto = document.querySelector("p.area-foto");
-      const data = new FormData();
-      data.append("file", file);
+
       reader.readAsDataURL(file);
 
       reader.onabort = () => console.log("file reading was aborted");
@@ -49,7 +48,7 @@ export default function EventRegist() {
         let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
 
         if (validExtensions.includes(file.type) && file.size <= 2000000) {
-          setKetFoto({ ket: `${file.name}`, status: "show", file: data });
+          setKetFoto({ ket: `${file.name}`, status: "show", file: file });
           setDataDetail({ ...dataDetail, eventImage: reader.result });
         } else {
           areaFoto.innerHTML = "Foto Harus Berformat .png , .jpg , .jpeg dan Dibawah 2MB";
@@ -59,7 +58,6 @@ export default function EventRegist() {
       // reader.readAsArrayBuffer(file);
     });
   }, []);
-
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   //---------------------------------------------------------------------
@@ -197,20 +195,56 @@ export default function EventRegist() {
 
   //---------------------------------------------------------------------
   //---------------------------------------------------------------------
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   const [showReview, setShowReview] = useState({ button: "null", show: "d-none", hideres: "sembunyi" });
+  const [isLoading, setIsLoading] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [listError, setListError] = useState([]);
+  const handleCloseError = () => setShowError(false);
 
   const uploadToDatabase = () => {
-    console.log(dataDetail);
+    setIsLoading(true);
+    const data = new FormData();
+    data.append("email", userObj.user.email);
+    data.append("eventName", dataDetail.eventName);
+    data.append("eventCategory", dataDetail.eventCategory);
+    data.append("eventImage", ketFoto.status);
+    data.append("file", ketFoto.file);
+    data.append("benefits", dataDetail.benefits);
+    data.append("descriptions", dataDetail.description);
+    data.append("eventDate", dataDetail.eventDate);
+    data.append("eventTimeStart", dataDetail.jamMulai);
+    data.append("eventTimeFinish", dataDetail.jamSelesai);
+    data.append("paymentType", dataDetail.paymentType);
+    data.append("price", dataDetail.price);
+    data.append("registrationLink", dataDetail.registrationLink);
+    data.append("instagram", dataDetail.instagram);
+    data.append("facebook", dataDetail.facebook);
+    data.append("twitter", dataDetail.twitter);
+    data.append("occurenceType", dataDetail.occurenceType);
+    data.append("mediaMeet", dataDetail.mediaMeet);
+    data.append("location", dataDetail.location);
+    data.append("address", dataDetail.address);
+
     Axios({
       method: "POST",
-      data: dataDetail,
+      data: data,
       withCredentials: true,
-      url: "http://localhost:5000/event",
+      url: "http://localhost:3001/event/addevent",
       // headers: {
       //   Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpYXNheWFuZ2JhbmdldHNhbWFhYnV0MkBnbWFpbC5jb20iLCJ1c2VySWQiOiI2MmUzOTQ2NTg0MTZlMGEyNTFjZjU2NmEiLCJpYXQiOjE2NTkwOTkyNTUsImV4cCI6MTY2MTY5MTI1NX0.GWMcALmOYy6XdBO3vb-F9TPvCz7G388hceRhuwB5pyw`,
       // },
     }).then((res) => {
-      console.log(res);
+      if (!res.data.errors) {
+        setIsLoading(false);
+      } else {
+        setShow(false);
+        setShowError(true);
+        setListError(res.data.errors);
+      }
     });
   };
 
@@ -218,10 +252,6 @@ export default function EventRegist() {
     setShowReview({ button: "", show: "d-none", hideres: "sembunyi" });
     setShowLokasi({ button: "", show: "", hideres: "" });
   };
-
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   return (
     <>
@@ -477,10 +507,28 @@ export default function EventRegist() {
                     Pastikan data sudah benar, Data yang sudah diupload tidak bisa dihapus
                   </p>
                   <p className="w-75 mx-auto mt-3">Apakah sudah yakin untuk Upload?</p>
-                  <Button isPrimary className="w-100 fs-5" onClick={uploadToDatabase}>
+                  <Button isPrimary className="w-100" onClick={uploadToDatabase}>
                     Ya, Saya yakin
                   </Button>
                 </div>
+              </ModalElement>
+              <ModalElement show={showError} funcModal={handleCloseError}>
+                <>
+                  <div className="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-exclamation-circle text-danger" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                      <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                    </svg>
+                    <p className="w-75 mx-auto mt-3" style={{ fontSize: "14px" }}>
+                      Data yang kamu kirimkan belum benar
+                    </p>
+                  </div>
+                  <ul className="mt-3" style={{ fontSize: "13px" }}>
+                    {listError.map((el) => {
+                      return <li className="text-danger">{el.msg}</li>;
+                    })}
+                  </ul>
+                </>
               </ModalElement>
             </div>
           </div>
