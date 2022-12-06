@@ -13,6 +13,7 @@ export default function Button(props) {
   if (props.isBlock) className.push("btn-block");
   if (props.isPrimary) className.push("btn-primary-saika");
   if (props.isAnimation) className.push("animation-button");
+  if (props.isDongker) className.push("btn-dongker");
 
   const onClick = () => {
     if (props.onClick) props.onClick();
@@ -85,4 +86,5 @@ Button.propTypes = {
   isPrimary: propTypes.bool,
   isAnimation: propTypes.bool,
   isSpinner: propTypes.bool,
+  isDongker: propTypes.bool,
 };

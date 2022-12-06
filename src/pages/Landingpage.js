@@ -1,17 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Header from "../parts/Header";
 import Card from "../element/Card";
 import Button from "../element/Button";
 import Footer from "../parts/Footer";
-import ImgLandingPage from "../assets/image/landingpage.png";
+// import ImgLandingPage from "../assets/image/landingpage.png";
 export default function Landingpage() {
-  const data = [{ s: "pokok" }, { s: "pokok" }, { s: "pokok" }, { s: "pokok" }, { s: "pokok" }, { s: "coba" }, { s: "coba" }, { s: "coba" }, { s: "coba" }, { s: "coba" }];
+  const getCursorShadow = (e) => {
+    const imageEl = document.querySelector("#section-1 .image");
+    const imageElShadow = document.querySelector("#section-1 .image .shadowImg");
+    let dataC = imageEl.getBoundingClientRect();
+    let dataX = e.clientX - dataC.left;
+    let dataY = e.clientY - dataC.top;
+    let height2 = imageElShadow.clientHeight / 2;
+    let width2 = imageElShadow.clientWidth / 2;
 
-  const urut = () => {};
-  useEffect(() => {
-    urut();
-  }, []);
-  console.log(data);
+    if (dataX <= imageEl.clientWidth / 2 && dataY <= imageEl.clientHeight / 2) {
+      //10 < 300/2 = true , 10 < 250/2 = true
+      imageElShadow.style.right = `${imageEl.clientWidth - dataX - width2}px`;
+      imageElShadow.style.bottom = `${imageEl.clientHeight - dataY - height2}px`;
+      imageElShadow.style.left = "0px";
+      imageElShadow.style.top = "0px";
+    } else if (dataX <= imageEl.clientWidth / 2 && dataY >= imageEl.clientHeight / 2) {
+      imageElShadow.style.left = "0px";
+      imageElShadow.style.bottom = "0px";
+      imageElShadow.style.right = `${imageEl.clientWidth - dataX - width2}px`;
+      imageElShadow.style.top = `${dataY - height2}px`;
+    } else if (dataX >= imageEl.clientWidth / 2 && dataY <= imageEl.clientHeight / 2) {
+      imageElShadow.style.left = "0px";
+      imageElShadow.style.top = "0px";
+      imageElShadow.style.left = `${dataX - width2}px`;
+      imageElShadow.style.bottom = `${imageEl.clientHeight - dataY - height2}px`;
+    } else {
+      imageElShadow.style.left = "0px";
+      imageElShadow.style.bottom = "0px";
+      imageElShadow.style.left = `${dataX - width2}px`;
+      imageElShadow.style.top = `${dataY - height2}px`;
+    }
+  };
+
+  const getDefaultPosition = () => {
+    const imageElShadow = document.querySelector("#section-1 .image .shadowImg");
+    imageElShadow.style.inset = "0px";
+    imageElShadow.style.margin = "auto";
+  };
   return (
     <>
       <Header />
@@ -19,18 +50,22 @@ export default function Landingpage() {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md text-center">
-              {/* <div className="image"> */}
-              <img src={ImgLandingPage} alt="hero" />
-              {/* </div> */}
+              <div className="image" onMouseMove={getCursorShadow} onMouseLeave={getDefaultPosition}>
+                <div class="shadowImg d-none d-lg-block"></div>
+                <div class="span span1 d-none d-lg-block">Find Friend</div>
+                <div class="span span2 d-none d-lg-block">Find Network</div>
+                <div class="span span3 d-none d-lg-block">Find Knowledge</div>
+                <img src="/image/section1-chat.png" alt="hero" />
+              </div>
             </div>
             <div className="col-md text-center text-md-start">
-              <p className="judul-1 text-cyan d-none d-sm-block">Pilihan Saika</p>
-              <p className="d-sm-none mb-4">Temukan Teman Dan Berkomunikasi Secara REALTIME sekarang.</p>
-              <p className="judul-2 d-none d-sm-block">
+              <p className="judul-1 text-cream d-none d-sm-block">Pilihan Saika</p>
+              <p className="d-sm-none text-cream mb-4">Temukan Teman Dan Berkomunikasi Secara REALTIME sekarang.</p>
+              <p className="judul-2 d-none d-sm-block text-cream">
                 Temukan Sahabat <br /> Informatikamu Disini
               </p>
-              <p className="keterangan-section1 mb-4 d-none d-sm-block ket">Temukan Teman dan Berkomunikasi secara REALTIME dengan orang-orang baru yang memiliki ketertarikan terhadap dunia Informatika.</p>
-              <Button isPrimary isAnimation className="mb-3 text-decoration-none text-white" type="link" href="/find">
+              <p className="keterangan-section1 mb-4 d-none d-sm-block ket text-white">Temukan Teman dan Berkomunikasi secara REALTIME dengan orang-orang baru yang memiliki ketertarikan terhadap dunia Informatika.</p>
+              <Button isPrimary className="mb-3 text-decoration-none " type="link" href="/find">
                 Cari Teman
               </Button>
             </div>

@@ -25,4 +25,5 @@ ModalElement.propTypes = {
   show: propTypes.bool,
   isHeader: propTypes.bool,
   isCentered: propTypes.bool,
+  isDongker: propTypes.bool,
 };

@@ -55,6 +55,9 @@
 .modal {
   font-family: "Poppins", sans-serif;
   color: $gray-900;
+  .isdongker {
+    background-color: $dongker;
+  }
   img {
     max-height: 170px;
   }
@@ -64,6 +67,7 @@
   label {
     font-weight: 600;
     margin-bottom: 4px;
+    font-size: 13px;
   }
   .hover-item {
     .image {

@@ -2,14 +2,18 @@
 
 .btn-primary-saika {
   border-radius: 10px;
-  background-color: $cyan;
-  color: $white;
+  background-color: $cream;
+  color: $dongker;
   font-weight: 600;
   font-size: 14px;
   padding: 13px 50px;
   border: none;
   transition: 0.3s;
-
+  box-shadow: 0px 3px 20px rgba(255, 255, 255, 0.25);
+  &.btn-dongker {
+    background-color: $bluelight !important;
+    color: $cream !important;
+  }
   &.active {
     background-color: rgba($cyan, 0.4) !important;
     color: $gray-800;
@@ -20,7 +24,8 @@
   }
 
   &:hover {
-    background-color: rgba($cyan, 0.8) !important;
+    color: $dongker;
+    box-shadow: 0px 3px 25px rgba(255, 255, 255, 0.4);
   }
 
   &.isHover {
@@ -41,7 +46,7 @@
 }
 
 .animation-button {
-  box-shadow: 0 0 0 0 rgba($cyan, 0.4);
+  box-shadow: 0 0 0 0 rgba($cream, 0.4);
   // animation: wideeffect 2s infinite linear;
   transition: all 300ms ease-in-out;
   animation-name: wideeffect;
