@@ -3,12 +3,19 @@
 
 .card {
   position: relative;
-  color: $gray-800;
+  background-color: #1f2f50 !important;
+  color: $white;
   min-height: 100%;
   overflow: hidden;
   border: none;
   border-radius: 10px !important;
-  height: auto;
+
+  @media (min-width: 992px) {
+    min-height: 285px;
+  }
+  @media (min-width: 1400px) {
+    min-height: 305px;
+  }
   .image {
     height: 180px;
     img {
@@ -16,14 +23,28 @@
       object-fit: cover;
     }
   }
-  @media (min-width: 992px) {
-    min-height: 320px;
-    // padding: 10px;
-  }
   .card-body {
     padding: 8px;
+    // background-color: yellow;
+    p {
+      font-size: 13px;
+    }
+    h5 {
+      font-size: 14px;
+    }
     @media (min-width: 992px) {
       padding: 10px;
+      h5 {
+        font-size: 15px;
+      }
+      p {
+        font-size: 14px;
+      }
+    }
+    @media (min-width: 1400px) {
+      h5 {
+        font-size: 17px;
+      }
     }
   }
   p {
@@ -35,9 +56,9 @@
     }
   }
   .kategori {
-    background-color: $white;
-    border: 2px solid $cyan;
-    color: $cyan;
+    background-color: $dongker;
+    border: 2px solid $cream;
+    color: $cream;
     width: 40px;
     font-weight: 600;
     text-align: center;

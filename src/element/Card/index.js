@@ -5,19 +5,17 @@ import "./index.scss";
 export default function Card(props) {
   return (
     <a href={props.linkUrl} className="text-decoration-none text-dark">
-      <div className="card mb-3">
+      <div className="card ">
         <div className="kategori">
-          <span>RPL</span>
+          <span>{props.kategori}</span>
         </div>
         <div class="image">
           <img src={props.imgSrc} className="card-img-top" />
         </div>
-        <div className="card-body">
+        <div className="card-body d-flex flex-column justify-content-between">
+          <h5>{props.judul}</h5>
           <p>
-            <b>{props.judul} </b>
-          </p>
-          <p>
-            {props.penyelenggara} | <span class="text-cyan ">{props.waktu}</span>
+            {props.penyelenggara} | <span class="text-cream ">{props.waktu}</span>
           </p>
         </div>
       </div>
@@ -30,4 +28,5 @@ Card.propTypes = {
   penyelenggara: propTypes.string,
   waktu: propTypes.string,
   linkUrl: propTypes.string,
+  kategori: propTypes.string,
 };

@@ -499,13 +499,13 @@ body {
     right: 0;
     z-index: 99;
     display: flex;
-    background-color: $white;
-    padding: 0px 5px;
+    background-color: $dongker;
+    padding: 1px 0px 5px 0px;
     border-radius: 10px 10px 0px 0px;
     justify-content: space-around;
-    box-shadow: 0px 0px 15px rgba($cyan, 0.4);
+    box-shadow: 0px 2px 17px rgba($white, 0.25);
     a {
-      color: $cyan;
+      color: $white;
       display: block;
       padding: 10px 0px !important;
       display: flex;
@@ -515,16 +515,18 @@ body {
       width: 100%;
       position: relative;
       &.active {
+        color: $cream;
         &::after {
           content: "";
           position: absolute;
-          bottom: 0;
+          bottom: 2px;
           left: 0;
           right: 0;
-          width: 30%;
+          width: 6px;
+          height: 6px;
+          border-radius: 5px;
           margin: 0 auto;
-          height: 5px;
-          background-color: $cyan;
+          background-color: $cream;
         }
       }
 
@@ -574,7 +576,7 @@ a.nav-link:hover {
   font-weight: 700;
   font-size: 22px;
   line-height: 45px;
-  color: $gray-900;
+  color: $white;
   @media (min-width: 992px) {
     font-size: 30px;
   }
@@ -671,6 +673,7 @@ a.nav-link:hover {
 }
 
 #section-2 {
+  background-color: #1f2f50;
   padding-top: 50px;
   padding-bottom: 50px;
   .ket {
@@ -678,8 +681,18 @@ a.nav-link:hover {
     font-size: 13px;
     @media (min-width: 768px) {
       padding: 0px 0px;
-      font-size: 16px;
+      font-size: 14px;
     }
+  }
+  .item {
+    // height: 300px;
+    transition: 0.5s;
+    box-shadow: 0px 2px 15px rgba(255, 255, 255, 0.2);
+    &:hover {
+      box-shadow: 0px 2px 25px rgba(255, 255, 255, 0.3);
+      transform: translateY(-10px);
+    }
+    // box-shadow: 0px 3px 20px rgba(255, 255, 255, 0.25);
   }
 }
 
@@ -687,7 +700,7 @@ a.nav-link:hover {
   padding-top: 50px;
   padding-bottom: 100px;
   span {
-    color: $cyan;
+    color: $cream;
   }
   .image {
     @include imagestyle();
@@ -697,6 +710,7 @@ a.nav-link:hover {
     &.ket {
       padding: 0px 30px;
       font-size: 13px;
+      color: rgb(240, 240, 240);
       @media (min-width: 768px) {
         padding: 0px 0px;
         font-size: 16px;
@@ -727,7 +741,7 @@ a.nav-link:hover {
 }
 
 footer {
-  background-color: #152355;
+  background-color: $bluedark;
   display: none;
   @media (min-width: 576px) {
     display: block;
@@ -736,9 +750,10 @@ footer {
     color: white;
   }
   .footer-brand {
-    color: white;
+    color: $cream;
     font-weight: 300;
     font-size: 12px;
+    // text-align: ;
     span {
       font-weight: 700;
       font-size: 24px;
@@ -760,7 +775,7 @@ footer {
     font-size: 13px;
 
     @media (min-width: 992px) {
-      font-size: 16px;
+      font-size: 14px;
     }
   }
 }

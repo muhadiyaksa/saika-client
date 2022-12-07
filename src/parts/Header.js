@@ -231,6 +231,18 @@ export default function Header() {
     }
   };
 
+  const subJudulHeader = () => {
+    if (window.location.pathname === "/find") {
+      return "Ruang Diskusi";
+    } else if (window.location.pathname === "/search") {
+      return "Ruang Acara";
+    } else if (window.location.pathname === "/chat") {
+      return "Ruang Sahabat";
+    } else {
+      return "Ruang Informatika";
+    }
+  };
+
   const showNotif = () => {
     if (activeChat?.length > 0) {
       let dataFilter = activeChat.filter((el) => el.chat !== userData._id);
@@ -341,9 +353,12 @@ export default function Header() {
   return (
     <nav className="navbar navbar-expand-sm">
       <div className="container">
-        <Button type="link" className="navbar-brand text-center shadow-none " href="/">
+        <Button type="link" className="navbar-brand text-md-center shadow-none " href="/">
           <span className="judul">SAIKA</span>
           <br />
+          <span className="d-block d-md-none fw-light" style={{ fontSize: "11px" }}>
+            {subJudulHeader()}
+          </span>
           <span className="d-none d-md-block fw-light">Sahabat Informatika</span>
         </Button>
         <div className="navbar-account ms-auto d-sm-none  shadow-none">
@@ -360,7 +375,7 @@ export default function Header() {
           <ul className="navbar-nav mx-auto mb-lg-0 flex-sm-row  d-flex ">
             <li className="nav-item ">
               <Button type="link" className={`nav-link    shadow-none ${getNavLinkClass("/find")}`} aria-current="page" href="/find">
-                Pesan
+                Diskusi
               </Button>
             </li>
             <li className="nav-item">
@@ -401,7 +416,7 @@ export default function Header() {
               <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
               <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
             </svg>
-            <span>Pesan</span>
+            <span>Diskusi</span>
           </Button>
           <Button className={`btn  shadow-none  p-0 ${getNavLinkClass("/chat")}`} type="link" href="/chat">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-people" viewBox="0 0 16 16">
