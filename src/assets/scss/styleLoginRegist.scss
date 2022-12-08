@@ -1,43 +1,105 @@
 @import "../scss/colorVariabel.scss";
-
 .login,
-.regist {
-  color: $gray-800;
-  .bg {
-    position: absolute;
-    background-color: #dbfefc;
-    width: 40%;
+.forget {
+  height: 100vh;
+  .row {
     height: 100%;
-    z-index: -1;
+  }
+}
+
+.forget {
+  .col-md:nth-child(1) {
+    img {
+      max-height: 470px;
+    }
+  }
+  .forget-only {
+    width: 100%;
+    @media (min-width: 1200px) {
+      .judul {
+        font-size: 20px;
+      }
+      width: 76%;
+      // width: 50%;
+    }
+  }
+  .code-form {
+    input {
+      text-transform: capitalize;
+      font-size: 32px !important;
+      padding: 3px 3px !important;
+      text-align: center;
+      color: $dongker;
+    }
+  }
+}
+.regist {
+  @media (min-width: 1800px) {
+    height: 100vh;
   }
   .row {
-    height: 100vh;
+    height: 100%;
+  }
+  .regist-only {
+    width: 100%;
+    @media (min-width: 1200px) {
+      .judul {
+        font-size: 20px;
+      }
+      width: 76%;
+      // width: 50%;
+    }
+  }
+}
+.login,
+.regist,
+.forget {
+  background-repeat: no-repeat;
 
+  color: $white;
+  position: relative;
+  .bg {
+    position: absolute;
+    background-color: $bluedark;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    width: 45%;
+    @media (min-width: 768px) {
+    }
+    @media (min-width: 1200px) {
+      width: 50%;
+    }
+  }
+  .row {
     .col-md:nth-child(1) {
-      background-color: #dbfefc;
       position: relative;
       padding-top: 30px;
-      @media (min-width: 992px) {
-        padding-top: 0px;
-      }
       img {
-        position: absolute;
         width: 100%;
-        left: -15%;
+        @media (min-width: 768px) {
+          width: 80%;
+        }
+        @media (min-width: 1200px) {
+          width: 100%;
+          transform: translateX(-20px);
+        }
       }
     }
     .col-md:nth-child(2) {
+      // background-color: red;
       display: flex;
       align-items: center;
       justify-content: center;
       @media (min-width: 992px) {
-        justify-content: end;
+        // justify-content: end;
       }
       .judul {
         font-weight: 700;
         font-size: 24px;
         @media (min-width: 992px) {
-          font-size: 32px;
+          font-size: 30px;
         }
       }
       .keterangan {
@@ -90,7 +152,7 @@
     position: absolute;
     width: 23px;
     height: 20px;
-    margin-top: 22px;
+    margin-top: 20px;
     margin-left: -45px;
     cursor: pointer;
   }

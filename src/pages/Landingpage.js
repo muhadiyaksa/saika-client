@@ -77,6 +77,10 @@ export default function Landingpage() {
               </p>
               <p className="keterangan-section1 mb-4 d-none d-sm-block ket text-white">Temukan Teman dan Berkomunikasi secara REALTIME dengan orang-orang baru yang memiliki ketertarikan terhadap dunia Informatika.</p>
               <Button isPrimary className="mb-3 text-decoration-none " type="link" href="/find">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chat-right-dots me-3" viewBox="0 0 16 16">
+                  <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
+                  <path d="M5 6a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                </svg>
                 Cari Teman
               </Button>
             </div>
@@ -120,6 +124,10 @@ export default function Landingpage() {
 
           <div className="row d-flex justify-content-center">
             <Button isPrimary className="mx-auto mt-4  text-decoration-none text-center" type="link" href="/search" style={{ width: "180px" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar4-event me-3" viewBox="0 0 16 16">
+                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
+                <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
+              </svg>
               Lihat Lainnya
             </Button>
           </div>
@@ -138,8 +146,12 @@ export default function Landingpage() {
               <h2 className="judul-2  d-none d-sm-block">
                 Jadikan <span>Saika</span> sebagai <span>Media Parner Mu</span> dan jangkau teman informatika
               </h2>
-              <p className="ket mb-4 ">Daftar dan lampirkan webinarmu dan jadikan saika sebagai media partner untuk mempromosikan acaramu, proses pendaftaran ini tidak dipungut biaya </p>
+              <p className="ket mb-4 ">Daftar dan lampirkan Kegiatanmu dan jadikan saika sebagai media partner untuk mempromosikan acaramu, proses pendaftaran ini tidak dipungut biaya </p>
               <Button isPrimary className="mx-auto text-decoration-none text-center " type="link" href="/addevent">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle me-3" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
                 Daftar Sekarang
               </Button>
             </div>

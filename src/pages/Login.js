@@ -45,14 +45,14 @@ export default function Login() {
         <section className="login">
           <div className="bg d-none d-md-block"></div>
           <div className="container">
-            <div className="row">
-              <div className="col-md d-flex align-items-center justify-content-center d-none d-md-block ">
-                <img src={BannerLogin} className="mt-5" />
+            <div className="row align-items-center">
+              <div className="col-md  d-none d-md-block ">
+                <img src="/image/login.svg" />
               </div>
               <div className="col-md p-4 ">
                 <div>
                   <p className="judul">Selamat Datang!!</p>
-                  <p className="keterangan">Masuk untuk mulai mencari teman Saikamu sekarang juga</p>
+                  <p className="keterangan mb-5">Masuk untuk mulai mencari teman Informatika Mu</p>
 
                   <label htmlFor="email">Email</label>
                   <br />
@@ -62,7 +62,18 @@ export default function Login() {
                   <br />
                   <input type={show} id="password" name="password" placeholder="Password" onChange={(e) => setDataLogin({ ...dataLogin, password: e.target.value })} />
                   <span className="show-hide" onClick={showhideclick}></span>
-                  <br />
+                  <div class="d-flex justify-content-between align-items-center mb-0 ">
+                    <div class="form-check " style={{ fontSize: "12px" }}>
+                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+                      <span class="form-check-label" for="flexCheckChecked">
+                        Ingat Saya
+                      </span>
+                    </div>
+                    <Button type="link" href="/forget" className="text-white" style={{ fontSize: "12px" }}>
+                      Lupa Password?
+                    </Button>
+                  </div>
+
                   <br />
                   <div className={`alert alert-danger pb-0 mb-4 ${errors.length === 0 ? "d-none" : ""}`} role="alert" style={{ fontSize: "13px" }}>
                     <p>{errors}</p>
@@ -73,12 +84,12 @@ export default function Login() {
 
                   <p className="text-center">
                     Belum punya akun Saika?{" "}
-                    <Button type="link" href="/regist" className="daftar">
+                    <Button type="link" href="/regist" className="daftar text-cream">
                       Daftar Sekarang
                     </Button>
                   </p>
                   <p className="text-center">
-                    <Button type="link" href="/" className="daftar ">
+                    <Button type="link" href="/" className="daftar text-white">
                       Kembali
                     </Button>
                   </p>

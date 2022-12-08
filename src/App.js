@@ -12,6 +12,7 @@ import SearchFriends from "./pages/SearchFriends";
 import Chats from "./pages/Chats";
 import Loading from "./pages/Loading";
 import PersonalChat from "./pages/PersonalChat";
+import ForgetPassword from "./pages/ForgetPassword";
 function App() {
   return (
     <>
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/" element={<LandingPage />}></Route>
           <Route exact path="/login" element={<Login />}></Route>
           <Route exact path="/regist" element={<Regist />}></Route>
+          <Route exact path="/forget" element={<ForgetPassword />}></Route>
           <Route exact path="/search" element={<List />}></Route>
           <Route exact path="/detail/:id" element={<Detail />}></Route>
           <Route exact path="/chat" element={<PersonalChat />}></Route>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Button from "../element/Button";
-import SignupBanner from "../assets/image/Signup.svg";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -36,15 +35,15 @@ export default function Regist() {
   return (
     <section className="regist">
       <div className="bg d-none d-md-block"></div>
-      <div className="container">
-        <div className="row">
-          <div className="col-md d-flex align-items-center justify-content-center d-none d-md-block">
-            <img src={SignupBanner} className="mt-5" />
+      <div className="container ">
+        <div className="row align-items-xxl-center">
+          <div className="col-md  d-none d-md-block ">
+            <img src="/image/signup.svg" style={{ marginTop: "80px" }} />
           </div>
           <div className="col-md p-4">
-            <div>
-              <p className="judul">Hello! Welcome to Saika</p>
-              <p className="keterangan">Register now and start to feel the excitement of study jamming with your matched buddy</p>
+            <div className="regist-only  ">
+              <p className="judul mb-0">Yeay! Ada Yang Mau jadi teman Baru SAIKA nih</p>
+              <p className="keterangan ">Yuk isi Form Registrasi di bawah.</p>
 
               <label htmlFor="namaLengkap">Nama Lengkap</label>
 
@@ -82,7 +81,7 @@ export default function Regist() {
 
               <p className="text-center">
                 Sudah punya akun SAIKA?{" "}
-                <Button type="link" href="/login" className="daftar">
+                <Button type="link" href="/login" className="daftar text-cream">
                   Login Disini
                 </Button>
               </p>
