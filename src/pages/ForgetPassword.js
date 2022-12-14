@@ -1,3 +1,4 @@
+import Axios from "axios";
 import React, { useState } from "react";
 import { Nav } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,20 +9,21 @@ export default function ForgetPassword() {
 
   const [dataLupaPassword, setDataLupaPassword] = useState({});
   const [errors, setErrors] = useState([]);
-  const [count, setCount] = useState(20);
+  const [count, setCount] = useState(60);
   const [disable, setDisable] = useState(false);
   const [show, setshow] = useState({ formEmail: true, formCode: false });
+  const [isLoading, setIsLoading] = useState(false);
+
   const sendUniqueCode = () => {
-    console.log("hai");
     setshow({ formEmail: false, formCode: true });
     setDisable(true);
-    let y = 20;
+    let y = 60;
     let x = setInterval(() => {
       setCount((currentCount) => currentCount - 1);
       y--;
       if (y < 1) {
         setDisable(false);
-        setCount(20);
+        setCount(60);
         clearInterval(x);
       }
     }, 1000);
@@ -34,19 +36,51 @@ export default function ForgetPassword() {
   const focusSet = (e) => {
     const inputCode = document.querySelectorAll(".forget .code-form input");
     let indeks = e.target.getAttribute("indeks");
+    let dataValue = [];
     if (e.target.value) {
+      dataValue.unshift(e.target.value);
       if (indeks === "6") {
         setDisableValidate(false);
       } else {
         inputCode[+indeks].focus();
       }
     }
+    if (!e.target.value[0]) {
+      console.log("s");
+      if (+indeks - 2 >= 0) {
+        inputCode[+indeks - 2].focus();
+      }
+    }
+
     let inputValue = [...inputCode];
     let data = inputValue.filter((el) => el.value === "" || !el.value);
     if (data.length > 0) {
       setDisableValidate(true);
     }
   };
+
+  const validateEmail = () => {
+    setIsLoading(true);
+    Axios({
+      method: "PUT",
+      data: {
+        email: dataLupaPassword.email,
+      },
+      withCredentials: true,
+      url: "http://localhost:3001/senduniquecode",
+    }).then((res) => {
+      if (!res.data.errors) {
+        setIsLoading(false);
+        sendUniqueCode();
+        return "Success";
+      } else {
+        let error = res.data.errors.map((el) => el.msg);
+        setIsLoading(false);
+        setErrors([...error]);
+      }
+    });
+  };
+
   return (
     <>
       {isLoggedIn ? (
@@ -54,6 +88,7 @@ export default function ForgetPassword() {
       ) : (
         <section className="forget">
           <div className="bg d-none d-md-block"></div>
+
           <div className="container">
             <div className="row ">
               <div className="col-md  d-none d-md-block py-4">
@@ -76,7 +111,6 @@ export default function ForgetPassword() {
                     <input type="text" id="email" name="email" placeholder="Email" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
                     <br />
 
-                    <br />
                     <div className={`alert alert-danger pb-0 ${errors.length === 0 ? "d-none" : ""}`} role="alert" style={{ fontSize: "13px" }}>
                       <ul>
                         {errors.map((el, i) => {
@@ -84,8 +118,9 @@ export default function ForgetPassword() {
                         })}
                       </ul>
                     </div>
-                    <Button isPrimary className={`w-100 rounded-3 mb-3  align-items-center justify-content-center ${disable ? "d-none" : "d-inline-flex"}`} onClick={sendUniqueCode}>
-                      <span className="me-2">Kirim Kode Unik</span>
+                    <br />
+                    <Button isSpinner={isLoading} isPrimary className={`w-100  rounded-3 mb-3  align-items-center justify-content-center ${disable ? "d-none" : "d-inline-flex"}`} onClick={validateEmail}>
+                      <span className="me-2 mb-0">Kirim Kode Unik</span>
                     </Button>
                   </div>
                   <Button className={`btn w-100 text-cream mb-3 align-items-center justify-content-center ${disable ? "disabled " : ""} ${show.formCode ? "d-inline-flex " : "d-none"}`} onClick={showButtonResendCode}>
@@ -95,6 +130,8 @@ export default function ForgetPassword() {
 
                   <div className={`${show.formCode ? "" : "d-none"}`}>
                     <label htmlFor="email">Kode Unik</label>
+                    <br />
+                    <span style={{ fontSize: "12px" }}>*Masukan kode unik yang telah dikirimkan melalui email</span>
                     <br />
                     <div class="d-flex code-form">
                       <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="1" name="email" className="1 me-2" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
@@ -112,7 +149,7 @@ export default function ForgetPassword() {
                   </div>
 
                   <p className="text-center mt-4 mb-0">
-                    <Button type="link" href="/" className="daftar text-white">
+                    <Button type="link" href="/login" className="daftar text-white">
                       Kembali
                     </Button>
                   </p>

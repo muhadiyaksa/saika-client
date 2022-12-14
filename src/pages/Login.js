@@ -12,7 +12,6 @@ export default function Login() {
   const [dataLogin, setDataLogin] = useState({ email: "", password: "" });
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  console.log(isLoggedIn);
   const showhideclick = () => {
     show === "password" ? setShow("text") : setShow("password");
   };

@@ -22,6 +22,11 @@
       width: 76%;
       // width: 50%;
     }
+
+    .lds-ring div {
+      border: 3px solid $dongker;
+      border-color: $dongker transparent transparent transparent;
+    }
   }
   .code-form {
     input {
