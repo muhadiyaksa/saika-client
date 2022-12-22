@@ -1,18 +1,21 @@
 import Axios from "axios";
 import React, { useState } from "react";
-import { Nav } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Navigate, useNavigate } from "react-router-dom";
 import Button from "../element/Button";
+import ModalElement from "../element/ModalElement";
+
 export default function ForgetPassword() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
+  const navigate = useNavigate();
+  // const userObj = JSON.parse(localStorage.getItem("userSaika"));
   const [dataLupaPassword, setDataLupaPassword] = useState({});
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState({ errValidateEmail: [], errValidateCode: [], errValidatePassword: [] });
   const [count, setCount] = useState(60);
   const [disable, setDisable] = useState(false);
   const [show, setshow] = useState({ formEmail: true, formCode: false });
   const [isLoading, setIsLoading] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
 
   const sendUniqueCode = () => {
     setshow({ formEmail: false, formCode: true });
@@ -23,6 +26,8 @@ export default function ForgetPassword() {
       y--;
       if (y < 1) {
         setDisable(false);
+        setDisableButton(false);
+
         setCount(60);
         clearInterval(x);
       }
@@ -33,20 +38,25 @@ export default function ForgetPassword() {
   };
 
   const [disableValidate, setDisableValidate] = useState(true);
+
   const focusSet = (e) => {
     const inputCode = document.querySelectorAll(".forget .code-form input");
     let indeks = e.target.getAttribute("indeks");
     let dataValue = [];
     if (e.target.value) {
-      dataValue.unshift(e.target.value);
-      if (indeks === "6") {
-        setDisableValidate(false);
+      if (e.target.value === " ") {
+        inputCode[+indeks - 1].value = null;
       } else {
-        inputCode[+indeks].focus();
+        dataValue.unshift(e.target.value);
+        if (+indeks === 6) {
+          inputCode[+indeks - 1].focus();
+        } else {
+          inputCode[+indeks].focus();
+        }
       }
     }
+
     if (!e.target.value[0]) {
-      console.log("s");
       if (+indeks - 2 >= 0) {
         inputCode[+indeks - 2].focus();
       }
@@ -54,33 +64,102 @@ export default function ForgetPassword() {
 
     let inputValue = [...inputCode];
     let data = inputValue.filter((el) => el.value === "" || !el.value);
+    let kodeValue = inputValue.map((el) => el.value);
     if (data.length > 0) {
       setDisableValidate(true);
+    } else {
+      setDisableValidate(false);
+      setDataLupaPassword({ ...dataLupaPassword, kodeunik: kodeValue.join("").toUpperCase() });
     }
   };
 
   const validateEmail = () => {
     setIsLoading(true);
+    setDisableButton(true);
     Axios({
       method: "PUT",
       data: {
         email: dataLupaPassword.email,
       },
       withCredentials: true,
-      url: "http://localhost:3001/senduniquecode",
+      url: "http://localhost:3001/user/senduniquecode",
     }).then((res) => {
       if (!res.data.errors) {
         setIsLoading(false);
         sendUniqueCode();
+        setErrors({ ...errors, errValidateEmail: [] });
         return "Success";
       } else {
         let error = res.data.errors.map((el) => el.msg);
         setIsLoading(false);
-        setErrors([...error]);
+        setErrors({ ...errors, errValidateEmail: [...error] });
+        setDisableButton(false);
       }
     });
   };
 
+  const [showBoxResetPassword, setShowBoxResetPassword] = useState(false);
+  const [showBoxNotifSuccess, setShowBoxNotifSuccess] = useState(false);
+  const [spinnerPassword, setSpinnerPassword] = useState(false);
+  const [spinnerUniqueCode, setSpinnerUniqueCode] = useState(false);
+
+  const validateUniqueCode = () => {
+    setSpinnerUniqueCode(true);
+    Axios({
+      method: "PUT",
+      data: {
+        email: dataLupaPassword.email,
+        kodeunik: dataLupaPassword.kodeunik,
+      },
+      withCredentials: true,
+      url: "http://localhost:3001/user/validateuniquecode",
+    }).then((res) => {
+      setSpinnerUniqueCode(false);
+      if (!res.data.errors) {
+        setShowBoxResetPassword(true);
+        setErrors({ ...errors, errValidateCode: [] });
+        return "Success";
+      } else {
+        let error = res.data.errors.map((el) => el.msg);
+        setErrors({ ...errors, errValidateCode: [...error] });
+      }
+    });
+  };
+
+  const handleCloseBoxReset = () => {
+    setShowBoxResetPassword(false);
+  };
+
+  const updateNewPassword = () => {
+    setSpinnerPassword(true);
+    Axios({
+      method: "PUT",
+      data: {
+        email: dataLupaPassword.email,
+        passwordNew: dataLupaPassword.newPassword,
+        passwordConfirm: dataLupaPassword.confirmNewPassword,
+        // kodeunik: dataLupaPassword.kodeunik ,
+        kodeunik: null,
+      },
+      withCredentials: true,
+      url: "http://localhost:3001/user/resetpassword",
+    }).then((res) => {
+      setSpinnerPassword(false);
+      if (!res.data.errors) {
+        setShowBoxNotifSuccess(true);
+        setShowBoxResetPassword(false);
+        setErrors({ ...errors, errValidateCode: [] });
+      } else {
+        let error = res.data.errors.map((el) => el.msg);
+        setErrors({ ...errors, errValidatePassword: [...error] });
+      }
+    });
+  };
+
+  const handleCloseNotifSuccess = () => {
+    setShowBoxNotifSuccess(false);
+    navigate("/login");
+  };
   return (
     <>
       {isLoggedIn ? (
@@ -111,15 +190,20 @@ export default function ForgetPassword() {
                     <input type="text" id="email" name="email" placeholder="Email" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
                     <br />
 
-                    <div className={`alert alert-danger pb-0 ${errors.length === 0 ? "d-none" : ""}`} role="alert" style={{ fontSize: "13px" }}>
+                    <div className={`alert alert-danger pb-0 ${errors.errValidateEmail.length === 0 ? "d-none" : ""}`} role="alert" style={{ fontSize: "13px" }}>
                       <ul>
-                        {errors.map((el, i) => {
-                          return <li key={`error-${i}`}>{el}</li>;
+                        {errors.errValidateEmail.map((el, i) => {
+                          return <li key={`error-email-${i}`}>{el}</li>;
                         })}
                       </ul>
                     </div>
                     <br />
-                    <Button isSpinner={isLoading} isPrimary className={`w-100  rounded-3 mb-3  align-items-center justify-content-center ${disable ? "d-none" : "d-inline-flex"}`} onClick={validateEmail}>
+                    <Button
+                      isSpinner={isLoading}
+                      isPrimary
+                      className={`w-100  rounded-3 mb-3  align-items-center justify-content-center ${disable ? "d-none" : "d-inline-flex"} ${!dataLupaPassword.email || disableButton ? "disabled layer" : ""}`}
+                      onClick={validateEmail}
+                    >
                       <span className="me-2 mb-0">Kirim Kode Unik</span>
                     </Button>
                   </div>
@@ -134,16 +218,22 @@ export default function ForgetPassword() {
                     <span style={{ fontSize: "12px" }}>*Masukan kode unik yang telah dikirimkan melalui email</span>
                     <br />
                     <div class="d-flex code-form">
-                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="1" name="email" className="1 me-2" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
-                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="2" name="email" className="2 me-2" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
-                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="3" name="email" className="3 me-2" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
-                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="4" name="email" className="4 me-2" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
-                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="5" name="email" className="5 me-2" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
-                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="6" name="email" className="6" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, email: e.target.value })} />
+                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="1" name="email" className="1 me-2" />
+                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="2" name="email" className="2 me-2" />
+                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="3" name="email" className="3 me-2" />
+                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="4" name="email" className="4 me-2" />
+                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="5" name="email" className="5 me-2" />
+                      <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="6" name="email" className="6" />
                     </div>
                     <br />
-
-                    <Button isPrimary className={`w-100 rounded-3 mb-3 d-inline-flex align-items-center justify-content-center ${disableValidate ? "disabled layer" : ""}`} onClick={sendUniqueCode}>
+                    <span style={{ fontSize: "13px" }} className={`alert alert-danger w-100 text-center ${errors.errValidateCode.length > 0 ? "d-inline-block" : "d-none"}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-exclamation-circle me-3" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                      </svg>
+                      {errors.errValidateCode[0]}
+                    </span>
+                    <Button isSpinner={spinnerUniqueCode} isPrimary className={`w-100 rounded-3 mb-3 d-inline-flex align-items-center justify-content-center ${disableValidate ? "disabled layer" : ""}`} onClick={validateUniqueCode}>
                       <span className="me-2">Validasi</span>
                     </Button>
                   </div>
@@ -157,6 +247,61 @@ export default function ForgetPassword() {
               </div>
             </div>
           </div>
+          <ModalElement isDongker={true} show={showBoxResetPassword} isCentered={true} funcModal={handleCloseBoxReset}>
+            <div class="d-flex text-dongker justify-content-between align-items-center shadow-none mb-4" onClick={handleCloseBoxReset}>
+              <p>Reset Password</p>
+              <button className="btn p-0 m-0 fw-bold">x</button>
+            </div>
+            <div class="text-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check2-circle text-success " viewBox="0 0 16 16">
+                <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z" />
+                <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
+              </svg>
+              <h4 className="text-success mb-0 fw-bolder">Yeay, Kode Valid</h4>
+              <span style={{ fontSize: "12px" }}>
+                <strong className="text-danger">*</strong> Kode hanya aktif selama 5 Menit, segera Ubah Password Mu
+              </span>
+            </div>
+
+            <label htmlFor="username" className="text-dongker">
+              Password Baru
+            </label>
+            <input id="newPassword" type="password" className="form-control shadow-none mb-3" placeholder="Password Baru" onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, newPassword: e.target.value })} />
+            <label htmlFor="name" className="text-dongker">
+              Konfirmasi Password Baru
+            </label>
+            <input
+              id="confirmNewPassword"
+              type="password"
+              className="form-control shadow-none mb-3"
+              placeholder="Konfirmasi Password Baru"
+              onChange={(e) => setDataLupaPassword({ ...dataLupaPassword, confirmNewPassword: e.target.value })}
+            />
+            <div className={`alert alert-danger pb-0 ${errors.errValidatePassword.length === 0 ? "d-none" : ""}`} role="alert" style={{ fontSize: "13px" }}>
+              <ul>
+                {errors.errValidatePassword.map((el, i) => {
+                  return <li key={`error-password-${i}`}>{el}</li>;
+                })}
+              </ul>
+            </div>
+            <Button isPrimary isDongker className="w-100  fs-6  shadow-none" isSpinner={spinnerPassword} onClick={updateNewPassword}>
+              Simpan
+            </Button>
+          </ModalElement>
+          <ModalElement isHeader={false} isCentered={true} show={showBoxNotifSuccess} funcModal={handleCloseNotifSuccess} heading={"Profil"}>
+            <div className="d-flex align-items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-exclamation-circle me-3 text-success" viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+              </svg>
+              <span>
+                Password Berhasil di ubah.{" "}
+                <a className="ms-2 text-dongker mb-0" href="/login">
+                  Kembali
+                </a>
+              </span>
+            </div>
+          </ModalElement>
         </section>
       )}
     </>

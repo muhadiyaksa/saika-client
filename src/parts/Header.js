@@ -35,11 +35,11 @@ export default function Header() {
   useEffect(() => {
     fetchtoAPI();
 
-    const getDataAllChat = () => {
+    const getDataAllChat = (iduser) => {
       Axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:3001/chat/all/${userData._id}`,
+        url: `http://localhost:3001/chat/all/${iduser}`,
         headers: {
           Authorization: `Bearer ${userObj.token}`,
         },
@@ -56,7 +56,14 @@ export default function Header() {
         });
     };
     if (isLoggedIn) {
-      getDataAllChat();
+      const dataIDUser = new Promise((fulfill, reject) => {
+        if (userData._id) {
+          return fulfill(userData._id);
+        }
+      });
+      dataIDUser.then((res) => {
+        getDataAllChat(res);
+      });
     }
   }, []);
 
@@ -88,7 +95,6 @@ export default function Header() {
       })
       .catch((error) => {
         if (!error.response) {
-          // network error
           this.errorStatus = "Error: Network Error";
         } else {
           this.errorStatus = error.response.data.message;
@@ -114,12 +120,15 @@ export default function Header() {
     }
   };
   const [foto, setFoto] = useState({});
+  const [uploadFile, setUploadFile] = useState(false);
   const [fotoError, setFotoError] = useState(false);
+
   function setFile(event) {
     let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
     let file = event.target.files[0];
     if (validExtensions.includes(file.type) && file.size <= 2000000) {
       setFoto(file);
+      setUploadFile(true);
       setFotoError(false);
       let reader = new FileReader();
       reader.onload = (e) => {
@@ -127,6 +136,7 @@ export default function Header() {
       };
       reader.readAsDataURL(file);
     } else {
+      setUploadFile(false);
       setFotoError(true);
     }
   }
@@ -137,6 +147,7 @@ export default function Header() {
     data.append("nama", dataUser?.nama);
     data.append("username", dataUser?.username);
     data.append("file", foto);
+    data.append("uploadFile", uploadFile);
     Axios({
       method: "PUT",
       withCredentials: true,
@@ -151,6 +162,7 @@ export default function Header() {
         setSpinnerProfil(false);
         setShow(false);
         setShowModalInfo(true);
+        setUploadFile(false);
       }
     });
   };
@@ -251,7 +263,7 @@ export default function Header() {
       let data = dataFilter.map((el, i) => {
         return (
           <button idchat={el.idchat} className={`btn d-flex shadow-none text-start w-100 align-items-center ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-cyan me-3" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-dongker me-3" viewBox="0 0 16 16">
               <path
                 fill-rule="evenodd"
                 d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
@@ -281,7 +293,7 @@ export default function Header() {
     } else {
       return (
         <div className="text-center p-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-cyan mb-2" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-dongker mb-2" viewBox="0 0 16 16">
             <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
             <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
           </svg>
@@ -443,9 +455,9 @@ export default function Header() {
         </div>
       </div>
       <ModalElement isDongker={true} show={show} isCentered={true} funcModal={handleCloseNotif}>
-        <div class="d-flex text-dongker justify-content-between align-items-center shadow-none" onClick={handleCloseNotif}>
+        <div class="d-flex text-softwhite justify-content-between align-items-center shadow-none" onClick={handleCloseNotif}>
           <p>Ubah Profile</p>
-          <button className="btn p-0 m-0 fw-bold">x</button>
+          <button className="btn p-0 m-0 fw-bold text-cream">x</button>
         </div>
         <div className="image-profile ">
           <div className="image border border-2">
@@ -471,7 +483,7 @@ export default function Header() {
           Nama Lengkap
         </label>
         <input id="nama" type="text" className="form-control shadow-none mb-3" placeholder="Nama Lengkap" defaultValue={dataUser.nama} onChange={(e) => setDataUser({ ...dataUser, nama: e.target.value })} />
-        <Button isPrimary isDongker className="w-100  fs-6  shadow-none" isSpinner={spinnerProfil} onClick={updateProfil}>
+        <Button isPrimary className="mt-4 mx-auto  fs-6  shadow-none d-flex align-items-center justify-content-center" isSpinner={spinnerProfil} onClick={updateProfil}>
           Simpan
         </Button>
       </ModalElement>
@@ -495,7 +507,7 @@ export default function Header() {
             );
           })}
         </ul>
-        <Button isPrimary isDongker className="w-100  fs-6  shadow-none" isSpinner={spinnerPassword} onClick={updatePassword}>
+        <Button isPrimary isDongker className="w-100  fs-6  shadow-none d-inline-flex align-items-center justify-content-center" isSpinner={spinnerPassword} onClick={updatePassword}>
           Simpan
         </Button>
       </ModalElement>
@@ -522,7 +534,7 @@ export default function Header() {
             <Button className="btn btn-light border rounded-pill me-3  shadow-none" onClick={handleCloseModalLogout}>
               Batal
             </Button>
-            <Button className="btn btn-danger rounded-pill  shadow-none" isSpinner={spinnerLogout} onClick={handleLogout}>
+            <Button className="btn btn-danger rounded-pill  shadow-none d-flex align-items-center" isSpinner={spinnerLogout} onClick={handleLogout}>
               Ya, Logout
             </Button>
           </div>

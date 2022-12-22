@@ -13,6 +13,7 @@ import Chats from "./pages/Chats";
 import Loading from "./pages/Loading";
 import PersonalChat from "./pages/PersonalChat";
 import ForgetPassword from "./pages/ForgetPassword";
+
 function App() {
   return (
     <>

@@ -55,8 +55,28 @@
 .modal {
   font-family: "Poppins", sans-serif;
   color: $gray-900;
-  .isdongker {
-    background-color: $dongker;
+  &.isdongker {
+    background-color: rgba($bluedark, 0.6) !important;
+
+    .modal-content {
+      background-color: $bluedark;
+      // border: 2px solid $cream;
+      box-shadow: 0px 3px 35px rgba($cream, 0.3);
+      border-radius: 10px;
+      padding: 15px 20px;
+      color: $cream;
+      input {
+        background-color: $dongker;
+        // border: 1px solid $cream;
+        border: none;
+        color: $white;
+        padding: 10px 15px !important;
+      }
+      label {
+        color: $cream !important;
+        font-weight: 400;
+      }
+    }
   }
   img {
     max-height: 170px;

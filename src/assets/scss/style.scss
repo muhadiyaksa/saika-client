@@ -258,14 +258,16 @@
 /* FONTS */
 
 body {
-  background-image: linear-gradient(to bottom, #1f2f50, #162440);
+  background-image: linear-gradient(to bottom, $bluedark, #162440);
   background-repeat: no-repeat;
   min-height: 100vh;
 }
 #section-2 {
   background-color: $gray-100;
 }
-
+.text-softwhite {
+  color: rgb(240, 240, 240);
+}
 .text-cyan {
   color: $cyan;
 }
@@ -300,7 +302,7 @@ body {
 
 /* NAVBAR */
 .navbar {
-  background-color: $dongker;
+  background-color: $bluedark;
 
   .navbar-account {
     display: flex;
@@ -630,7 +632,7 @@ a.nav-link:hover {
     }
     .span {
       position: absolute;
-      color: $dongker;
+      color: $bluedark;
       cursor: pointer;
       font-weight: 500;
       &.span1 {
@@ -676,7 +678,7 @@ a.nav-link:hover {
 }
 
 #section-2 {
-  background-color: #1f2f50;
+  background-color: rgba($white, 0.03);
   padding-top: 50px;
   padding-bottom: 50px;
   .ket {

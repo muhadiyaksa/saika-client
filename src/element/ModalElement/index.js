@@ -5,8 +5,10 @@ import "./index.scss";
 
 export default function ModalElement(props) {
   const { show, funcModal, heading } = props;
+  let className = [];
+  if (props.isDongker) className.push("isdongker");
   return (
-    <Modal show={show} onHide={funcModal} centered={props.isCentered}>
+    <Modal show={show} onHide={funcModal} centered={props.isCentered} className={`${className.join(" ")}`}>
       {props.isHeader ? (
         <Modal.Header closeButton>
           <Modal.Title>{heading}</Modal.Title>
