@@ -1,0 +1,275 @@
+.login,
+.forget {
+  height: 100%;
+}
+
+@media (min-width: 1400px) {
+  .login,
+  .forget {
+    height: 100vh;
+  }
+}
+
+.login .row,
+.forget .row {
+  height: 100%;
+}
+
+.forget .col-md:nth-child(1) img {
+  max-height: 470px;
+}
+
+.forget .forget-only {
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .forget .forget-only {
+    width: 76%;
+  }
+  .forget .forget-only .judul {
+    font-size: 20px;
+  }
+}
+
+.forget .forget-only .lds-ring div {
+  border: 3px solid #1f2f50;
+  border-color: #1f2f50 transparent transparent transparent;
+}
+
+.forget .code-form input {
+  text-transform: capitalize;
+  font-size: 32px !important;
+  padding: 3px 3px !important;
+  text-align: center;
+  color: #1f2f50;
+}
+
+.regist {
+  height: 100%;
+  position: relative;
+}
+
+@media (min-width: 1800px) {
+  .regist {
+    height: 100vh;
+  }
+}
+
+.regist .row {
+  height: 100%;
+}
+
+.regist .regist-only {
+  width: 100%;
+}
+
+@media (min-width: 1200px) {
+  .regist .regist-only {
+    width: 76%;
+  }
+  .regist .regist-only .judul {
+    font-size: 20px;
+  }
+}
+
+.login,
+.regist,
+.forget {
+  background-repeat: no-repeat;
+  color: #f0f0f0;
+}
+
+.login .bg,
+.regist .bg,
+.forget .bg {
+  position: absolute;
+  background-color: #101f36;
+  top: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 55%;
+  right: 0;
+}
+
+@media (min-width: 1200px) {
+  .login .bg,
+  .regist .bg,
+  .forget .bg {
+    width: 50%;
+  }
+}
+
+.login .row .col-md:nth-child(1),
+.regist .row .col-md:nth-child(1),
+.forget .row .col-md:nth-child(1) {
+  padding-top: 30px;
+}
+
+.login .row .col-md:nth-child(1) img,
+.regist .row .col-md:nth-child(1) img,
+.forget .row .col-md:nth-child(1) img {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .login .row .col-md:nth-child(1) img,
+  .regist .row .col-md:nth-child(1) img,
+  .forget .row .col-md:nth-child(1) img {
+    width: 80%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .login .row .col-md:nth-child(1) img,
+  .regist .row .col-md:nth-child(1) img,
+  .forget .row .col-md:nth-child(1) img {
+    width: 100%;
+    -webkit-transform: translateX(-20px);
+            transform: translateX(-20px);
+  }
+}
+
+.login .row .col-md:nth-child(2),
+.regist .row .col-md:nth-child(2),
+.forget .row .col-md:nth-child(2) {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.login .row .col-md:nth-child(2) .judul,
+.regist .row .col-md:nth-child(2) .judul,
+.forget .row .col-md:nth-child(2) .judul {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+@media (min-width: 992px) {
+  .login .row .col-md:nth-child(2) .judul,
+  .regist .row .col-md:nth-child(2) .judul,
+  .forget .row .col-md:nth-child(2) .judul {
+    font-size: 30px;
+  }
+}
+
+.login .row .col-md:nth-child(2) .keterangan,
+.regist .row .col-md:nth-child(2) .keterangan,
+.forget .row .col-md:nth-child(2) .keterangan {
+  font-size: 13px;
+}
+
+@media (min-width: 992px) {
+  .login .row .col-md:nth-child(2) .keterangan,
+  .regist .row .col-md:nth-child(2) .keterangan,
+  .forget .row .col-md:nth-child(2) .keterangan {
+    font-size: 16px;
+  }
+}
+
+.login input[type="text"],
+.login input[type="password"],
+.login select,
+.regist input[type="text"],
+.regist input[type="password"],
+.regist select,
+.forget input[type="text"],
+.forget input[type="password"],
+.forget select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  background-color: #1f2f50 !important;
+  caret-color: #f4db9d;
+  border: none;
+  color: white;
+  outline: none;
+  border-radius: 4px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-size: 13px;
+}
+
+.login .form-check-input,
+.regist .form-check-input,
+.forget .form-check-input {
+  background-color: #1f2f50 !important;
+  border: 1px solid #f4db9d !important;
+}
+
+.login input:not([value=""]):not(:focus):invalid,
+.regist input:not([value=""]):not(:focus):invalid,
+.forget input:not([value=""]):not(:focus):invalid {
+  background-color: #1f2f50 !important;
+}
+
+.login label,
+.regist label,
+.forget label {
+  color: #f4db9d;
+  font-weight: 400 !important;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.login input[type="submit"],
+.regist input[type="submit"],
+.forget input[type="submit"] {
+  width: 100%;
+  background-color: #5db3bf;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login input[type="submit"]:hover,
+.regist input[type="submit"]:hover,
+.forget input[type="submit"]:hover {
+  background-color: #358f9b;
+}
+
+.login .daftar,
+.regist .daftar,
+.forget .daftar {
+  text-decoration: none;
+  color: #4f4f4f;
+  font-weight: 600;
+}
+
+.login .daftar:hover,
+.regist .daftar:hover,
+.forget .daftar:hover {
+  color: #2b2b2b;
+}
+
+.login .show-hide,
+.regist .show-hide,
+.forget .show-hide {
+  background-image: url("../icon/clarity_eye-line.png");
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 23px;
+  height: 20px;
+  margin-top: 20px;
+  margin-left: -45px;
+  cursor: pointer;
+}
+
+.login label,
+.regist label,
+.forget label {
+  font-weight: 700;
+  margin-top: 10px;
+}
+/*# sourceMappingURL=styleLoginRegist.css.map */

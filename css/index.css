@@ -1,0 +1,258 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+@-webkit-keyframes loadingBar {
+  25% {
+    -webkit-transform: translateX(100%) skewX(0deg);
+            transform: translateX(100%) skewX(0deg);
+  }
+  50% {
+    -webkit-transform: translateX(0) skewX(-45deg);
+            transform: translateX(0) skewX(-45deg);
+  }
+  75% {
+    -webkit-transform: translateX(-100%) skewX(0deg);
+            transform: translateX(-100%) skewX(0deg);
+  }
+  100% {
+    -webkit-transform: translateX(0%) skewX(45deg);
+            transform: translateX(0%) skewX(45deg);
+  }
+}
+@keyframes loadingBar {
+  25% {
+    -webkit-transform: translateX(100%) skewX(0deg);
+            transform: translateX(100%) skewX(0deg);
+  }
+  50% {
+    -webkit-transform: translateX(0) skewX(-45deg);
+            transform: translateX(0) skewX(-45deg);
+  }
+  75% {
+    -webkit-transform: translateX(-100%) skewX(0deg);
+            transform: translateX(-100%) skewX(0deg);
+  }
+  100% {
+    -webkit-transform: translateX(0%) skewX(45deg);
+            transform: translateX(0%) skewX(45deg);
+  }
+}
+
+.modal {
+  font-family: "Poppins", sans-serif;
+  color: #f0f0f0;
+}
+
+.modal.isdongker {
+  background-color: rgba(16, 31, 54, 0.6) !important;
+}
+
+.modal.isdongker .modal-content {
+  background-color: #101f36;
+  -webkit-box-shadow: 0px 3px 35px rgba(244, 219, 157, 0.3);
+          box-shadow: 0px 3px 35px rgba(244, 219, 157, 0.3);
+  border-radius: 10px;
+  padding: 13px 18px;
+  color: #f4db9d;
+}
+
+.modal.isdongker .modal-content input {
+  background-color: #1f2f50;
+  border: none;
+  color: #f0f0f0;
+  padding: 10px 15px !important;
+}
+
+.modal.isdongker .modal-content label {
+  color: #f4db9d !important;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.modal.isdongker .modal-content .area-notif .d-flex {
+  margin-bottom: 10px;
+}
+
+.modal.isdongker .modal-content button.active {
+  background-color: rgba(42, 66, 100, 0.3);
+}
+
+.modal.isdongker .modal-content .red {
+  position: absolute;
+  top: 13px;
+  left: 30px;
+  min-width: 10px;
+  min-height: 10px;
+  border-radius: 50%;
+  background-color: #d44856;
+}
+
+.modal.isdongker .modal-content ul {
+  padding: 0;
+}
+
+.modal.isdongker .modal-content ul li {
+  background-color: #101f36;
+  color: #f4db9d;
+  border: none;
+}
+
+.modal.isdongker .modal-content ul li .btn {
+  margin-left: 0px;
+}
+
+.modal img {
+  max-height: 170px;
+}
+
+.modal input {
+  font-size: 13px;
+}
+
+.modal label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.modal .hover-item .image {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.modal .hover-item .image img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.modal .image-profile {
+  position: relative;
+  height: 150px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.modal .image-profile .image {
+  position: absolute;
+  overflow: hidden;
+  top: 0;
+  height: 140px;
+  width: 140px;
+  background-color: #f6f5f5;
+  border-radius: 50%;
+}
+
+.modal .image-profile .image img {
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.modal .image-profile .btn {
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: white;
+  -webkit-box-shadow: 0px 0px 10px #dee2e6;
+          box-shadow: 0px 0px 10px #dee2e6;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: absolute;
+  bottom: 10%;
+  right: 33%;
+  padding: 0;
+}
+
+.modal p {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.modal span {
+  font-size: 13px;
+}
+
+@media (min-width: 992px) {
+  .modal p {
+    font-size: 16px;
+    margin-bottom: 0;
+  }
+  .modal span {
+    font-size: 15px;
+  }
+}
+
+.modal .image {
+  width: 180px;
+  height: 180px;
+  border-radius: 5px;
+  background-color: #f6f5f5;
+}
+
+.modal .image img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.modal .sahabat {
+  border: 2px solid #5db3bf;
+  border-radius: 2px;
+  padding: 3px;
+  position: relative;
+  overflow: hidden;
+  width: 250px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .modal .sahabat {
+    width: 300px;
+  }
+}
+
+.modal .sahabat p {
+  position: relative;
+  color: #5db3bf;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.modal .sahabat::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+  background-color: #5db3bf;
+  -webkit-transform: translateX(0) skewX(45deg);
+          transform: translateX(0) skewX(45deg);
+  -webkit-animation-name: loadingBar;
+          animation-name: loadingBar;
+  -webkit-animation-duration: 3s;
+          animation-duration: 3s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  overflow: hidden;
+}
+/*# sourceMappingURL=index.css.map */

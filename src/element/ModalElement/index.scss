@@ -54,7 +54,7 @@
 }
 .modal {
   font-family: "Poppins", sans-serif;
-  color: $gray-900;
+  color: $white;
   &.isdongker {
     background-color: rgba($bluedark, 0.6) !important;
 
@@ -63,7 +63,7 @@
       // border: 2px solid $cream;
       box-shadow: 0px 3px 35px rgba($cream, 0.3);
       border-radius: 10px;
-      padding: 15px 20px;
+      padding: 13px 18px;
       color: $cream;
       input {
         background-color: $dongker;
@@ -75,6 +75,33 @@
       label {
         color: $cream !important;
         font-weight: 400;
+        letter-spacing: 1px;
+      }
+      .area-notif .d-flex {
+        margin-bottom: 10px;
+      }
+      button.active {
+        background-color: rgba($bluelight, 0.3);
+      }
+      .red {
+        position: absolute;
+        top: 13px;
+        left: 30px;
+        min-width: 10px;
+        min-height: 10px;
+        border-radius: 50%;
+        background-color: $red;
+      }
+      ul {
+        padding: 0;
+        li {
+          background-color: $bluedark;
+          color: $cream;
+          .btn {
+            margin-left: 0px;
+          }
+          border: none;
+        }
       }
     }
   }

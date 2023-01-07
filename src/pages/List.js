@@ -6,6 +6,7 @@ import Button from "../element/Button";
 import iconSearch from "../assets/icon/icon-search.png";
 import Card from "../element/Card";
 import Axios from "axios";
+import { rupiahFormats } from "../utils/numberFormat";
 export default function List() {
   let navigate = useNavigate();
 
@@ -15,16 +16,18 @@ export default function List() {
     return React.useMemo(() => new URLSearchParams(search), [search]);
   }
   const [dataEvent, setDataEvent] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const TampilData = () => {
-      // let query = useQuery();
+      setIsLoading(true);
       Axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:3001/event`,
+        url: `http://localhost:3001/event/all`,
       }).then((result) => {
-        console.log(result.data.Event);
-        setDataEvent(result.data.Event);
+        console.log(result.data);
+        setDataEvent(result.data);
+        setIsLoading(false);
       });
     };
     TampilData();
@@ -44,7 +47,16 @@ export default function List() {
       let data = dataEvent.map((el) => {
         return (
           <div className="item column-3 row-1">
-            <Card linkUrl={`/detail/${el._id}`} imgSrc={"/image/section2-1.png"} judul={el.eventName} penyelenggara={el.eventCategory} waktu={el.eventDate} />
+            <Card
+              linkUrl={`/detail/${el.eventId}`}
+              imgSrc={el.eventImage}
+              judul={el.eventName}
+              penyelenggara={el.institution}
+              kategori={el.eventCategory.toUpperCase()}
+              waktu={el.eventDate}
+              paymentType={el.paymentType}
+              price={rupiahFormats(el.price)}
+            />
           </div>
         );
       });
@@ -55,29 +67,38 @@ export default function List() {
   return (
     <>
       <Header />
-      <section className="list mt-4">
+      <section className="list mt-3 mb-5">
         <div className="container">
           <div className="row">
             <div className="col text-center">
-              <p className="judul-1 text-cyan">Pilihan Kegiatanmu</p>
-              <p className="judul-2">Webinar Khusus Anak Informatika </p>
-              <div className="keterangan-1">
+              <p className="judul-1 text-cream">Pilihan Kegiatanmu</p>
+              {/* <p className="judul-2">Webinar Khusus Anak Informatika </p> */}
+              <div className="keterangan-1 text-softwhite">
                 <p>Berikut merupakan beberapa acara kegiatan webinar dari beberapa lembaga yang dapat diikuti baik secara gratis maupun berbayar</p>
               </div>
             </div>
           </div>
           <div className="row align-items-center">
             <div className="col-auto">
-              <Button isPrimary className="rounded-3 text-white text-decoration-none" style={{ paddingTop: "10px", paddingBottom: "10px" }} type="link" href="/addevent">
+              <Button isPrimary className="rounded-3 text-decoration-none" style={{ paddingTop: "10px", paddingBottom: "10px" }} type="link" href="/addevent">
                 Tambah Acara
               </Button>
             </div>
             <div className="col">
-              <div className="input-group w-100">
-                <input type="text" id="search-pesanan" className="form-control " placeholder="Cari Judul Acara atau Penyelenggara" aria-label="Recipient's username" aria-describedby="basic-addon2" style={{ fontSize: "13px" }} required />
-                <button type="submit" className="input-group-text btn border border-2" id="basic-addon2" onClick={GotoSearch}>
+              <div className="input-group w-100 ">
+                <input
+                  type="text"
+                  id="search-pesanan"
+                  className="form-control input-dongker "
+                  placeholder="Cari Judul Acara atau Penyelenggara"
+                  aria-label="Recipient's username"
+                  aria-describedby="basic-addon2"
+                  style={{ fontSize: "13px" }}
+                  required
+                />
+                <Button isPrimary type="submit" className="input-group-text  " id="basic-addon2" onClick={GotoSearch}>
                   <img src={iconSearch} alt="Search" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -101,18 +122,7 @@ export default function List() {
             <div className="item column-12 row-1 text-center">
               <p>Ini Hanya Event Dummy</p>
             </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/123123"} imgSrc={"/image/section2-1.png"} judul={"It Security Fundamentals UNUSIA"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara2.png"} judul={"Peranan K3 Menghadapi Era Industri 4.0"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara3.png"} judul={"Creative With Technology, To Become Enterpreneuer"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
-            <div className="item column-3 row-1 d-md-none d-lg-block">
-              <Card linkUrl={"/detail/123123"} imgSrc={"/image/acara4.png"} judul={"Strategi Startup dan Industri di masa Pandemi"} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} />
-            </div>
+
             {tampilEvent()}
           </div>
         </div>

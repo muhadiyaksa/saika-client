@@ -3,6 +3,31 @@
 @import "../scss/colorVariabel.scss";
 @import "../scss/gridContainer.scss";
 
+@mixin fungsiAnimasiEvent() {
+  position: relative;
+  border: none;
+  &::after {
+    content: "";
+    display: block;
+    background-color: $dongker;
+    position: absolute;
+    inset: -3px;
+    border-radius: 5px;
+    z-index: 1;
+  }
+  &::before {
+    content: "";
+    display: block;
+    background-color: rgba($white, 0.05);
+    width: 30%;
+    position: absolute;
+    height: 100%;
+    animation: load-right 2s infinite;
+    z-index: 2;
+    filter: blur(10px);
+  }
+}
+
 @mixin fungsiAnimasi() {
   @media (min-width: 992px) {
     width: 100%;
@@ -265,6 +290,12 @@ body {
 #section-2 {
   background-color: $gray-100;
 }
+.bg-cream {
+  background-color: $cream !important;
+}
+.bg-dongker {
+  background-color: $dongker !important;
+}
 .text-softwhite {
   color: rgb(240, 240, 240);
 }
@@ -276,6 +307,20 @@ body {
 }
 .text-dongker {
   color: $dongker !important;
+}
+.input-dongker {
+  background-color: $dongker !important;
+  color: $white;
+  border: 1px solid $bluelight !important;
+  box-shadow: none;
+}
+.notfound {
+  img {
+    max-width: 100%;
+    @media (min-width: 992px) {
+      max-width: 50%;
+    }
+  }
 }
 
 @mixin imagestyle {
@@ -313,7 +358,7 @@ body {
       position: relative;
       &:hover {
         .area-notif {
-          display: block;
+          display: inline-block;
         }
       }
       .area-notif {
@@ -321,39 +366,54 @@ body {
         position: absolute;
         top: 120%;
         right: 0%;
-        width: 270px;
-        min-height: 130px;
+        width: 280px;
+        min-height: 140px;
         max-height: 300px;
-        background-color: $white;
+        // padding: 10px;
         border-radius: 8px;
+        background-color: $dongker;
+        border: 1px solid $bluelight;
 
-        color: $dongker;
         overflow-y: scroll;
         @media (min-width: 1200px) {
           right: -300%;
         }
+
         button {
           position: relative;
           overflow: hidden;
-          &::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            display: block;
-          }
+          object-fit: cover;
           padding: 14px 20px;
-          border-bottom: 1px solid $gray-200;
-          border-top: 1px solid $gray-200;
+          border-radius: 0;
           &.active {
-            background-color: rgba($cyan, 0.1);
+            // background-color: rgba($bluelight, 0.5);
+            &::before {
+              content: "";
+              position: absolute;
+              inset: 0;
+              display: block;
+              height: 100%;
+              z-index: 1;
+              background-color: rgba($bluelight, 0.3);
+              width: 92%;
+              margin: 0 auto;
+            }
           }
-          background-color: white;
+          // background-color: $bluelight !important;
 
+          svg,
+          p,
           .red {
+            z-index: 2;
+          }
+          .red {
+            position: absolute;
+            top: 22px;
+            left: 34px;
             min-width: 10px;
-            height: 10px;
+            min-height: 10px;
             border-radius: 50%;
-            background-color: $orange;
+            background-color: $red;
           }
         }
         &::-webkit-scrollbar {
@@ -362,7 +422,7 @@ body {
         }
 
         &::-webkit-scrollbar-thumb {
-          background: #c4c4c4;
+          background: $bluelight;
           height: 4px !important;
           border-radius: 8px;
         }
@@ -448,7 +508,9 @@ body {
       font-size: 13px;
       width: 220px;
       li {
-        color: $dongker;
+        background-color: $dongker;
+        color: $cream;
+        border: 1px solid $bluelight;
       }
       @media (min-width: 1200px) {
         right: -90px;
@@ -463,7 +525,7 @@ body {
       .btn {
         transition: 0.4s;
         &:hover {
-          background-color: $gray-100;
+          background-color: $bluelight;
         }
         &.logout {
           &:hover {
@@ -575,6 +637,9 @@ a.nav-link:hover {
   margin-bottom: 0;
   @media (min-width: 992px) {
     font-size: 20px;
+  }
+  @media (min-width: 1200px) {
+    font-size: 24px;
   }
 }
 .judul-2 {
@@ -689,16 +754,6 @@ a.nav-link:hover {
       font-size: 14px;
     }
   }
-  .item {
-    // height: 300px;
-    transition: 0.5s;
-    box-shadow: 0px 2px 15px rgba(255, 255, 255, 0.2);
-    &:hover {
-      box-shadow: 0px 2px 25px rgba(255, 255, 255, 0.3);
-      transform: translateY(-10px);
-    }
-    // box-shadow: 0px 3px 20px rgba(255, 255, 255, 0.25);
-  }
 }
 
 #section-3 {
@@ -788,32 +843,47 @@ footer {
 .detail {
   color: $gray-800;
   padding-bottom: 40px;
-  // background-color: $gray-100;
-  &:not(.primary) {
-    background-color: $white;
-  }
-  p.fw-bold {
-    font-size: 14px;
-    @media (min-width: 992px) {
-      font-size: 15px;
+  &.loading {
+    .row {
+      p,
+      span,
+      img,
+      .image {
+        @include fungsiAnimasiEvent();
+      }
     }
   }
-  .image.detail {
+
+  p.fw-bold {
+    letter-spacing: 1px;
+    font-weight: 500 !important;
+    font-size: 12px;
+    color: $cream;
+    @media (min-width: 992px) {
+      font-size: 13px;
+    }
+  }
+  p:not(.fw-bold) {
+    color: $white;
+  }
+  .image.detailinfo {
     height: 280px;
     width: 250px;
     margin: 0 auto;
-    background-color: $white;
+    background-color: rgba($bluelight, 0.3);
     border: 1px solid $gray-300;
     border-radius: 10px;
     overflow: hidden;
+    padding: 0;
+
     img {
       object-fit: contain;
+      margin-top: 0;
       height: 100%;
       width: 100%;
     }
     @media (min-width: 576px) {
       width: 100%;
-
       height: 350px;
     }
     @media (min-width: 1200px) {
@@ -833,7 +903,9 @@ footer {
 .addevent {
   // background-color: $gray-200;
   padding-bottom: 40px;
-
+  p.subjudul {
+    border-bottom: 1px solid $bluelight;
+  }
   .navtabs-button {
     .item {
       position: relative;
@@ -853,12 +925,13 @@ footer {
           }
         }
         p {
-          color: $cyan;
+          color: $cream;
           display: block;
           width: 90%;
         }
         span {
-          background-color: $cyan;
+          background-color: $cream;
+          color: $dongker;
           left: 0%;
         }
         @media (min-width: 992px) {
@@ -872,7 +945,7 @@ footer {
         height: 40px;
         width: 40px;
         color: $white;
-        background-color: $gray-500;
+        background-color: $bluelight;
         border-radius: 50%;
         font-size: 20px;
         display: inline-flex;
@@ -896,8 +969,8 @@ footer {
         right: 5%;
         margin: 0;
         padding: 7px 0px;
-        background-color: $white;
-        color: $gray-500;
+        background-color: rgba($bluelight, 0);
+        color: $white;
         font-weight: 600;
         width: 90%;
         border-radius: 20px;
@@ -905,12 +978,12 @@ footer {
         display: none;
         font-size: 13px;
         padding-left: 28px;
-        border: 2px solid $cyan;
+        border: 2px solid $cream;
         @media (min-width: 375px) {
           padding-left: 15px;
         }
         &.sembunyi {
-          border: 2px solid $gray-200;
+          border: 2px solid $bluelight;
           display: none;
           @media (min-width: 992px) {
             display: block;
@@ -935,30 +1008,49 @@ footer {
 
   .boxevent {
     color: $gray-800;
-    background-color: white;
+    background-color: $bluedark;
     padding: 20px 25px;
     border-radius: 15px;
     margin-top: 30px;
+    margin-bottom: 25px;
     label {
-      font-weight: 600;
+      font-weight: 500;
+      color: $cream;
+      font-size: 14px;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
     }
     input,
     textarea,
     select {
+      background-color: $dongker;
+      border: none;
+      color: $white;
+      box-shadow: none;
+      padding: 10px 15px;
       font-size: 14px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+      // background-color: aqua;
+      // fill: $cream;
+      // outline: wheat;
+      // border: 1px solid yellow;
     }
   }
 
   .upload-image {
-    border: 2px dashed $cyan;
-    background-color: rgba($cyan, 0.05);
+    border: 2px dashed $cream;
+    background-color: rgba($bluelight, 0.5);
     margin-bottom: 20px;
     border-radius: 8px;
     text-align: center;
     padding: 30px 20px;
     .ketfoto {
-      background-color: white;
-      color: $gray-800;
+      background-color: $bluelight;
+      color: $white;
       padding: 10px 15px;
       border-radius: 5px;
     }
@@ -1853,5 +1945,17 @@ footer {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes load-right {
+  0% {
+    width: 30%;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 30%;
   }
 }

@@ -42,6 +42,9 @@
   }
 }
 .regist {
+  height: 100%;
+  position: relative;
+  // background-color: #358f9b;
   @media (min-width: 1800px) {
     height: 100vh;
   }
@@ -74,7 +77,8 @@
     top: 0;
     bottom: 0;
     z-index: -1;
-    width: 45%;
+    width: 55%;
+    right: 0;
     @media (min-width: 768px) {
     }
     @media (min-width: 1200px) {
@@ -127,10 +131,31 @@
     margin: 8px 0;
     display: inline-block;
     border: 1px solid #ccc;
+    background-color: $dongker !important;
+    // box-shadow: 0px 1px 10px rgba($cream, 0.1);
+    caret-color: $cream;
+    border: none;
+    color: white;
     outline: none;
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 13px;
+  }
+  .form-check-input {
+    background-color: $dongker !important;
+    // boarde: $dongker !important;
+    // caret-color: $dongker;
+    border: 1px solid $cream !important;
+  }
+
+  input:not([value=""]):not(:focus):invalid {
+    background-color: $dongker !important;
+  }
+  label {
+    color: $cream;
+    font-weight: 400 !important;
+    font-size: 14px;
+    letter-spacing: 1px;
   }
 
   input[type="submit"] {

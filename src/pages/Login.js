@@ -6,12 +6,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/user/userSlice";
 import { unwrapResult } from "@reduxjs/toolkit";
 import { Navigate } from "react-router-dom";
+
 export default function Login() {
+  const userLogin = JSON.parse(localStorage.getItem("userLogin"));
   const [show, setShow] = useState("password");
   const [errors, setErrors] = useState([]);
-  const [dataLogin, setDataLogin] = useState({ email: "", password: "" });
+  const [dataLogin, setDataLogin] = useState({ email: userLogin ? userLogin?.email : "", password: userLogin ? userLogin?.password : "" });
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-
+  const [isRemember, setIsRemember] = useState(userLogin ? true : false);
   const showhideclick = () => {
     show === "password" ? setShow("text") : setShow("password");
   };
@@ -31,11 +33,26 @@ export default function Login() {
         if (result) {
           window.location.reload();
         }
+        let data = {
+          email: dataLogin.email,
+          password: dataLogin.password,
+        };
+        if (isRemember) {
+          localStorage.setItem("userLogin", JSON.stringify(data));
+        } else {
+          localStorage.removeItem("userLogin");
+        }
       } else {
         setErrors(res.data.message);
       }
     });
   };
+
+  const rememberMe = (e) => {
+    e.target.checked ? setIsRemember(true) : setIsRemember(false);
+  };
+  console.log(dataLogin);
+  console.log(isRemember);
   return (
     <>
       {isLoggedIn ? (
@@ -55,15 +72,15 @@ export default function Login() {
 
                   <label htmlFor="email">Email</label>
                   <br />
-                  <input type="text" id="email" name="email" placeholder="Email" onChange={(e) => setDataLogin({ ...dataLogin, email: e.target.value })} />
+                  <input type="text" id="email" name="email" placeholder="Email" defaultValue={userLogin?.email} onChange={(e) => setDataLogin({ ...dataLogin, email: e.target.value })} />
                   <br />
                   <label htmlFor="lname">Password</label>
                   <br />
-                  <input type={show} id="password" name="password" placeholder="Password" onChange={(e) => setDataLogin({ ...dataLogin, password: e.target.value })} />
+                  <input type={show} id="password" name="password" placeholder="Password" defaultValue={userLogin?.password} onChange={(e) => setDataLogin({ ...dataLogin, password: e.target.value })} />
                   <span className="show-hide" onClick={showhideclick}></span>
                   <div class="d-flex justify-content-between align-items-center mb-0 ">
                     <div class="form-check " style={{ fontSize: "12px" }}>
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+                      <input class="form-check-input shadow-none" type="checkbox" defaultChecked={userLogin ? true : false} id="flexCheckChecked" onChange={rememberMe} />
                       <span class="form-check-label" for="flexCheckChecked">
                         Ingat Saya
                       </span>

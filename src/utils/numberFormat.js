@@ -35,4 +35,16 @@ function rupiahFormats(angka, prefix) {
   rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
   return prefix === undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
 }
-module.exports = { numberFormat, namesOfMonth, getNamesMonth, rupiahFormats };
+
+function changeDateFormat(date) {
+  if (date) {
+    let dataPisah = date?.split("-");
+    let months = namesOfMonth();
+    let namaBulan = months[+dataPisah[1] - 1];
+
+    return `${dataPisah[2]} ${namaBulan} ${dataPisah[0]}`;
+  } else {
+    return "";
+  }
+}
+module.exports = { numberFormat, namesOfMonth, getNamesMonth, rupiahFormats, changeDateFormat };

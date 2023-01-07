@@ -1,5 +1,15 @@
 @import "../../assets/scss/colorVariabel.scss";
 
+.btn-secondary-saika {
+  border-radius: 10px;
+  color: $cream;
+  background-color: rgba($cyan, 0);
+  text-decoration: underline;
+  font-weight: 600;
+  letter-spacing: 1px;
+  font-size: 14px;
+  border: none;
+}
 .btn-primary-saika {
   border-radius: 10px;
   background-color: $cream;
@@ -13,7 +23,12 @@
   &.btn-dongker {
     background-color: $dongker !important;
     color: $cream !important;
+
+    .lds-ring div {
+      border-color: $cream transparent transparent transparent !important;
+    }
   }
+
   &.disabled {
     pointer-events: none;
     // box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.25);
@@ -100,7 +115,7 @@
   border: 3px solid #fff;
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #fff transparent transparent transparent;
+  border-color: $dongker transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
   animation-delay: -0.45s;

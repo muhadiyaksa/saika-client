@@ -1,0 +1,131 @@
+.container-grid {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[12];
+      grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: auto;
+  grid-auto-flow: dense;
+  row-gap: 15px;
+  -webkit-column-gap: 15px;
+          column-gap: 15px;
+  position: relative;
+  z-index: 3;
+}
+
+@media (min-width: 1200px) {
+  .container-grid {
+    -webkit-column-gap: 25px;
+            column-gap: 25px;
+  }
+}
+
+.container-grid .item {
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.container-grid .item.column-1 {
+  -ms-grid-column-span: 1;
+      grid-column-end: span 1;
+}
+
+.container-grid .item.column-2 {
+  -ms-grid-column-span: 2;
+      grid-column-end: span 2;
+}
+
+.container-grid .item.column-3 {
+  -ms-grid-column-span: 6;
+      grid-column-end: span 6;
+}
+
+@media (min-width: 768px) {
+  .container-grid .item.column-3 {
+    -ms-grid-column-span: 4;
+        grid-column-end: span 4;
+  }
+}
+
+@media (min-width: 992px) {
+  .container-grid .item.column-3 {
+    -ms-grid-column-span: 3;
+        grid-column-end: span 3;
+  }
+}
+
+.container-grid .item.column-4 {
+  -ms-grid-column-span: 12;
+      grid-column-end: span 12;
+}
+
+@media (min-width: 768px) {
+  .container-grid .item.column-4 {
+    -ms-grid-column-span: 4;
+        grid-column-end: span 4;
+  }
+}
+
+@media (min-width: 992px) {
+  .container-grid .item.column-4 {
+    -ms-grid-column-span: 4;
+        grid-column-end: span 4;
+  }
+}
+
+.container-grid .item.column-5 {
+  -ms-grid-column-span: 5;
+      grid-column-end: span 5;
+}
+
+.container-grid .item.column-6 {
+  -ms-grid-column-span: 6;
+      grid-column-end: span 6;
+}
+
+.container-grid .item.column-7 {
+  -ms-grid-column-span: 7;
+      grid-column-end: span 7;
+}
+
+.container-grid .item.column-8 {
+  -ms-grid-column-span: 8;
+      grid-column-end: span 8;
+}
+
+.container-grid .item.column-9 {
+  -ms-grid-column-span: 9;
+      grid-column-end: span 9;
+}
+
+.container-grid .item.column-10 {
+  -ms-grid-column-span: 10;
+      grid-column-end: span 10;
+}
+
+.container-grid .item.column-11 {
+  -ms-grid-column-span: 11;
+      grid-column-end: span 11;
+}
+
+.container-grid .item.column-12 {
+  -ms-grid-column-span: 12;
+      grid-column-end: span 12;
+}
+
+.container-grid .item.row-1 {
+  -ms-grid-row-span: 1;
+      grid-row-end: span 1;
+}
+
+.container-grid .item.row-2 {
+  -ms-grid-row-span: 2;
+      grid-row-end: span 2;
+}
+
+.container-grid .item img {
+  height: 100%;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+/*# sourceMappingURL=gridContainer.css.map */

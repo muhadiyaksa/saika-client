@@ -14,6 +14,8 @@ export default function Header() {
   const socket = io.connect("http://localhost:3001");
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
+  const userObj2 = JSON.parse(localStorage.getItem("userLogin"));
+  console.log(userObj2);
   let navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -97,7 +99,8 @@ export default function Header() {
         if (!error.response) {
           this.errorStatus = "Error: Network Error";
         } else {
-          this.errorStatus = error.response.data.message;
+          console.log(error);
+          this.errorStatus = error.response.status;
         }
       });
   };
@@ -173,7 +176,7 @@ export default function Header() {
       withCredentials: true,
       data: {
         iduserreq: userData._id,
-        passwordOld: dataPassword.passwordOld,
+        passwordOld: dataPassword.passwordOld ? dataPassword.passwordOld : "",
         passwordNew: dataPassword.passwordNew,
         passwordConfirm: dataPassword.passwordConfirm,
       },
@@ -238,10 +241,18 @@ export default function Header() {
   let refInputFile = useRef(null);
 
   const getNavLinkClass = (path) => {
-    if (window.location.pathname === path) {
-      return " active";
+    if (Array.isArray(path)) {
+      if (path.includes(window.location.pathname)) {
+        return "active";
+      } else {
+        return "";
+      }
     } else {
-      return "";
+      if (window.location.pathname === path) {
+        return " active";
+      } else {
+        return "";
+      }
     }
   };
 
@@ -258,21 +269,34 @@ export default function Header() {
   };
 
   const showNotif = () => {
-    if (activeChat?.length > 0) {
+    let dummy = [
+      { statusNotif: "active", username: "enol" },
+      { statusNotif: "active", username: "enol" },
+      // { statusNotif: "non-active", username: "enol" },
+      { statusNotif: "non-active", username: "enol" },
+    ];
+    if (dummy?.length > 0) {
       let dataFilter = activeChat.filter((el) => el.chat !== userData._id);
-      let data = dataFilter.map((el, i) => {
+      let data = dummy.map((el, i) => {
         return (
-          <button idchat={el.idchat} className={`btn d-flex shadow-none text-start w-100 align-items-center ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-dongker me-3" viewBox="0 0 16 16">
-              <path
-                fill-rule="evenodd"
-                d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
-              />
-            </svg>
-            <p>
+          <button idchat={el.idchat} className={`btn  d-flex shadow-none text-start mb-1  w-100 align-items-center position-relative ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
+            {el.statusNotif === "active" ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-envelope-fill text-cream me-3" viewBox="0 0 16 16">
+                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-softwhite me-3" viewBox="0 0 16 16">
+                <path
+                  fill-rule="evenodd"
+                  d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
+                />
+              </svg>
+            )}
+            <p className={`${el.statusNotif === "active" ? "text-cream" : "text-softwhite"}`}>
               Yuhuuu, kamu Memiliki pesan baru dari <strong>@{el.username}</strong>
             </p>
-            {el.statusNotif === "active" ? <span className="red"></span> : ""}
+            {/* <span className="red"></span> */}
+            {el.statusNotif === "active" ? <span className="red "></span> : ""}
           </button>
         );
       });
@@ -310,7 +334,7 @@ export default function Header() {
           <Button className="btn border rounded-circle p-0 d-none d-sm-block  shadow-none">
             <img src={dataUser.fotoUser ? `${dataUser.fotoUser.fotoUrl === "" ? avaUser : dataUser.fotoUser.fotoUrl}` : `${avaUser}`} alt="User" />
           </Button>
-          <div className="hover-item  text-start">
+          <div className="hover-item  text-start ">
             <ul className="list-group ">
               <li className="list-group-item d-flex align-items-center ">
                 <div className="image d-sm-none">
@@ -328,14 +352,14 @@ export default function Header() {
                 </div>
               </li>
               <li className="list-group-item">
-                <Button className="btn d-inline-flex w-100 align-items-center shadow-none text-dongker" onClick={handleShowNotif}>
+                <Button className="btn d-inline-flex w-100 align-items-center shadow-none text-cream" onClick={handleShowNotif}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle me-2" viewBox="0 0 16 16">
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                     <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
                   </svg>
                   <span>Ubah Profile</span>
                 </Button>
-                <Button className="btn d-inline-flex w-100 align-items-center shadow-none  text-dongker" onClick={handleShowNotif2}>
+                <Button className="btn d-inline-flex w-100 align-items-center shadow-none  text-cream" onClick={handleShowNotif2}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-lock-fill me-2" viewBox="0 0 16 16">
                     <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
                   </svg>
@@ -417,7 +441,7 @@ export default function Header() {
                 {activeNotifRed?.length > 0 ? <div className="notif"></div> : ""}
               </Button>
               <div className="area-notif ">
-                <p className="text-center my-2 fw-bold text-dongker">Notifikasi SAIKA</p>
+                <p className="text-center my-2 fw-bold text-softwhite">Notifikasi SAIKA</p>
                 {showNotif()}
               </div>
             </div>
@@ -445,7 +469,7 @@ export default function Header() {
             </svg>
             <span>Teman</span>
           </Button>
-          <Button className={`btn  shadow-none p-0 ${getNavLinkClass("/search")}`} type="link" href="/search">
+          <Button className={`btn  shadow-none p-0 ${getNavLinkClass(["/search", "/addevent"])}`} type="link" href="/search">
             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-calendar4-event " viewBox="0 0 16 16">
               <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
               <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
@@ -487,10 +511,10 @@ export default function Header() {
           Simpan
         </Button>
       </ModalElement>
-      <ModalElement show={showModalPassword} isCentered={true} funcModal={handleCloseNotif2}>
-        <div class="d-flex text-dongker mb-3 justify-content-between align-items-center shadow-none" onClick={handleCloseNotif2}>
-          <p>Ubah Password</p>
-          <button className="btn p-0 m-0 fw-bold">x</button>
+      <ModalElement isDongker={true} show={showModalPassword} isCentered={true} funcModal={handleCloseNotif2}>
+        <div class="d-flex  mb-3 justify-content-between align-items-center shadow-none" onClick={handleCloseNotif2}>
+          <p className="text-softwhite">Ubah Password</p>
+          <button className="btn p-0 m-0 fw-bold text-cream">x</button>
         </div>
         <label htmlFor="lama">Password Lama</label>
         <input id="lama" type="password" className="form-control shadow-none mb-3" placeholder="Isi Password lama" onChange={(e) => setDataPassword({ ...dataPassword, passwordOld: e.target.value })} />
@@ -507,29 +531,29 @@ export default function Header() {
             );
           })}
         </ul>
-        <Button isPrimary isDongker className="w-100  fs-6  shadow-none d-inline-flex align-items-center justify-content-center" isSpinner={spinnerPassword} onClick={updatePassword}>
+        <Button isPrimary className="w-100  fs-6  shadow-none d-inline-flex align-items-center justify-content-center" isSpinner={spinnerPassword} onClick={updatePassword}>
           Simpan
         </Button>
       </ModalElement>
-      <ModalElement isHeader={true} show={showModalProfile} isCentered={true} funcModal={handleCloseModalProfile} heading={"Profil"}>
+      <ModalElement isDongker show={showModalProfile} isCentered={true} funcModal={handleCloseModalProfile}>
         {showUser()}
       </ModalElement>
-      <ModalElement isHeader={false} isCentered={true} show={showModalInfo} funcModal={handleCloseModalInfo} heading={"Profil"}>
+      <ModalElement isDongker isHeader={false} isCentered={true} show={showModalInfo} funcModal={handleCloseModalInfo} heading={"Profil"}>
         <div className="d-flex align-items-center">
           <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-exclamation-circle me-3 text-success" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
             <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
           </svg>
-          <span>Profil Berhasil di ubah</span>
+          <span className="text-softwhite">Profil Berhasil di ubah</span>
         </div>
       </ModalElement>
-      <ModalElement isHeader={false} show={showModalLogout} funcModal={handleCloseModalLogout} heading={"Logout"} isCentered={false}>
+      <ModalElement isDongker={true} isHeader={false} show={showModalLogout} funcModal={handleCloseModalLogout} heading={"Logout"} isCentered={false}>
         <div className="text-center d-flex flex-column align-items-center py-4 ">
           <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor" className="bi bi-exclamation-triangle text-danger" viewBox="0 0 16 16">
             <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z" />
             <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z" />
           </svg>
-          <span className="mt-3 mb-4">Apakah Anda Yakin Untuk Logout?</span>
+          <span className="mt-3 mb-4 text-softwhite">Apakah Anda Yakin Untuk Logout?</span>
           <div className="d-flex">
             <Button className="btn btn-light border rounded-pill me-3  shadow-none" onClick={handleCloseModalLogout}>
               Batal
@@ -540,15 +564,15 @@ export default function Header() {
           </div>
         </div>
       </ModalElement>
-      <ModalElement isHeader={false} show={showModalNotif} funcModal={handleCloseModalNotif} isCentered={true}>
+      <ModalElement isDongker isHeader={false} show={showModalNotif} funcModal={handleCloseModalNotif} isCentered={true}>
         <div className="area-notif ">
-          <p className="text-center my-2 fw-bold text-cyan">Notifikasi SAIKA</p>
-          {showNotif()}
-          <div className="text-center">
-            <Button onClick={handleCloseModalNotif} className="btn btn-secondary ">
-              Close
+          <div class="d-flex justify-content-between align-items-center">
+            <p className="text-center my-2 fw-bold text-softwhite mobile">Notifikasi SAIKA</p>
+            <Button className="btn fw-bold shadow-none text-cream" onClick={handleCloseModalNotif}>
+              X
             </Button>
           </div>
+          {showNotif()}
         </div>
       </ModalElement>
     </nav>

@@ -8,6 +8,7 @@ export default function Regist() {
   const [show2, setShow2] = useState("password");
   const [dataUser, setDataUser] = useState({});
   const [errors, setErrors] = useState([]);
+  const [isSpinner, setIsSpinner] = useState(false);
   const showhideclick = () => {
     show === "password" ? setShow("text") : setShow("password");
   };
@@ -17,6 +18,7 @@ export default function Regist() {
   const navigate = useNavigate();
 
   const submitRegist = () => {
+    setIsSpinner(true);
     Axios({
       method: "POST",
       data: dataUser,
@@ -25,6 +27,7 @@ export default function Regist() {
     }).then((res) => {
       if (!res.data.errors) {
         navigate("/login");
+        console.log(res);
         return "Success";
       } else {
         let error = res.data.errors.map((el) => el.msg);
@@ -42,8 +45,8 @@ export default function Regist() {
           </div>
           <div className="col-md p-4">
             <div className="regist-only  ">
-              <p className="judul mb-0">Yeay! Ada Yang Mau jadi teman Baru SAIKA nih</p>
-              <p className="keterangan ">Yuk isi Form Registrasi di bawah.</p>
+              <p className="judul mb-0">Registrasi</p>
+              <p className="keterangan ">Isi Form dan Nikmati akses penuh aplikasi SAIKA</p>
 
               <label htmlFor="namaLengkap">Nama Lengkap</label>
 
@@ -75,7 +78,7 @@ export default function Regist() {
                   })}
                 </ul>
               </div>
-              <Button isPrimary className="w-100 rounded-3 mb-4" onClick={submitRegist}>
+              <Button isPrimary isSpinner={isSpinner} className="w-100 rounded-3 mb-4 d-inline-flex align-items-center justify-content-center" onClick={submitRegist}>
                 Daftar
               </Button>
 
