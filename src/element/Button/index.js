@@ -57,7 +57,7 @@ export default function Button(props) {
     <button className={className.join(" ")} style={props.style} onClick={onClick}>
       {props.children}
       {props.isSpinner ? (
-        <div class="lds-ring d-inline-props">
+        <div className="lds-ring d-inline-props">
           <div></div>
           <div></div>
           <div></div>

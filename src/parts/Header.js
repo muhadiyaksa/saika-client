@@ -11,11 +11,17 @@ import ModalElement from "../element/ModalElement";
 import io from "socket.io-client";
 
 export default function Header() {
-  const socket = io.connect("http://localhost:3001");
+  const socket = io("http://localhost:3001", {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
+
+  //PR
+  // BUAT NOTIFIKASI PKE SETINTERVAL AJAH
+  // GAUSAH PKE SOCKET
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   const userObj2 = JSON.parse(localStorage.getItem("userLogin"));
-  console.log(userObj2);
   let navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -73,13 +79,13 @@ export default function Header() {
     // socket.on("pesan_terima_pc", (data) => {
     //   // setDataChat(data);
     // });
-
     socket.on("pesan_aktif", (data) => {
       let dataFilter = data.filter((el) => el.chat !== userData._id).filter((el) => el.statusNotif === "active");
       setActiveNotifRed(dataFilter);
       setActiveChat(data);
     });
-  }, [socket]);
+    console.log("yas");
+  }, []);
 
   const updateStatusNotif = (e) => {
     Axios({
@@ -281,13 +287,13 @@ export default function Header() {
         return (
           <button idchat={el.idchat} className={`btn  d-flex shadow-none text-start mb-1  w-100 align-items-center position-relative ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
             {el.statusNotif === "active" ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-envelope-fill text-cream me-3" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-fill text-cream me-3" viewBox="0 0 16 16">
                 <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
               </svg>
             ) : (
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-softwhite me-3" viewBox="0 0 16 16">
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
                 />
               </svg>
@@ -383,12 +389,12 @@ export default function Header() {
     } else {
       return (
         <Button isPrimary className="py-1 px-2 text-decoration-none rounded d-inline-flex align-items-center" type="link" href="/login">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right me-2" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-in-right me-2" viewBox="0 0 16 16">
             <path
-              fill-rule="evenodd"
+              fillRule="evenodd"
               d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"
             />
-            <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+            <path fillRule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
           </svg>
           Login
         </Button>
@@ -479,7 +485,7 @@ export default function Header() {
         </div>
       </div>
       <ModalElement isDongker={true} show={show} isCentered={true} funcModal={handleCloseNotif}>
-        <div class="d-flex text-softwhite justify-content-between align-items-center shadow-none" onClick={handleCloseNotif}>
+        <div className="d-flex text-softwhite justify-content-between align-items-center shadow-none" onClick={handleCloseNotif}>
           <p>Ubah Profile</p>
           <button className="btn p-0 m-0 fw-bold text-cream">x</button>
         </div>
@@ -512,7 +518,7 @@ export default function Header() {
         </Button>
       </ModalElement>
       <ModalElement isDongker={true} show={showModalPassword} isCentered={true} funcModal={handleCloseNotif2}>
-        <div class="d-flex  mb-3 justify-content-between align-items-center shadow-none" onClick={handleCloseNotif2}>
+        <div className="d-flex  mb-3 justify-content-between align-items-center shadow-none" onClick={handleCloseNotif2}>
           <p className="text-softwhite">Ubah Password</p>
           <button className="btn p-0 m-0 fw-bold text-cream">x</button>
         </div>
@@ -566,7 +572,7 @@ export default function Header() {
       </ModalElement>
       <ModalElement isDongker isHeader={false} show={showModalNotif} funcModal={handleCloseModalNotif} isCentered={true}>
         <div className="area-notif ">
-          <div class="d-flex justify-content-between align-items-center">
+          <div className="d-flex justify-content-between align-items-center">
             <p className="text-center my-2 fw-bold text-softwhite mobile">Notifikasi SAIKA</p>
             <Button className="btn fw-bold shadow-none text-cream" onClick={handleCloseModalNotif}>
               X

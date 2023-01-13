@@ -178,7 +178,7 @@ export default function ForgetPassword() {
                   <p className="judul">Lupa Password?</p>
                   <p className="keterangan mb-5">tenang kamu dapat mereset lalu mengganti password mu!</p>
                   <span style={{ fontSize: "13px" }} className={`alert alert-success w-100 text-center ${show.formCode ? "d-inline-block" : "d-none"}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-check-square me-3" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" className="bi bi-check-square me-3" viewBox="0 0 16 16">
                       <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
                       <path d="M10.97 4.97a.75.75 0 0 1 1.071 1.05l-3.992 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.235.235 0 0 1 .02-.022z" />
                     </svg>
@@ -217,7 +217,7 @@ export default function ForgetPassword() {
                     <br />
                     <span style={{ fontSize: "12px" }}>*Masukan kode unik yang telah dikirimkan melalui email</span>
                     <br />
-                    <div class="d-flex code-form">
+                    <div className="d-flex code-form">
                       <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="1" name="email" className="1 me-2" />
                       <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="2" name="email" className="2 me-2" />
                       <input type="text" onKeyUp={focusSet} id="email" maxLength="1" indeks="3" name="email" className="3 me-2" />
@@ -227,7 +227,7 @@ export default function ForgetPassword() {
                     </div>
                     <br />
                     <span style={{ fontSize: "13px" }} className={`alert alert-danger w-100 text-center ${errors.errValidateCode.length > 0 ? "d-inline-block" : "d-none"}`}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" class="bi bi-exclamation-circle me-3" viewBox="0 0 16 16">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" className="bi bi-exclamation-circle me-3" viewBox="0 0 16 16">
                         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
                       </svg>
@@ -248,12 +248,12 @@ export default function ForgetPassword() {
             </div>
           </div>
           <ModalElement isDongker={true} show={showBoxResetPassword} isCentered={true} funcModal={handleCloseBoxReset}>
-            <div class="d-flex text-dongker justify-content-between align-items-center shadow-none mb-4" onClick={handleCloseBoxReset}>
+            <div className="d-flex text-dongker justify-content-between align-items-center shadow-none mb-4" onClick={handleCloseBoxReset}>
               <p>Reset Password</p>
               <button className="btn p-0 m-0 fw-bold">x</button>
             </div>
-            <div class="text-center mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-check2-circle text-success " viewBox="0 0 16 16">
+            <div className="text-center mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" className="bi bi-check2-circle text-success " viewBox="0 0 16 16">
                 <path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z" />
                 <path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z" />
               </svg>

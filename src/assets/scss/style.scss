@@ -297,7 +297,7 @@ body {
   background-color: $dongker !important;
 }
 .text-softwhite {
-  color: rgb(240, 240, 240);
+  color: rgb(240, 240, 240) !important;
 }
 .text-cyan {
   color: $cyan;
@@ -310,15 +310,60 @@ body {
 }
 .input-dongker {
   background-color: $dongker !important;
-  color: $white;
+  color: $white !important;
   border: 1px solid $bluelight !important;
+  outline: none;
+  // border: 1px solid $bluelight;
   box-shadow: none;
+
+  &:focus {
+    outline: none;
+    border: 1px solid $white !important;
+  }
 }
 .notfound {
-  img {
-    max-width: 100%;
+  font-size: 12px;
+  @media (min-width: 992px) {
+    font-size: 14px;
+  }
+  .image {
+    height: 200px;
+    width: 100%;
+    object-fit: contain;
+    text-align: center;
+    @media (min-width: 768px) {
+      height: 300px;
+    }
     @media (min-width: 992px) {
-      max-width: 50%;
+      height: 380px;
+    }
+    img {
+      height: 100%;
+      max-width: 100%;
+      @media (min-width: 992px) {
+        max-width: 50%;
+      }
+    }
+  }
+}
+.pagination {
+  margin-top: 30px;
+  justify-content: end;
+  * {
+    border-color: rgba($bluelight, 0);
+  }
+  .page-item {
+    font-size: 12px;
+    margin: 0px 3px !important;
+    .page-link {
+      color: $white !important;
+      border: 0px solid $cream !important;
+    }
+    &.active .page-link {
+      background-color: $cream !important;
+      outline: none !important;
+      color: $dongker !important;
+      border-color: $cream !important;
     }
   }
 }

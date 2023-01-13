@@ -78,10 +78,10 @@ export default function Login() {
                   <br />
                   <input type={show} id="password" name="password" placeholder="Password" defaultValue={userLogin?.password} onChange={(e) => setDataLogin({ ...dataLogin, password: e.target.value })} />
                   <span className="show-hide" onClick={showhideclick}></span>
-                  <div class="d-flex justify-content-between align-items-center mb-0 ">
-                    <div class="form-check " style={{ fontSize: "12px" }}>
-                      <input class="form-check-input shadow-none" type="checkbox" defaultChecked={userLogin ? true : false} id="flexCheckChecked" onChange={rememberMe} />
-                      <span class="form-check-label" for="flexCheckChecked">
+                  <div className="d-flex justify-content-between align-items-center mb-0 ">
+                    <div className="form-check " style={{ fontSize: "12px" }}>
+                      <input className="form-check-input shadow-none" type="checkbox" defaultChecked={userLogin ? true : false} id="flexCheckChecked" onChange={rememberMe} />
+                      <span className="form-check-label" for="flexCheckChecked">
                         Ingat Saya
                       </span>
                     </div>
