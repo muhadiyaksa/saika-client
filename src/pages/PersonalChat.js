@@ -124,8 +124,18 @@ export default function PersonalChat() {
         }
       });
     }
-    console.log(userData._id);
-    console.log(e.target.getAttribute("iduserreq"));
+
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: `http://localhost:3001/user/friend/${e.target.getAttribute("iduserreq")}`,
+      headers: {
+        Authorization: `Bearer ${userObj.token}`,
+      },
+    }).then((res) => {
+      setDataFriend(res.data);
+    });
+
     Axios({
       method: "POST",
       withCredentials: true,
@@ -194,6 +204,7 @@ export default function PersonalChat() {
     });
   };
 
+  console.log(dataFriend);
   const deleteFriend = () => {
     console.log("hai");
   };
@@ -237,18 +248,18 @@ export default function PersonalChat() {
               <div className="item-friends d-flex align-items-center">
                 <div className="d-flex align-items-center">
                   <div className="image ">
-                    <img src="" alt="" />
+                    <img src={el.fotoUser} alt="" />
                   </div>
                   <div className="friend">
                     <p className="p-0 m-0 text-capitalize">{el.nama}</p>
-                    <button iduserreq={el.iduser} className="btn p-0 shadow-none" onClick={showProfil}>
+                    <button iduserreq={el.iduser} className="btn p-0 text-cream shadow-none" onClick={showProfil}>
                       @{el.username}
                     </button>
                   </div>
                 </div>
                 <div className="info">
                   <button className="btn p-0 shadow-none" iduserreq={el.iduser} idchat={setIdChat(el.iduser)} onClick={showChats}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-envelope-fill text-cyan" viewBox="0 0 16 16">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-envelope-fill text-cream" viewBox="0 0 16 16">
                       <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
                     </svg>
                   </button>
@@ -261,7 +272,7 @@ export default function PersonalChat() {
         } else {
           return (
             <div className="pt-5 d-flex align-items-center justify-content-center">
-              <p>Kamu belum Memiliki Teman</p>
+              <p className="ketnull">Kamu belum Memiliki Teman</p>
             </div>
           );
         }
@@ -274,7 +285,7 @@ export default function PersonalChat() {
               <div className="item-friends d-flex align-items-center">
                 <div className="d-flex align-items-center">
                   <div className="image me-lg-3 me-1">
-                    <img src="" alt="" />
+                    <img src={el.fotoUser} alt="" />
                   </div>
                   <div className="friend">
                     <p className="p-0 m-0">{el.nama}</p>
@@ -375,8 +386,13 @@ export default function PersonalChat() {
               <div className="box">
                 {isChat === false ? (
                   <div className="d-flex align-items-center justify-content-center banner flex-column">
-                    <img src={Message} alt="" />
+                    <div class="image">
+                      <img src="/image/chat-start.svg" alt="" />
+                    </div>
                     <p>Mulailah Berkomunikasi secara Personal kepada teman-teman Mu di SAIKA</p>
+                    <Button isPrimary type="link" href="/find" className="text-decoration-none">
+                      Cari Teman
+                    </Button>
                   </div>
                 ) : (
                   <>
@@ -396,34 +412,34 @@ export default function PersonalChat() {
                         {isFriendProfile === true ? (
                           <div className="position-relative h-100">
                             <div className="profile-friend ">
-                              <div className="subjudul  text-sm-center text-start d-flex d-sm-block align-items-center mb-3 ">
-                                <button className="btn p-0 me-3 d-sm-none back" onClick={hiddenChats}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-left-circle text-cyan" viewBox="0 0 16 16">
+                              <div className="subjudul mt-3 text-sm-center text-start d-flex align-items-center d-sm-block align-items-center mb-3 ">
+                                <button className="btn p-0 me-3 d-sm-none ms-2" onClick={hiddenChats}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-left-circle text-cream" viewBox="0 0 16 16">
                                     <path
                                       fill-rule="evenodd"
                                       d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"
                                     />
                                   </svg>
                                 </button>
-                                <p className="mb-0 mt-3">Profile Sahabat SAIKA</p>
+                                <p className="mb-0 mt-md-3">Profile Anggota SAIKA</p>
                               </div>
-                              <div className="image mx-auto d-none d-lg-block">
+                              {/* <div className="image mx-auto d-none d-lg-block">
                                 <img src={ImageHello} alt="" />
-                              </div>
+                              </div> */}
                               <div className="row justify-content-center align-items-center mb-3">
                                 <div className="col-md mb-3">
                                   <div className="image user ">
-                                    <img src={dataFriend?.fotoUrl} alt="Icon Process" />
+                                    <img src={dataFriend?.fotoProfil} alt="Icon Process" />
                                   </div>
                                 </div>
-                                <div className="col-md text-center text-lg-start ">
-                                  <p className="fs-5 fw-bold text-cyan">{dataFriend.jumlahTeman} Teman</p>
+                                <div className="col-md text-center text-md-start ">
+                                  <p className="fs-5 fw-bold text-cream">{dataFriend.jumlahTeman} Teman</p>
                                   <p className="text-capitalize mb-0 ">{dataFriend?.nama}</p>
                                   <p className="mb-0">@{dataFriend?.username}</p>
                                   <p>{dataFriend?.email}</p>
-                                  <div className="d-flex">
-                                    <button className="btn btn-cyan btn-close-layer" idchat="null" iduserreq={dataFriend.iduser} onClick={showChats}>
-                                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-send text-light me-3" viewBox="0 0 16 16">
+                                  <div className="d-flex justify-content-center justify-content-md-start">
+                                    <button className="btn btn-cream btn-close-layer" idchat="null" iduserreq={dataFriend.iduser} onClick={showChats} style={{ fontSize: "14px" }}>
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-send text-dongker me-3" viewBox="0 0 16 16">
                                         <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
                                       </svg>
                                       <span>Kirim Pesan</span>
@@ -444,7 +460,7 @@ export default function PersonalChat() {
                           </div>
                         ) : (
                           <div className="position-relative h-100">
-                            <div className="row header-chats align-items-center">
+                            <div className="row header-chats align-items-center ">
                               <div className="col d-flex align-items-center">
                                 <button className="btn p-0 me-3 d-sm-none" onClick={hiddenChats}>
                                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-arrow-left-circle text-cyan" viewBox="0 0 16 16">
@@ -455,11 +471,13 @@ export default function PersonalChat() {
                                   </svg>
                                 </button>
                                 <div className="image">
-                                  <img src="" alt="" />
+                                  <img src={dataFriend?.fotoProfil} alt="" />
                                 </div>
                                 <div className="identitas">
-                                  <p className="p-0 m-0 text-capitalize">{dataChat?.iduserpertama === userData._id ? dataChat.userkedua.nama : dataChat.userpertama.nama}</p>
-                                  <span>@{dataChat?.iduserpertama === userData._id ? dataChat.userkedua.username : dataChat.userpertama.username}</span>
+                                  {/* <p className="p-0 m-0 text-capitalize">{dataChat?.iduserpertama === userData._id ? dataChat.userkedua.nama : dataChat.userpertama.nama}</p> */}
+                                  <p className="p-0 m-0 text-capitalize">{dataFriend?.nama}</p>
+                                  {/* <span>@{dataChat?.iduserpertama === userData._id ? dataChat.userkedua.username : dataChat.userpertama.username}</span> */}
+                                  <span>@{dataFriend?.username}</span>
                                 </div>
                               </div>
                             </div>
@@ -471,8 +489,10 @@ export default function PersonalChat() {
                             <div className="input-chats">
                               <div className="position-relative h-100">
                                 <textarea className="form-control input-pesan shadow-none border-0" placeholder="ketikan pesanmu disini" onChange={(e) => setPesanKirim(e.target.value)} />
-                                <Button className="btn shadow-none" onClick={sendMessage}>
-                                  <img src={ChatSend} alt="Send" />
+                                <Button className="btn shadow-none text-cream" onClick={sendMessage}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-send-fill text-cream" viewBox="0 0 16 16" style={{ transform: "rotate(45deg)" }}>
+                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                                  </svg>
                                 </Button>
                               </div>
                             </div>
@@ -488,7 +508,7 @@ export default function PersonalChat() {
           <div className="d-none d-sm-block">
             <Footer />
           </div>
-          <ModalElement show={showModal} funcModal={handleCloseModal} heading={"Konfirmasi"}>
+          <ModalElement show={showModal} funcModal={handleCloseModal} isDongker heading={"Konfirmasi"}>
             <div className="text-center py-2">
               <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" className="bi bi-exclamation-circle text-danger" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -500,7 +520,7 @@ export default function PersonalChat() {
               </Button>
             </div>
           </ModalElement>
-          <ModalElement show={showModalTolak} funcModal={handleCloseModalTolak} heading={"Konfirmasi"}>
+          <ModalElement show={showModalTolak} funcModal={handleCloseModalTolak} isDongker heading={"Konfirmasi"}>
             <div className="text-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" className="bi bi-exclamation-circle text-danger" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />

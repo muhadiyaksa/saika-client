@@ -17,6 +17,7 @@ export default function List() {
   const [valueSearch, setValueSearch] = useState("DEFAULT");
 
   useEffect(() => {
+    setIsLoading(true);
     Axios({
       method: "GET",
       withCredentials: true,
@@ -29,6 +30,7 @@ export default function List() {
         setNotFound(false);
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
         setNotFound(true);
       });
@@ -45,25 +47,37 @@ export default function List() {
   };
 
   const tampilEvent = () => {
-    if (dataEvent.events?.length !== 0) {
-      console.log(dataEvent.events);
-      let data = dataEvent.events?.map((el) => {
-        return (
-          <div className="item column-3 row-1">
-            <Card
-              linkUrl={`/detail/${el.eventId}`}
-              imgSrc={el.eventImage}
-              judul={el.eventName}
-              penyelenggara={el.institution}
-              kategori={el.eventCategory.toUpperCase()}
-              waktu={el.eventDate}
-              paymentType={el.paymentType}
-              price={rupiahFormats(el.price)}
-            />
+    if (isLoading) {
+      return (
+        <div class="item column-12 row-1">
+          <div className="lds-ring  big">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
-        );
-      });
-      return data;
+        </div>
+      );
+    } else {
+      if (dataEvent.events?.length !== 0) {
+        let data = dataEvent.events?.map((el) => {
+          return (
+            <div className="item column-3 row-1">
+              <Card
+                linkUrl={`/detail/${el.eventId}`}
+                imgSrc={el.eventImage}
+                judul={el.eventName}
+                penyelenggara={el.institution}
+                kategori={el.eventCategory.toUpperCase()}
+                waktu={el.eventDate}
+                paymentType={el.paymentType}
+                price={rupiahFormats(el.price)}
+              />
+            </div>
+          );
+        });
+        return data;
+      }
     }
   };
 
@@ -75,6 +89,7 @@ export default function List() {
     setIsLoading(true);
     setValueSelect({ ...valueSelect, paymentType: e.target.value });
   };
+
   console.log(qtyCurrent);
   const tampilPagination = () => {
     if (!notFound) {
@@ -100,21 +115,15 @@ export default function List() {
               <option value="5">5</option>
               <option value="10">10</option>
             </select>
-            <li className="page-item disabled">
-              <Button
-                className={`page-link bg-dongker shadow-none ${dataEvent?.current === 1 ? "disabled" : ""}`}
-                onClick={() => setQtyCurrent({ ...qtyCurrent, current: qtyCurrent.current === 1 ? qtyCurrent.curret : qtyCurrent.current - 1 })}
-              >
-                <span aria-hidden="true">&laquo;</span>
+            <li className={`page-item ${dataEvent?.current === 1 ? "disabled" : ""}`}>
+              <Button className="page-link bg-dongker shadow-none" onClick={() => setQtyCurrent({ ...qtyCurrent, current: qtyCurrent.current === 1 ? qtyCurrent.current : qtyCurrent.current - 1 })}>
+                <span aria-hidden="true">&laquo; </span>
               </Button>
             </li>
             {element}
 
-            <li className="page-item">
-              <Button
-                className={`page-link bg-dongker shadow-none ${dataEvent?.current === dataEvent?.totalPagination ? "disabled" : ""}`}
-                onClick={() => setQtyCurrent({ ...qtyCurrent, current: qtyCurrent.current >= dataEvent?.totalPagination ? qtyCurrent.current : qtyCurrent.current + 1 })}
-              >
+            <li className={`page-item ${dataEvent?.current === dataEvent?.totalPagination ? "disabled" : ""}`}>
+              <Button className="page-link bg-dongker shadow-none" onClick={() => setQtyCurrent({ ...qtyCurrent, current: qtyCurrent.current >= dataEvent?.totalPagination ? qtyCurrent.current : qtyCurrent.current + 1 })}>
                 <span aria-hidden="true">&raquo;</span>
               </Button>
             </li>

@@ -334,7 +334,12 @@ export default function EventRegist() {
                       <label htmlFor="kategori">
                         Kategori Acara<span className="text-danger">*</span>
                       </label>
-                      <select name="kategori" id="kategori" className="form-select mb-3" onChange={(e) => setDataDetail({ ...dataDetail, eventCategory: e.target.value })}>
+                      <select
+                        name="kategori"
+                        id="kategori"
+                        className="d-block rounded mb-3 w-100 bg-dongker text-white px-2 shadow-none border border-0 py-2mb-3"
+                        onChange={(e) => setDataDetail({ ...dataDetail, eventCategory: e.target.value })}
+                      >
                         <option value="">Pilih Kategori</option>
                         <option value="rpl">Rekayasa Perangkat Lunak</option>
                         <option value="jarkom">Jaringan Komputer</option>

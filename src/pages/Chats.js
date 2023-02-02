@@ -15,7 +15,10 @@ import Sorry from "../assets/image/sorry.svg";
 import Disconnected from "../assets/image/disconnected.png";
 
 export default function Chats() {
-  const socket = io.connect("http://localhost:3001");
+  const socket = io.connect("http://localhost:3001", {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   const userData = useSelector((state) => state.user.user);
