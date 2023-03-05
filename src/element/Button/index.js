@@ -28,7 +28,7 @@ export default function Button(props) {
           // Dibawah ini adalah react.fragment
           <>
             <span className="spinner-border spinner-border-sm mx-5"></span>
-            <span className="sr-only">Loading ...</span>
+            {!props.isLoadingText ? <span className="sr-only">Loading ...</span> : ""}
           </>
         ) : (
           props.children
@@ -78,6 +78,7 @@ Button.propTypes = {
   className: propTypes.string, //button hanya menerima string untuk classnya
   isDisabled: propTypes.bool, //button hanya menerima true atau false untuk apakah dia disable atau engga
   isLoading: propTypes.bool, //button hanya menerima true atau false untuk proses loading kecil apabila button ditekan
+  isLoadingText: propTypes.bool, //button hanya menerima true atau false untuk proses loading kecil apabila button ditekan
   isSmall: propTypes.bool, //button hanya menerima true atau false untuk proses milih ini button kecil atau engga
   isLarge: propTypes.bool, //button hanya menerima true atau false untuk proses milih ini button besar atau engga
   isBlock: propTypes.bool, //button hanya menerima true atau false untuk proses milih ini button block atau engga

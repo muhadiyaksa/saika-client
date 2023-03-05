@@ -5,8 +5,7 @@ import io from "socket.io-client";
 import Axios from "axios";
 import Button from "../element/Button";
 
-export default function Loading() {
-  const socket = io.connect("http://localhost:3001");
+export default function Loading({ socket }) {
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const userData = useSelector((state) => state.user.user);
@@ -67,7 +66,7 @@ export default function Loading() {
             kategori: query.get("kategori"),
             tipeUser: "registered",
             iduser: userData._id,
-            fotoUser: "",
+            fotoUser: dataUser.fotoUser?.fotoUrl,
             namauser: dataUser.nama,
             usernameuser: dataUser.username ? dataUser.username : "@anonymous",
             percobaan: y,

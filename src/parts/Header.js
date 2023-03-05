@@ -8,17 +8,13 @@ import { unwrapResult } from "@reduxjs/toolkit";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ModalElement from "../element/ModalElement";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 export default function Header() {
-  const socket = io("http://localhost:3001", {
-    transports: ["websocket"],
-    withCredentials: true,
-  });
-
-  //PR
-  // BUAT NOTIFIKASI PKE SETINTERVAL AJAH
-  // GAUSAH PKE SOCKET
+  // const socket = io("http://localhost:3001", {
+  //   transports: ["websocket"],
+  //   withCredentials: true,
+  // });
 
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
   const userObj2 = JSON.parse(localStorage.getItem("userLogin"));
@@ -29,16 +25,12 @@ export default function Header() {
   const userData = useSelector((state) => state.user.user);
 
   const [dataUser, setDataUser] = useState({});
+  const [dataChatAll, setDataChatAll] = useState([]);
   const [dataPassword, setDataPassword] = useState({});
   const [activeChat, setActiveChat] = useState([]);
   const [activeNotifRed, setActiveNotifRed] = useState([]);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [errors, setErrors] = useState([]);
-  const handleLogout = () => {
-    setSpinnerLogout(true);
-    dispatch(logout());
-    window.location.reload();
-  };
 
   useEffect(() => {
     fetchtoAPI();
@@ -47,20 +39,16 @@ export default function Header() {
       Axios({
         method: "GET",
         withCredentials: true,
-        url: `http://localhost:3001/chat/all/${iduser}`,
+        url: `http://localhost:3001/chat/allv2/${iduser}`,
         headers: {
           Authorization: `Bearer ${userObj.token}`,
         },
       })
         .then((res) => {
-          setActiveChat(res.data);
+          setDataChatAll(res.data);
         })
         .catch((error) => {
-          if (!error.response) {
-            this.errorStatus = "Error: Network Error";
-          } else {
-            this.errorStatus = error.response.data.message;
-          }
+          setDataChatAll([]);
         });
     };
     if (isLoggedIn) {
@@ -75,41 +63,24 @@ export default function Header() {
     }
   }, []);
 
-  useEffect(() => {
-    // socket.on("pesan_terima_pc", (data) => {
-    //   // setDataChat(data);
-    // });
-    socket.on("pesan_aktif", (data) => {
-      let dataFilter = data.filter((el) => el.chat !== userData._id).filter((el) => el.statusNotif === "active");
-      setActiveNotifRed(dataFilter);
-      setActiveChat(data);
-    });
-    console.log("yas");
-  }, []);
+  // useEffect(() => {
+  //   // socket.on("pesan_terima_pc", (data) => {
+  //   //   // setDataChat(data);
+  //   // });
+  //   socket.on("pesan_aktif", (data) => {
+  //     // let dataFilter = data.filter((el) => el.iduserLastSender && el.iduserLastSender !== userData._id).filter((el) => el.statusNotif === "active");
+  //     // setActiveNotifRed(dataFilter);
+  //     // setActiveChat(data);
+  //   });
+  //   // console.log("yas");
+  // }, []);
 
-  const updateStatusNotif = (e) => {
-    Axios({
-      method: "PUT",
-      withCredentials: true,
-      url: `http://localhost:3001/chat/notifstatus/${e.target.getAttribute("idchat")}`,
-      headers: {
-        Authorization: `Bearer ${userObj.token}`,
-      },
-    })
-      .then((res) => {
-        if (res.data.status === "success") {
-          navigate("/chat");
-        }
-      })
-      .catch((error) => {
-        if (!error.response) {
-          this.errorStatus = "Error: Network Error";
-        } else {
-          console.log(error);
-          this.errorStatus = error.response.status;
-        }
-      });
+  const handleLogout = () => {
+    setSpinnerLogout(true);
+    dispatch(logout());
+    window.location.reload();
   };
+
   const fetchtoAPI = async () => {
     if (isLoggedIn) {
       setIsLoadingPage(true);
@@ -123,7 +94,7 @@ export default function Header() {
         const actionResult = await dispatch(getDataUser(res));
         const result = unwrapResult(actionResult);
         setDataUser(result);
-        socket.emit("data_user", userData._id);
+        // socket.emit("data_user", userData._id);
         setIsLoadingPage(false);
       });
     }
@@ -149,6 +120,7 @@ export default function Header() {
       setFotoError(true);
     }
   }
+
   const updateProfil = () => {
     setSpinnerProfil(true);
     let data = new FormData();
@@ -175,6 +147,7 @@ export default function Header() {
       }
     });
   };
+
   const updatePassword = () => {
     setSpinnerPassword(true);
     Axios({
@@ -282,16 +255,17 @@ export default function Header() {
       { statusNotif: "non-active", username: "enol" },
     ];
     if (dummy?.length > 0) {
-      let dataFilter = activeChat.filter((el) => el.chat !== userData._id);
+      // let dataFilter = activeChat.filter((el) => el.iduserLastSender && el.iduserLastSender !== userData._id);
+      // console.log(dataFilter);
       let data = dummy.map((el, i) => {
         return (
-          <button idchat={el.idchat} className={`btn  d-flex shadow-none text-start mb-1  w-100 align-items-center position-relative ${el.statusNotif}`} key={`notif-${i}`} onClick={updateStatusNotif}>
+          <a className={`btn btn-close-layer  d-flex shadow-none text-start mb-1  w-100 align-items-center  ${el.statusNotif}`} key={`notif-${i}`} href="/chat">
             {el.statusNotif === "active" ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-fill text-cream me-3" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-envelope-fill text-cream me-3" viewBox="0 0 16 16">
                 <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z" />
               </svg>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" className="bi bi-envelope-paper-fill text-softwhite me-3" viewBox="0 0 16 16">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-envelope-paper-fill text-softwhite me-3" viewBox="0 0 16 16">
                 <path
                   fillRule="evenodd"
                   d="M6.5 9.5 3 7.5v-6A1.5 1.5 0 0 1 4.5 0h7A1.5 1.5 0 0 1 13 1.5v6l-3.5 2L8 8.75l-1.5.75ZM1.059 3.635 2 3.133v3.753L0 5.713V5.4a2 2 0 0 1 1.059-1.765ZM16 5.713l-2 1.173V3.133l.941.502A2 2 0 0 1 16 5.4v.313Zm0 1.16-5.693 3.337L16 13.372v-6.5Zm-8 3.199 7.941 4.412A2 2 0 0 1 14 16H2a2 2 0 0 1-1.941-1.516L8 10.072Zm-8 3.3 5.693-3.162L0 6.873v6.5Z"
@@ -299,11 +273,11 @@ export default function Header() {
               </svg>
             )}
             <p className={`${el.statusNotif === "active" ? "text-cream" : "text-softwhite"}`}>
-              Yuhuuu, kamu Memiliki pesan baru dari <strong>@{el.username}</strong>
+              Pesan baru dari <strong>@{el.username}</strong>
             </p>
             {/* <span className="red"></span> */}
             {el.statusNotif === "active" ? <span className="red "></span> : ""}
-          </button>
+          </a>
         );
       });
 
@@ -312,22 +286,22 @@ export default function Header() {
       } else {
         return (
           <div className="text-center p-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-dongker mb-2" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-cream mb-2" viewBox="0 0 16 16">
               <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
               <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
             </svg>
-            <p>Kamu belum memiliki notifikasi apapun</p>
+            <p className="text-softwhite">Kamu belum memiliki notifikasi apapun</p>
           </div>
         );
       }
     } else {
       return (
         <div className="text-center p-3">
-          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-dongker mb-2" viewBox="0 0 16 16">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mailbox text-cream mb-2" viewBox="0 0 16 16">
             <path d="M4 4a3 3 0 0 0-3 3v6h6V7a3 3 0 0 0-3-3zm0-1h8a4 4 0 0 1 4 4v6a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V7a4 4 0 0 1 4-4zm2.646 1A3.99 3.99 0 0 1 8 7v6h7V7a3 3 0 0 0-3-3H6.646z" />
             <path d="M11.793 8.5H9v-1h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.354-.146l-.853-.854zM5 7c0 .552-.448 0-1 0s-1 .552-1 0a1 1 0 0 1 2 0z" />
           </svg>
-          <p>Kamu belum memiliki notifikasi apapun</p>
+          <p className="text-softwhite">Kamu belum memiliki notifikasi apapun</p>
         </div>
       );
     }

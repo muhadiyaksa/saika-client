@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../parts/Header";
 import Card from "../element/Card";
 import Button from "../element/Button";
 import Footer from "../parts/Footer";
+import { rupiahFormats } from "../utils/numberFormat";
+import Axios from "axios";
 // import ImgLandingPage from "../assets/image/landingpage.png";
 export default function Landingpage() {
   const getCursorShadow = (e) => {
@@ -37,6 +39,16 @@ export default function Landingpage() {
       imageElShadow.style.top = `${dataY - height2}px`;
     }
   };
+  const [dataEvents, setDataEvents] = useState({});
+  useEffect(() => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: `http://localhost:3001/event/filter?category=DEFAULT&paymentType=DEFAULT&qty=4&current=1&key=DEFAULT`,
+    }).then((res) => {
+      setDataEvents(res.data);
+    });
+  }, []);
 
   const getDefaultPosition = () => {
     const imageElShadow = document.querySelector("#section-1 .image .shadowImg");
@@ -51,6 +63,26 @@ export default function Landingpage() {
     } else {
       return param;
     }
+  };
+
+  const showEvents = () => {
+    let data = dataEvents.events?.map((el) => {
+      return (
+        <div className="item column-3 row-1">
+          <Card
+            linkUrl={`/detail/${el.eventId}`}
+            imgSrc={el.eventImage}
+            judul={el.eventName}
+            penyelenggara={el.institution}
+            kategori={el.eventCategory.toUpperCase()}
+            waktu={el.eventDate}
+            paymentType={el.paymentType}
+            price={rupiahFormats(el.price)}
+          />
+        </div>
+      );
+    });
+    return data;
   };
   return (
     <>
@@ -107,23 +139,10 @@ export default function Landingpage() {
               </div>
             </div>
           </div>
-          <div className="container-grid">
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/"} imgSrc={"/image/section2-1.png"} judul={cutWords("It Security Fundamentals UNUSIA")} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} kategori={"RPL"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/"} imgSrc={"/image/acara2.png"} judul={cutWords("Peranan K3 Menghadapi Era Industri 4.0")} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} kategori={"RPL"} />
-            </div>
-            <div className="item column-3 row-1">
-              <Card linkUrl={"/"} imgSrc={"/image/acara3.png"} judul={cutWords("Creative With Technology, To Become Enterpreneuer")} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} kategori={"MM"} />
-            </div>
-            <div className="item column-3 row-1 d-md-none d-lg-block">
-              <Card linkUrl={"/"} imgSrc={"/image/acara4.png"} judul={cutWords("Strategi Startup dan Industri di masa Pandemi")} penyelenggara={"Dicoding"} waktu={"6 Juli 2022"} kategori={"RPL"} />
-            </div>
-          </div>
+          <div className="container-grid">{showEvents()}</div>
 
           <div className="row d-flex justify-content-center">
-            <Button isPrimary className="mx-auto mt-4  text-decoration-none text-center" type="link" href="/search" style={{ width: "180px" }}>
+            <Button isPrimary className="mx-auto mt-4  text-decoration-none text-center " type="link" href="/search" style={{ width: "230px" }}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar4-event me-3" viewBox="0 0 16 16">
                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v1h14V3a1 1 0 0 0-1-1H2zm13 3H1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V5z" />
                 <path d="M11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
