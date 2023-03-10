@@ -3,6 +3,7 @@ import "./assets/scss/style.scss";
 import "./assets/scss/styleLoginRegist.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import io from "socket.io-client";
+import LoadingElement from "./parts/LoadingElement";
 
 const LandingPage = lazy(() => import("./pages/Landingpage"));
 const Login = lazy(() => import("./pages/Login"));
@@ -34,17 +35,17 @@ function App() {
   return (
     <>
       <Router>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<LoadingElement />}>
           <Routes>
-            <Route exact path="/" element={<LandingPage />}></Route>
+            <Route exact path="/" element={<LandingPage socket={socket} />}></Route>
             <Route exact path="/login" element={<Login />}></Route>
             <Route exact path="/regist" element={<Regist />}></Route>
             <Route exact path="/forget" element={<ForgetPassword />}></Route>
-            <Route exact path="/search" element={<List />}></Route>
-            <Route exact path="/detail/:id" element={<Detail />}></Route>
+            <Route exact path="/search" element={<List socket={socket} />}></Route>
+            <Route exact path="/detail/:id" element={<Detail socket={socket} />}></Route>
             <Route exact path="/chat" element={<PersonalChat socket={socket} />}></Route>
-            <Route exact path="/addevent" element={<EventRegist />}></Route>
-            <Route exact path="/find" element={<SearchFriends />}></Route>
+            <Route exact path="/addevent" element={<EventRegist socket={socket} />}></Route>
+            <Route exact path="/find" element={<SearchFriends socket={socket} />}></Route>
             <Route exact path="/waiting" element={<Loading socket={socket} />}></Route>
             <Route exact path="/live/:idroom" element={<Chats socket={socket} />}></Route>
           </Routes>

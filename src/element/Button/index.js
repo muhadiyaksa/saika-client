@@ -40,7 +40,7 @@ export default function Button(props) {
   if (props.type === "link") {
     if (props.isExternal) {
       return (
-        <a href={props.href} className={className.join(" ")} style={props.style}>
+        <a href={`${props.href.includes("https://") ? props.href : "https://" + props.href}`} className={className.join(" ")} style={props.style} target="blank">
           {props.children}
         </a>
       );

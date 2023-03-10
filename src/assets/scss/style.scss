@@ -327,6 +327,10 @@
 }
 /* FONTS */
 
+.animasi-load {
+  @include fungsiAnimasi();
+}
+
 body {
   background-image: linear-gradient(to bottom, $bluedark, #162440);
   background-repeat: no-repeat;

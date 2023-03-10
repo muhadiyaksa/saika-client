@@ -9,6 +9,7 @@ import Signup from "../assets/image/Signup.svg";
 import Sorry from "../assets/image/sorry.svg";
 import Disconnected from "../assets/image/disconnected.png";
 import ChatElement from "../parts/ChatElement";
+import LoadingElement from "../parts/LoadingElement";
 
 export default function Chats({ socket }) {
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
@@ -375,17 +376,7 @@ export default function Chats({ socket }) {
     <section className="chats">
       <div className="container">
         {isLoading === true ? (
-          <div className="animasi-load mx-auto text-center">
-            <img src={IconProcess} alt="Icon Process" />
-            <div className="image"></div>
-            <p className="mt-4 mb-3">
-              Saika Sedang Mempersiapkan Ruang Diskusi Mu <br />
-              Mohon Ditunggu Beberapa Saat . . .
-            </p>
-            <div className="sahabat">
-              <p>Loading</p>
-            </div>
-          </div>
+          <LoadingElement />
         ) : (
           <>
             {isSisaAnggota === false ? (

@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import ModalElement from "../element/ModalElement";
 
-export default function SearchFriends() {
+export default function SearchFriends({ socket }) {
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
 
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
@@ -93,7 +93,7 @@ export default function SearchFriends() {
   };
   return (
     <>
-      <Header />
+      <Header socket={socket} />
       <section className="findfriend py-5">
         <div className="container">
           <div className="row">

@@ -6,7 +6,7 @@ import Footer from "../parts/Footer";
 import { rupiahFormats } from "../utils/numberFormat";
 import Axios from "axios";
 // import ImgLandingPage from "../assets/image/landingpage.png";
-export default function Landingpage() {
+export default function Landingpage({ socket }) {
   const getCursorShadow = (e) => {
     const imageEl = document.querySelector("#section-1 .image");
     const imageElShadow = document.querySelector("#section-1 .image .shadowImg");
@@ -86,7 +86,7 @@ export default function Landingpage() {
   };
   return (
     <>
-      <Header />
+      <Header socket={socket} />
       <section id="section-1">
         <div className="container">
           <div className="row align-items-center">

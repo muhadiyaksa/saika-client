@@ -8,6 +8,7 @@ import ModalElement from "../element/ModalElement";
 import { Navigate } from "react-router-dom";
 import { returnFormatDate } from "../utils/numberFormat";
 import ChatElement from "../parts/ChatElement";
+import LoadingElement from "../parts/LoadingElement";
 
 export default function PersonalChat({ socket }) {
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
@@ -360,81 +361,12 @@ export default function PersonalChat({ socket }) {
     }
   };
 
-  const tampilPesan = () => {
-    let dataWaktu = returnFormatDate();
-
-    if (dataChat?.chats.length > 0) {
-      let dataLoading = [];
-      if (dataChatLoading.length > 0) {
-        let result = dataChatLoading.map((el, i) => {
-          return (
-            <>
-              <div className={`chat-item ${el.iduser === userData._id ? "me" : ""} `} key={`datachatloading${i}`}>
-                <p className="value">{el.pesan}</p>
-                <p className={`jam ${el.iduser === userData._id ? "me" : ""} `}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13px" height="13px" fill="currentColor" className="bi bi-clock" viewBox="0 0 16 16">
-                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
-                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
-                  </svg>
-                </p>
-              </div>
-            </>
-          );
-        });
-        dataLoading.push(...result);
-      }
-      let data = dataChat.chats.map((el, i) => {
-        return (
-          <>
-            <div className={`chat-item ${el.iduser === userData._id ? "me" : ""} `} key={`datachat${i}`}>
-              <p className="value">{el.pesan}</p>
-              {!el._id ? (
-                <p className={`jam ${el.iduser === userData._id ? "me" : ""} `}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13px" height="13px" fill="currentColor" className="bi bi-clock" viewBox="0 0 16 16">
-                    <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z" />
-                    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z" />
-                  </svg>
-                </p>
-              ) : (
-                <p className={`jam ${el.iduser === userData._id ? "me" : ""} `}>
-                  {el.waktu}
-                  {el.iduser === userData._id ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-check" viewBox="0 0 16 16">
-                      <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z" />
-                    </svg>
-                  ) : (
-                    ""
-                  )}
-                </p>
-              )}
-            </div>
-            {el.tanggal === dataChat.chats[i + 1]?.tanggal ? (
-              ""
-            ) : (
-              <div className="chat-date">
-                <p className="fw-bolder">{el.tanggal === dataWaktu.tanggalKirim ? "Hari Ini" : el.tanggal}</p>
-              </div>
-            )}
-          </>
-        );
-      });
-
-      return [...dataLoading, ...data];
-    } else {
-      return (
-        <div className="chat-item notif-masuk">
-          <p className="text-capitalize pb-0">Ayo Mulai percakapan dengan Teman Baru Mu</p>
-        </div>
-      );
-    }
-  };
-
   return (
     <>
       {isLoggedIn ? (
         <>
           <section className="personalchat">
-            <Header />
+            <Header socket={socket} />
             <div className="container">
               <div className={`friends ${geser === true ? "geser" : ""}`}>
                 <div className="navigasi-friends">
@@ -462,15 +394,7 @@ export default function PersonalChat({ socket }) {
                   <>
                     {isLoading === true ? (
                       <div className="position-relative h-100">
-                        <div className="animasi-load mx-auto text-center">
-                          <div className="image ">
-                            <img src="/image/loading.svg" alt="" />
-                          </div>
-                          <p className="mt-4 mb-3">Mohon Ditunggu Beberapa Saat . . .</p>
-                          <div className="sahabat">
-                            <p>Loading</p>
-                          </div>
-                        </div>
+                        <LoadingElement />
                       </div>
                     ) : (
                       <>
@@ -488,9 +412,7 @@ export default function PersonalChat({ socket }) {
                                 </button>
                                 <p className="mb-0 mt-md-3">Profile Anggota SAIKA</p>
                               </div>
-                              {/* <div className="image mx-auto d-none d-lg-block">
-                                <img src={ImageHello} alt="" />
-                              </div> */}
+
                               <div className="row justify-content-center align-items-center mb-3">
                                 <div className="col-md mb-3">
                                   <div className="image user ">

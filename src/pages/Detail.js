@@ -7,13 +7,12 @@ import DetailEvent from "../parts/DetailEvent.js";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import Notfound from "../parts/Notfound";
-export default function Detail() {
+export default function Detail({ socket }) {
   const param = useParams();
 
   const [dataDetail, setDataDetail] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
-
   useEffect(() => {
     setIsLoading(true);
     Axios({
@@ -25,7 +24,7 @@ export default function Detail() {
         setIsLoading(false);
         if (res.data.status !== "failed") {
           setNotFound(false);
-          setDataDetail(res.data);
+          setDataDetail(res.data.event);
         } else {
           setDataDetail({});
         }
@@ -38,7 +37,7 @@ export default function Detail() {
 
   return (
     <>
-      <Header />
+      <Header socket={socket} />
       {notFound === true ? (
         <Notfound />
       ) : (

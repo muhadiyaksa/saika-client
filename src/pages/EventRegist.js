@@ -6,24 +6,23 @@ import { useDropzone } from "react-dropzone";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import DetailEvent from "../parts/DetailEvent";
-import iconUpload from "../assets/icon/upload.png";
 import ModalElement from "../element/ModalElement";
 import Axios from "axios";
 import { rupiahFormats } from "../utils/numberFormat";
 
-export default function EventRegist() {
+export default function EventRegist({ socket }) {
   const [ketFoto, setKetFoto] = useState({ ket: "", status: "hide", file: null });
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const [dataDetail, setDataDetail] = useState({
     eventName: "",
-    organization: "",
+    institution: "",
     eventImage: "",
     eventCategory: "",
     benefits: "",
     description: "",
     eventDate: "",
-    jamMulai: "",
-    jamSelesai: "",
+    eventTimeStart: "",
+    eventTimeFinish: "",
     paymentType: "",
     price: "",
     registrationLink: "",
@@ -69,7 +68,7 @@ export default function EventRegist() {
   const [showWarning, setShowWarning] = useState("d-none");
 
   const setGeneralInfo = () => {
-    if (ketFoto.file && dataDetail.eventName && dataDetail.organization && dataDetail.eventCategory && dataDetail.benefits && dataDetail.description) {
+    if (ketFoto.file && dataDetail.eventName && dataDetail.institution && dataDetail.eventCategory && dataDetail.benefits && dataDetail.description) {
       setShowWarning("d-none");
       setShowGeneral({ button: "", show: "d-none", hideres: "sembunyi" });
       setShowJadwal({ button: "", show: "", hideres: "" });
@@ -86,7 +85,7 @@ export default function EventRegist() {
   const [showWarningJadwal, setShowWarningJadwal] = useState("d-none");
 
   const setGeneralJadwal = () => {
-    if (dataDetail.eventDate && dataDetail.jamMulai && dataDetail.jamSelesai) {
+    if (dataDetail.eventDate) {
       setShowWarningJadwal("d-none");
       setShowJadwal({ button: "", show: "d-none", hideres: "sembunyi" });
       setShowPendaftaran({ button: "", show: "", hideres: "" });
@@ -98,7 +97,7 @@ export default function EventRegist() {
   };
 
   const backtoGeneral = () => {
-    if (dataDetail.eventDate && dataDetail.jamMulai && dataDetail.jamSelesai) {
+    if (dataDetail.eventDate) {
       setShowJadwal({ button: "", show: "d-none", hideres: "sembunyi" });
     } else {
       setShowJadwal({ button: "null", show: "d-none", hideres: "sembunyi" });
@@ -218,15 +217,16 @@ export default function EventRegist() {
     const data = new FormData();
     data.append("email", userObj.user.email);
     data.append("eventName", dataDetail.eventName);
-    data.append("institution", dataDetail.organization);
+    data.append("institution", dataDetail.institution);
     data.append("eventCategory", dataDetail.eventCategory);
     data.append("eventImage", ketFoto.status);
     data.append("file", ketFoto.file);
     data.append("benefits", dataDetail.benefits);
     data.append("descriptions", dataDetail.description);
     data.append("eventDate", dataDetail.eventDate);
-    data.append("eventTimeStart", dataDetail.jamMulai);
-    data.append("eventTimeFinish", dataDetail.jamSelesai);
+    data.append("eventDateEnd", dataDetail.eventDateEnd);
+    data.append("eventTimeStart", dataDetail.eventTimeStart);
+    data.append("eventTimeFinish", dataDetail.eventTimeFinish);
     data.append("paymentType", dataDetail.paymentType);
     data.append("price", dataDetail.price);
     data.append("registrationLink", dataDetail.registrationLink);
@@ -243,9 +243,9 @@ export default function EventRegist() {
       data: data,
       withCredentials: true,
       url: "http://localhost:3001/event/addevent",
-      // headers: {
-      //   Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJpYXNheWFuZ2JhbmdldHNhbWFhYnV0MkBnbWFpbC5jb20iLCJ1c2VySWQiOiI2MmUzOTQ2NTg0MTZlMGEyNTFjZjU2NmEiLCJpYXQiOjE2NTkwOTkyNTUsImV4cCI6MTY2MTY5MTI1NX0.GWMcALmOYy6XdBO3vb-F9TPvCz7G388hceRhuwB5pyw`,
-      // },
+      headers: {
+        Authorization: `Bearer ${userObj.token}`,
+      },
     }).then((res) => {
       setShow(false);
       setIsLoading(false);
@@ -268,7 +268,7 @@ export default function EventRegist() {
     <>
       {isLoggedIn ? (
         <>
-          <Header />
+          <Header socket={socket} />
           <section className="addevent">
             <div className="container">
               <p className=" pt-4 pb-2 subjudul">
@@ -348,7 +348,7 @@ export default function EventRegist() {
                       <label htmlFor="penyelenggara">
                         Nama Penyelenggara<span className="text-danger">*</span>
                       </label>
-                      <input type="text" className="form-control shadow-none mb-3" id="penyelenggara" name="penyelenggara" placeholder="Nama Event" onChange={(e) => setDataDetail({ ...dataDetail, organization: e.target.value })} />
+                      <input type="text" className="form-control shadow-none mb-3" id="penyelenggara" name="penyelenggara" placeholder="Nama Event" onChange={(e) => setDataDetail({ ...dataDetail, institution: e.target.value })} />
 
                       <label htmlFor="benefits">
                         Benefits<span className="text-danger">*</span>
@@ -364,6 +364,18 @@ export default function EventRegist() {
                         placeholder="Contoh: Ilmu, Snack, Relasi, Doorprize"
                         onChange={(e) => setDataDetail({ ...dataDetail, benefits: e.target.value })}
                       />
+
+                      <div className={`alert border text-softwhite   ${dataDetail?.benefits.split(",").length > 1 ? "" : "d-none"}`} style={{ fontSize: "12px" }}>
+                        <ul className="list-group px-3">
+                          {dataDetail?.benefits.split(",").map((el, i) => {
+                            return (
+                              <li className="list-item text-capitalize mb-0" key={`listbenefits-${i}`}>
+                                {el}
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
 
                       <label htmlFor="deskripsi">
                         Deskripsi<span className="text-danger">*</span>
@@ -394,25 +406,44 @@ export default function EventRegist() {
                 </div>
 
                 <div className={`jadwalinfo ${showJadwal.show}`}>
-                  <p className="judul-1 mb-4 text-softwhite">Jadwal</p>
-
-                  <label htmlFor="tanggalevent">
-                    Tanggal Pelaksanaan<span className="text-danger">*</span>
-                  </label>
-                  <input type="date" className="form-control shadow-none mb-3" id="tanggalevent" name="tanggalevent" onChange={(e) => setDataDetail({ ...dataDetail, eventDate: e.target.value })} />
+                  <p className="judul-1 text-softwhite mb-4">Jadwal</p>
 
                   <div className="row">
                     <div className="col-md">
-                      <label htmlFor="jammulai">
-                        Jam Mulai<span className="text-danger">*</span>
+                      <label htmlFor="tanggalevent">
+                        Tanggal Pelaksanaan<span className="text-danger">*</span>
                       </label>
-                      <input type="time" className="form-control shadow-none mb-3" id="jammulai" name="jammulai" onChange={(e) => setDataDetail({ ...dataDetail, jamMulai: e.target.value })} />
+                      <input type="date" className="form-control shadow-none mb-3" id="tanggalevent" name="tanggalevent" onChange={(e) => setDataDetail({ ...dataDetail, eventDate: e.target.value })} />
                     </div>
                     <div className="col-md">
-                      <label htmlFor="jamselesai">
-                        Jam Selesai<span className="text-danger">*</span>
+                      <label htmlFor="tanggalevent">
+                        Tanggal Akhir Pelaksanaan{" "}
+                        <span className="text-softwhite fw-light" style={{ fontSize: "12px" }}>
+                          - Optional
+                        </span>
                       </label>
-                      <input type="time" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" onChange={(e) => setDataDetail({ ...dataDetail, jamSelesai: e.target.value })} />
+                      <input type="date" className="form-control shadow-none mb-3" id="tanggaleventend" name="tanggaleventend" onChange={(e) => setDataDetail({ ...dataDetail, eventDateEnd: e.target.value })} />
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md">
+                      <label htmlFor="eventTimeStart">
+                        Jam Mulai{" "}
+                        <span className="text-softwhite fw-light" style={{ fontSize: "12px" }}>
+                          - Optional
+                        </span>
+                      </label>
+                      <input type="time" className="form-control shadow-none mb-3" id="eventTimeStart" name="eventTimeStart" onChange={(e) => setDataDetail({ ...dataDetail, eventTimeStart: e.target.value })} />
+                    </div>
+                    <div className="col-md">
+                      <label htmlFor="eventTimeFinish">
+                        Jam Selesai{" "}
+                        <span className="text-softwhite fw-light" style={{ fontSize: "12px" }}>
+                          - Optional
+                        </span>
+                      </label>
+                      <input type="time" className="form-control shadow-none mb-3" id="namaLengkap" name="namaLengkap" onChange={(e) => setDataDetail({ ...dataDetail, eventTimeFinish: e.target.value })} />
                     </div>
                   </div>
 
@@ -460,12 +491,27 @@ export default function EventRegist() {
                     placeholder="Link Pendaftaran : bit.ly atau forms.gle dll"
                     onChange={(e) => setDataDetail({ ...dataDetail, registrationLink: e.target.value })}
                   />
-                  <label htmlFor="instagram">Link Instagram</label>
-                  <input type="text" className="form-control shadow-none mb-3" id="instagram" name="instagram" placeholder="Link Instagram (Optional)" onChange={(e) => setDataDetail({ ...dataDetail, instagram: e.target.value })} />
-                  <label htmlFor="facebook">Link Facebook</label>
-                  <input type="text" className="form-control shadow-none mb-3" id="facebook" name="facebook" placeholder="Link Facebook (Optional)" onChange={(e) => setDataDetail({ ...dataDetail, facebook: e.target.value })} />
-                  <label htmlFor="twitter">Link Twitter</label>
-                  <input type="text" className="form-control shadow-none mb-3" id="twitter" name="twitter" placeholder="Link Twitter (Optional)" onChange={(e) => setDataDetail({ ...dataDetail, twitter: e.target.value })} />
+                  <label htmlFor="instagram">
+                    Link Instagram{" "}
+                    <span className="text-softwhite fw-light" style={{ fontSize: "12px" }}>
+                      - Optional
+                    </span>
+                  </label>
+                  <input type="text" className="form-control shadow-none mb-3" id="instagram" name="instagram" placeholder="Link Tautan Akun Instagram" onChange={(e) => setDataDetail({ ...dataDetail, instagram: e.target.value })} />
+                  <label htmlFor="facebook">
+                    Link Facebook{" "}
+                    <span className="text-softwhite fw-light" style={{ fontSize: "12px" }}>
+                      - Optional
+                    </span>
+                  </label>
+                  <input type="text" className="form-control shadow-none mb-3" id="facebook" name="facebook" placeholder="Link Tautan Akun Facebook" onChange={(e) => setDataDetail({ ...dataDetail, facebook: e.target.value })} />
+                  <label htmlFor="twitter">
+                    Link Twitter{" "}
+                    <span className="text-softwhite fw-light" style={{ fontSize: "12px" }}>
+                      - Optional
+                    </span>
+                  </label>
+                  <input type="text" className="form-control shadow-none mb-3" id="twitter" name="twitter" placeholder="Link Tautan Akun Twitter" onChange={(e) => setDataDetail({ ...dataDetail, twitter: e.target.value })} />
                   <div className={`alert alert-danger ${showWarningPendaftaran}`} role="alert" style={{ fontSize: "13px" }}>
                     Terdapat Data yang belum diisi!
                   </div>

@@ -8,7 +8,7 @@ import Axios from "axios";
 import { rupiahFormats } from "../utils/numberFormat";
 import Notfound from "../parts/Notfound";
 
-export default function List() {
+export default function List({ socket }) {
   const [dataEvent, setDataEvent] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
@@ -136,7 +136,7 @@ export default function List() {
   };
   return (
     <>
-      <Header />
+      <Header socket={socket} />
       <section className="list mt-3 " style={{ marginBottom: "70px" }}>
         <div className="container">
           <div className="row">
