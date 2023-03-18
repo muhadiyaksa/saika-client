@@ -1,7 +1,7 @@
 import React from "react";
 import { returnFormatDate } from "../utils/numberFormat";
 
-export default function ChatElement({ dataChatLoading, dataChat, userData }) {
+export default function ChatElement({ dataChatLoading, dataChat, userData, typeChat }) {
   const tampilPesan = () => {
     let dataWaktu = returnFormatDate();
 
@@ -30,6 +30,7 @@ export default function ChatElement({ dataChatLoading, dataChat, userData }) {
           return (
             <>
               <div className={`chat-item ${el.iduser === userData._id ? "me" : ""} `} key={`datachat${i}`}>
+                <p className={`user text-capitalize ${typeChat === "personal" ? "d-none" : el.iduser === userData._id ? "d-none" : ""}`}>{el.usernameuser}</p>
                 <p className="value">{el.pesan}</p>
                 {!el._id ? (
                   <p className={`jam ${el.iduser === userData._id ? "me" : ""} `}>
@@ -51,6 +52,7 @@ export default function ChatElement({ dataChatLoading, dataChat, userData }) {
                   </p>
                 )}
               </div>
+
               {el.tanggal === dataChat.chats[i + 1]?.tanggal ? (
                 ""
               ) : (

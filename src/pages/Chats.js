@@ -6,8 +6,6 @@ import Axios from "axios";
 import IconProcess from "../assets/image/process2.png";
 import ModalElement from "../element/ModalElement";
 import Signup from "../assets/image/Signup.svg";
-import Sorry from "../assets/image/sorry.svg";
-import Disconnected from "../assets/image/disconnected.png";
 import ChatElement from "../parts/ChatElement";
 import LoadingElement from "../parts/LoadingElement";
 
@@ -16,6 +14,7 @@ export default function Chats({ socket }) {
   const userData = useSelector((state) => state.user.user);
   const param = useParams();
   const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   const geserList = () => {
     const listChats = document.querySelector(".chats .friends");
@@ -26,7 +25,7 @@ export default function Chats({ socket }) {
     listChats.classList.toggle("geser");
   };
 
-  const [dataMasuk, setdataMasuk] = useState({});
+  const [dataRoom, setDataRoom] = useState({});
   const [dataChatLoading, setDataChatLoading] = useState([]);
   const [pesanKirim, setPesanKirim] = useState("");
 
@@ -40,6 +39,7 @@ export default function Chats({ socket }) {
   const [isNotAnggota, setIsNotAnggota] = useState(false);
 
   useEffect(() => {
+    // MENGAMBIL DATA PROFIL USER
     const getDataUser = () => {
       Axios({
         method: "GET",
@@ -52,7 +52,11 @@ export default function Chats({ socket }) {
         setDataUser(result.data);
       });
     };
-    getDataUser();
+    if (isLoggedIn) {
+      getDataUser();
+    }
+
+    // MENGAMBIL DATA DETAIL ROOM
     const getDataRoom = () => {
       Axios({
         method: "GET",
@@ -67,7 +71,8 @@ export default function Chats({ socket }) {
             socket.emit("join_room", result.data.idroom);
             socket.emit("data_user", userData._id);
             socket.emit("cek_anggota", result.data.idroom);
-            setdataMasuk(result.data);
+
+            setDataRoom(result.data);
             setIsLoading(false);
             let dataAnggota = result.data.anggota.map((el) => el.iduser);
             if (!dataAnggota.includes(userData._id)) {
@@ -111,7 +116,7 @@ export default function Chats({ socket }) {
     inputPesan.value = "";
   };
 
-  const keluarRoom = () => {
+  const getOutFromRoom = () => {
     const dataKirim = {
       idroom: param.idroom,
       iduser: userData._id,
@@ -119,11 +124,13 @@ export default function Chats({ socket }) {
     socket.emit("keluar_room", dataKirim);
     socket.emit("anggota_keluar", dataKirim);
   };
+  const [show, setShow] = useState(false);
+  const handleCloseNotif = () => setShow(false);
 
   useEffect(() => {
-    socket.on("userLeft", function (data) {
-      console.log(data);
-    });
+    // socket.on("userLeft", function (data) {
+    //   console.log(data);
+    // });
     socket.on("data_user_send", (data) => {
       setDataUser(data);
     });
@@ -132,10 +139,11 @@ export default function Chats({ socket }) {
     });
     socket.on("pesan_terima", (data) => {
       setDataChatLoading([]);
-      setdataMasuk(data);
+      setDataRoom(data);
     });
 
     socket.on("data_anggota_sisa", (data) => {
+      setDataRoom(data);
       let dataAnggota = data.anggota.map((el) => el.iduser);
       if (!dataAnggota.includes(userData._id)) {
         setIsKeluar(true);
@@ -148,6 +156,7 @@ export default function Chats({ socket }) {
       }
     });
 
+    // NGECEK APAKAH USER MASIH DALAM ANGGOTA, KALO TIDAK MAKA KELUAR
     socket.on("anggota_update", (data) => {
       let dataAnggotaUpdate = data.map((el) => el.iduser);
       if (!dataAnggotaUpdate.includes(userData._id)) {
@@ -158,7 +167,7 @@ export default function Chats({ socket }) {
     });
 
     socket.on("data_anggota", (data) => {
-      setdataMasuk(data);
+      setDataRoom(data);
       let dataAnggota = data.anggota.map((el) => el.iduser);
       if (data.anggota.length === 1) {
         setShow(false);
@@ -174,10 +183,7 @@ export default function Chats({ socket }) {
     });
   }, []);
 
-  const [show, setShow] = useState(false);
-  const handleCloseNotif = () => setShow(false);
-
-  const tambahTeman = (e) => {
+  const addFriend = (e) => {
     Axios({
       method: "PUT",
       withCredentials: true,
@@ -195,7 +201,7 @@ export default function Chats({ socket }) {
     });
   };
 
-  const terimaTeman = (e) => {
+  const acceptFriend = (e) => {
     Axios({
       method: "PUT",
       withCredentials: true,
@@ -212,6 +218,7 @@ export default function Chats({ socket }) {
       }
     });
   };
+
   const checkProfileUser = (e) => {
     setShowFriend(true);
     if (dataProfilFriend.iduser !== e.target.getAttribute("iduser")) {
@@ -234,7 +241,7 @@ export default function Chats({ socket }) {
     setShowFriend(false);
   };
 
-  const tolakTeman = (e) => {
+  const rejectFriend = (e) => {
     Axios({
       method: "PUT",
       withCredentials: true,
@@ -252,7 +259,7 @@ export default function Chats({ socket }) {
     });
   };
 
-  const hapusRoom = () => {
+  const getOutandDeleteRoom = () => {
     Axios({
       method: "DELETE",
       withCredentials: true,
@@ -269,6 +276,7 @@ export default function Chats({ socket }) {
   const handleAfterJoinButEmpty = () => {
     setAfterJoinButEmpty(false);
   };
+
   const joinRoom = () => {
     Axios({
       method: "POST",
@@ -286,6 +294,7 @@ export default function Chats({ socket }) {
     })
       .then((res) => {
         if (res.data.status === "finish") {
+          console.log(res.data);
           socket.emit("data_anggota", res.data.idroom);
           socket.emit("anggota_masuk", { idroom: res.data.idroom, iduser: userData._id });
           setIsNotAnggota(false);
@@ -300,14 +309,13 @@ export default function Chats({ socket }) {
       });
   };
 
-  console.log(dataProfilFriend);
-  const tampilTeman = () => {
-    if (dataMasuk?.anggota !== undefined) {
-      let dataFilter = dataMasuk.anggota.filter((el) => el.iduser !== userData._id);
+  const showListOfFriends = () => {
+    if (dataRoom?.anggota !== undefined) {
+      let dataFilter = dataRoom.anggota.filter((el) => el.iduser !== userData._id);
       let dataFilterListFriends = dataUser.listFriends ? dataUser.listFriends.map((el) => el.iduser) : [];
       let dataFilterListWaitingSend = dataUser.listWaitingSend ? dataUser.listWaitingSend.map((el) => el.iduser) : [];
       let dataFilterListWaitingReceive = dataUser.listWaitingReceive ? dataUser.listWaitingReceive.map((el) => el.iduser) : [];
-      console.log(dataMasuk.anggota);
+      console.log(dataRoom.anggota);
       let data = dataFilter.map((el) => {
         return (
           <div className="item-friends" key={el.iduser}>
@@ -332,12 +340,12 @@ export default function Chats({ socket }) {
                 <>
                   {dataFilterListWaitingReceive.includes(el.iduser) ? (
                     <div className="terima">
-                      <button className="btn p-0 me-2 shadow-none" iduserreq={el.iduser} title="Terima Permintaan Pertemanan" onClick={terimaTeman}>
+                      <button className="btn p-0 me-2 shadow-none" iduserreq={el.iduser} title="Terima Permintaan Pertemanan" onClick={acceptFriend}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" className="bi bi-check-circle-fill text-cream" viewBox="0 0 16 16">
                           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
                         </svg>
                       </button>
-                      <button className="btn p-0  shadow-none" iduserreq={el.iduser} title="Tolak Permintaan Pertemanan" onClick={tolakTeman}>
+                      <button className="btn p-0  shadow-none" iduserreq={el.iduser} title="Tolak Permintaan Pertemanan" onClick={rejectFriend}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" className="bi bi-x text-softwhite" viewBox="0 0 16 16">
                           <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
                         </svg>
@@ -352,7 +360,7 @@ export default function Chats({ socket }) {
                           </svg>
                         </div>
                       ) : (
-                        <button className="btn btn-outline-cyan " iduserreq={el.iduser} onClick={tambahTeman}>
+                        <button className="btn btn-outline-cyan " iduserreq={el.iduser} onClick={addFriend}>
                           + <span className="d-none d-lg-inline-block">Teman</span>
                         </button>
                       )}
@@ -386,7 +394,7 @@ export default function Chats({ socket }) {
                   Yahh Ruang Diskusi kamu Sudah Sepi <br />
                   teman-teman mu telah meninggalkan ruang diskusi. . .
                 </p>
-                <Button isPrimary onClick={hapusRoom} className="text-decoration-none  w-auto">
+                <Button isPrimary onClick={getOutandDeleteRoom} className="text-decoration-none  w-auto">
                   Cari Teman SAIKA
                 </Button>
               </div>
@@ -418,7 +426,7 @@ export default function Chats({ socket }) {
                                 <span className="text-softwhite">Live Sedang Berlangsung</span>
                               </div>
                               <div className="col text-end">
-                                <button className="btn btn-outline-danger me-3 me-sm-0" onClick={keluarRoom}>
+                                <button className="btn btn-outline-danger me-3 me-sm-0" onClick={getOutFromRoom}>
                                   Keluar Room
                                 </button>
                                 <button className="btn btn-outline-cyan d-sm-none" onClick={geserList}>
@@ -432,7 +440,7 @@ export default function Chats({ socket }) {
                               <div className="position-relative h-100 w-100 ">
                                 <div className="chat-value ">
                                   {/* {tampilPesan()} */}
-                                  <ChatElement dataChatLoading={dataChatLoading} dataChat={dataMasuk} userData={userData} />
+                                  <ChatElement dataChatLoading={dataChatLoading} dataChat={dataRoom} userData={userData} typeChat={"notpersonal"} />
                                 </div>
                               </div>
                             </div>
@@ -461,9 +469,9 @@ export default function Chats({ socket }) {
                                 </button>
                               </div>
                               <div className=" d-flex flex-column flex-lg-row align-items-center justify-content-center">
-                                <img src={dataMasuk?.kategori === "mm" ? "/image/multimedia.svg" : dataMasuk?.kategori === "jarkom" ? "/image/jaringan.svg" : "/image/rpl.svg"} alt="" className="img-fluid topik me-3" />
+                                <img src={dataRoom?.kategori === "mm" ? "/image/multimedia.svg" : dataRoom?.kategori === "jarkom" ? "/image/jaringan.svg" : "/image/rpl.svg"} alt="" className="img-fluid topik me-3" />
                                 <p className="judul-1 text-softwhite text-center text-lg-start tema">
-                                  Tema : <br /> {dataMasuk?.kategori === "mm" ? "Multimedia" : dataMasuk?.kategori === "jarkom" ? "Jaringan Komputer" : "Rekayasa Perangkat Lunak"}
+                                  Tema : <br /> {dataRoom?.kategori === "mm" ? "Multimedia" : dataRoom?.kategori === "jarkom" ? "Jaringan Komputer" : "Rekayasa Perangkat Lunak"}
                                 </p>
                               </div>
                             </div>
@@ -483,7 +491,7 @@ export default function Chats({ socket }) {
                                     </div>
                                   </div>
                                 </div>
-                                {tampilTeman()}
+                                {showListOfFriends()}
                               </div>
                             </div>
                           </div>
@@ -498,6 +506,7 @@ export default function Chats({ socket }) {
             )}
           </>
         )}
+
         <ModalElement isDongker show={showAfterJoin} funcModal={handleAfterJoinButEmpty} isHeader={false} isCentered={true}>
           <div className="d-flex align-items-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" className="bi bi-exclamation-circle text-danger me-3" viewBox="0 0 16 16">
@@ -520,26 +529,25 @@ export default function Chats({ socket }) {
           </div>
         </ModalElement>
         <ModalElement show={showFriend} isDongker funcModal={handleCloseFriend} isHeader={false} isCentered={true}>
-          <div className="row justify-content-center align-items-center mb-3 profileteman">
-            {spinnerFriend === true ? (
+          <div className="row justify-content-center align-items-center mb-3 ">
+            {spinnerFriend ? (
               <div className="position-relative h-100">
-                <div className="animasi-load mx-auto text-center">
-                  <img src={IconProcess} alt="Icon Process" />
-                  <p className="mt-4 mb-3">Mohon Ditunggu Beberapa Saat . . .</p>
-                  <div className="sahabat">
-                    <p>Loading</p>
-                  </div>
-                </div>
+                <LoadingElement simple />
               </div>
             ) : (
               <div className="row align-items-center mt-3">
                 <div className="col-md mb-3">
                   <div className="image user mx-auto">
-                    <img src={dataProfilFriend?.fotoProfil} alt="Icon Process" />
+                    <img src={dataProfilFriend?.fotoProfil === "" ? "/image/ava_user.jpg" : dataProfilFriend?.fotoProfil} alt="Icon Process" />
                   </div>
                 </div>
                 <div className="col-md text-center text-lg-start text-softwhite ">
-                  <p className="fs-5 fw-bold text-cream">{dataProfilFriend?.jumlahTeman} Teman</p>
+                  <p className="fs-5 fw-bold text-cream d-inline-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-people-fill me-2" viewBox="0 0 16 16">
+                      <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                    </svg>{" "}
+                    {dataProfilFriend?.jumlahTeman}{" "}
+                  </p>
                   <p className="text-capitalize mb-0 ">{dataProfilFriend?.nama}</p>
                   <p className="mb-0">@{dataProfilFriend?.username}</p>
                   <p>{dataProfilFriend?.email}</p>

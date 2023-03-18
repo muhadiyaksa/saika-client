@@ -107,6 +107,7 @@ export default function PersonalChat({ socket }) {
 
   const showChatsV2 = (e) => {
     setGeser(true);
+    setIsChat(true);
     setIsLoading(true);
     setPesanKirim("");
     localStorage.removeItem("idchatUserSaika");
@@ -139,7 +140,6 @@ export default function PersonalChat({ socket }) {
     }).then((res) => {
       localStorage.setItem("idchatUserSaika", res.data._id);
       setDataChat(res.data);
-      setIsChat(true);
       setIsFriendProfile(false);
 
       let tungguData = new Promise((fulfill, reject) => {
@@ -472,7 +472,7 @@ export default function PersonalChat({ socket }) {
                               <div className="position-relative h-100 w-100 ">
                                 <div className="chat-value ">
                                   {/* {tampilPesan()} */}
-                                  <ChatElement dataChatLoading={dataChatLoading} dataChat={dataChat} userData={userData} />
+                                  <ChatElement dataChatLoading={dataChatLoading} dataChat={dataChat} userData={userData} typeChat={"personal"} />
                                 </div>
                               </div>
                             </div>
