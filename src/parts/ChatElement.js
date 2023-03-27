@@ -1,7 +1,7 @@
 import React from "react";
 import { returnFormatDate } from "../utils/numberFormat";
 
-export default function ChatElement({ dataChatLoading, dataChat, userData, typeChat }) {
+export default function ChatElement({ dataChatLoading, dataChat, userData, typeChat, isLoggedIn }) {
   const tampilPesan = () => {
     let dataWaktu = returnFormatDate();
 
@@ -30,7 +30,20 @@ export default function ChatElement({ dataChatLoading, dataChat, userData, typeC
           return (
             <>
               <div className={`chat-item ${el.iduser === userData._id ? "me" : ""} `} key={`datachat${i}`}>
-                <p className={`user text-capitalize ${typeChat === "personal" ? "d-none" : el.iduser === userData._id ? "d-none" : ""}`}>{el.usernameuser}</p>
+                <p className={`user d-inline-flex align-items-center text-capitalize ${typeChat === "personal" ? "d-none" : el.iduser === userData._id ? "d-none" : ""} ${el.iduser.includes("anonymous") ? "text-cream" : ""}`}>
+                  {isLoggedIn ? (
+                    el.usernameuser
+                  ) : el.iduser.includes("anonymous") ? (
+                    `Anonymous${el.iduser.slice(8, 12)}`
+                  ) : (
+                    <>
+                      Saika-{el.iduser.slice(8, 11).toUpperCase()}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-patch-check-fill ms-1 text-cream" viewBox="0 0 16 16">
+                        <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+                      </svg>
+                    </>
+                  )}
+                </p>
                 <p className="value">{el.pesan}</p>
                 {!el._id ? (
                   <p className={`jam ${el.iduser === userData._id ? "me" : ""} `}>
@@ -66,16 +79,40 @@ export default function ChatElement({ dataChatLoading, dataChat, userData, typeC
           if (el.kondisi === "keluar") {
             return (
               <div className="chat-item notif-keluar ">
-                <p className="text-capitalize pb-0 ">
-                  <strong>{el.namauser}</strong> Keluar dari Room
+                <p className="text-capitalize pb-0 d-inline-flex align-items-center">
+                  {isLoggedIn ? (
+                    el.namauser
+                  ) : el.iduser.includes("anonymous") ? (
+                    `Anonymous${el.iduser.slice(8, 12)}`
+                  ) : (
+                    <>
+                      Saika-{el.iduser.slice(8, 11).toUpperCase()}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-patch-check-fill ms-1 text-cream" viewBox="0 0 16 16">
+                        <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+                      </svg>
+                    </>
+                  )}
+                  <span className="ms-2">Keluar dari Room</span>
                 </p>
               </div>
             );
           } else {
             return (
               <div className="chat-item notif-masuk">
-                <p className="text-capitalize pb-0">
-                  <strong>{el.namauser}</strong> Masuk Room
+                <p className="text-capitalize pb-0 d-inline-flex align-items-center">
+                  {isLoggedIn ? (
+                    el.namauser
+                  ) : el.iduser.includes("anonymous") ? (
+                    `Anonymous${el.iduser.slice(8, 12)}`
+                  ) : (
+                    <>
+                      Saika-{el.iduser.slice(8, 11).toUpperCase()}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-patch-check-fill ms-1 text-cream" viewBox="0 0 16 16">
+                        <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+                      </svg>
+                    </>
+                  )}
+                  <span className="ms-2">Masuk Room</span>
                 </p>
               </div>
             );

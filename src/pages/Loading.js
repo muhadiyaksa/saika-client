@@ -19,16 +19,16 @@ export default function Loading({ socket }) {
   }
   const query = useQuery();
 
-  function countDown(amount) {
-    let y = 20;
-    let x = setInterval(() => {
-      y--;
-      setCount(y);
-      if (y === 0) {
-        clearInterval(x);
-      }
-    }, 1000);
-  }
+  // function countDown(amount) {
+  //   let y = 20;
+  //   let x = setInterval(() => {
+  //     y--;
+  //     setCount(y);
+  //     if (y === 0) {
+  //       clearInterval(x);
+  //     }
+  //   }, 1000);
+  // }
 
   useEffect(() => {
     const getDataUser = () => {
@@ -85,7 +85,10 @@ export default function Loading({ socket }) {
             if (result.data.status === "finish") {
               socket.emit("data_anggota", result.data.idroom);
               if (isLoggedIn) {
-                socket.emit("anggota_masuk", { idroom: result.data.idroom, iduser: userData._id });
+                socket.emit("anggota_masuk", { idroom: result.data.idroom, iduser: userData._id, namauser: dataUser.nama });
+              } else {
+                socket.emit("anggota_masuk", { idroom: result.data.idroom, iduser: sessionStorage.getItem("iduseranonymous"), namauser: sessionStorage.getItem("iduseranonymous") });
+                localStorage.removeItem("limitAnonymous");
               }
               setIdRoom(result.data.idroom);
               setIsStatus("finish");

@@ -152,7 +152,7 @@ export default function List({ socket }) {
             <div className="col-auto ">
               <Button isPrimary className="rounded-3 px-3 px-md-4 text-decoration-none" style={{ paddingTop: "10px", paddingBottom: "10px" }} type="link" href="/addevent">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg d-inline-block d-md-none" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+                  <path fillRule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
                 </svg>
                 <span className="d-none d-md-inline-block">Tambah Acara</span>
               </Button>

@@ -82,7 +82,7 @@ export default function Regist() {
                 Daftar
               </Button>
 
-              <p className="text-center">
+              <p className="text-center" style={{ fontSize: "14px" }}>
                 Sudah punya akun SAIKA?{" "}
                 <Button type="link" href="/login" className="daftar text-cream">
                   Login Disini

@@ -5,7 +5,7 @@ import Button from "../element/Button";
 import Footer from "../parts/Footer";
 import { rupiahFormats } from "../utils/numberFormat";
 import Axios from "axios";
-// import ImgLandingPage from "../assets/image/landingpage.png";
+
 export default function Landingpage({ socket }) {
   const getCursorShadow = (e) => {
     const imageEl = document.querySelector("#section-1 .image");
@@ -66,9 +66,9 @@ export default function Landingpage({ socket }) {
   };
 
   const showEvents = () => {
-    let data = dataEvents.events?.map((el) => {
+    let data = dataEvents.events?.map((el, i) => {
       return (
-        <div className="item column-3 row-1">
+        <div className="item column-3 row-1" key={`itemEvent-${i}`}>
           <Card
             linkUrl={`/detail/${el.eventId}`}
             imgSrc={el.eventImage}
@@ -92,10 +92,10 @@ export default function Landingpage({ socket }) {
           <div className="row align-items-center">
             <div className="col-md text-center">
               <div className="image" onMouseMove={getCursorShadow} onMouseLeave={getDefaultPosition}>
-                <div class="shadowImg d-none d-lg-block"></div>
-                <div class="span span1 d-none d-lg-block">Teman</div>
-                <div class="span span2 d-none d-lg-block">Pengetahuan</div>
-                <div class="span span3 d-none d-lg-block">Jaringan</div>
+                <div className="shadowImg d-none d-lg-block"></div>
+                <div className="span span1 d-none d-lg-block">Teman</div>
+                <div className="span span2 d-none d-lg-block">Pengetahuan</div>
+                <div className="span span3 d-none d-lg-block">Jaringan</div>
                 <img src="/image/section1-chat.png" alt="hero" />
               </div>
             </div>
@@ -167,7 +167,7 @@ export default function Landingpage({ socket }) {
               </h2>
               <p className="ket mb-4 ">Daftar dan lampirkan Kegiatanmu dan jadikan saika sebagai media partner untuk mempromosikan acaramu, proses pendaftaran ini tidak dipungut biaya </p>
               <Button isPrimary className="mx-auto text-decoration-none text-center " type="link" href="/addevent">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle me-3" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle me-3" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                   <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
                 </svg>

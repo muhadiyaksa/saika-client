@@ -25,7 +25,6 @@ export default function Button(props) {
     return (
       <span className={className.join(" ")} style={props.style}>
         {props.isLoading ? (
-          // Dibawah ini adalah react.fragment
           <>
             <span className="spinner-border spinner-border-sm mx-5"></span>
             {!props.isLoadingText ? <span className="sr-only">Loading ...</span> : ""}
@@ -40,7 +39,7 @@ export default function Button(props) {
   if (props.type === "link") {
     if (props.isExternal) {
       return (
-        <a href={`${props.href.includes("https://") ? props.href : "https://" + props.href}`} className={className.join(" ")} style={props.style} target="blank">
+        <a href={`${props.href?.includes("https://") ? props.href : "https://" + props.href}`} className={className.join(" ")} style={props.style} target="blank">
           {props.children}
         </a>
       );

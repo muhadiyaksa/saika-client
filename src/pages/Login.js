@@ -98,13 +98,13 @@ export default function Login() {
                     Login
                   </Button>
 
-                  <p className="text-center">
+                  <p className="text-center" style={{ fontSize: "14px" }}>
                     Belum punya akun Saika?{" "}
                     <Button type="link" href="/regist" className="daftar text-cream">
                       Daftar Sekarang
                     </Button>
                   </p>
-                  <p className="text-center">
+                  <p className="text-center" style={{ fontSize: "14px" }}>
                     <Button type="link" href="/" className="daftar text-white">
                       Kembali
                     </Button>

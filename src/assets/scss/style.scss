@@ -1426,18 +1426,40 @@ footer {
             color: $cream;
           }
         }
+        .info-anonymous {
+          &.text-warning {
+            background-color: rgba($yellow, 0.05);
+            border: 1px solid $yellow;
+          }
+          &.text-softwhite {
+            background-color: rgba($white, 0.05);
+            border: 1px solid $white;
+          }
+          border-radius: 3px;
+          padding: 4px;
+        }
         @media (min-width: 576px) {
           border-bottom: 0px solid $bluelight;
 
           height: 50%;
         }
         @media (min-width: 768px) {
-          height: 50%;
+          height: 52%;
         }
         @media (min-width: 992px) {
           border-bottom: 2px solid $bluelight;
 
-          height: 40%;
+          height: 47%;
+        }
+        @media (min-width: 1200px) {
+          border-bottom: 2px solid $bluelight;
+
+          height: 44%;
+        }
+        @media (min-width: 1400px) {
+          border-bottom: 2px solid $bluelight;
+
+          height: 50%;
         }
       }
       .list-friends {
@@ -1457,11 +1479,19 @@ footer {
           height: 50%;
         }
         @media (min-width: 768px) {
-          height: 50%;
+          height: 48%;
         }
         @media (min-width: 992px) {
           padding: 10px;
-          height: 60%;
+          height: 53%;
+        }
+        @media (min-width: 1200px) {
+          padding: 10px;
+          height: 56%;
+        }
+        @media (min-width: 1400px) {
+          padding: 10px;
+          height: 50%;
         }
         .items-friends {
           overflow-y: scroll;

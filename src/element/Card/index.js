@@ -18,11 +18,13 @@ export default function Card(props) {
             <h5 className="mb-0">{props.judul}</h5>
             <p className="text-cream m-0">By {props.penyelenggara}</p>
           </div>
-          <div className="d-inline-flex justify-content-between">
+          <div className="d-flex justify-content-between">
             <span style={{ fontSize: "13px" }} className={`${props.paymentType === "gratis" ? "bg-cream" : "bg-light"} px-2 rounded text-dongker fw-bolder text-capitalize`}>
               {props.paymentType === "bayar" ? "Rp " + props.price : props.paymentType}
             </span>
-            <span style={{ fontSize: "13px" }}>{changeDateFormat(props.waktu)}</span>
+            <span style={{ fontSize: "13px" }} className="text-end">
+              {changeDateFormat(props.waktu)}
+            </span>
           </div>
         </div>
       </div>
