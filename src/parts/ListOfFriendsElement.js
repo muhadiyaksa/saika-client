@@ -18,7 +18,7 @@ export default function ListOfFriendsElement({ dataRoom, dataUser, userData, isL
               </div>
               <div className="friend">
                 {dataFilterAnonymous.includes(el.iduser) ? (
-                  <p className="p-0 m-0 text-capitalize ">{el.usernameuser}</p>
+                  <p className="p-0 m-0 text-capitalize ">{el.iduser}</p>
                 ) : (
                   <>
                     <p className="p-0 m-0 text-capitalize ">{el.namauser}</p>

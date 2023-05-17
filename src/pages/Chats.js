@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Button from "../element/Button";
 import { useSelector } from "react-redux";
 import { useParams, useNavigate, Navigate } from "react-router-dom";
@@ -9,6 +9,7 @@ import Signup from "../assets/image/Signup.svg";
 import ChatElement from "../parts/ChatElement";
 import LoadingElement from "../parts/LoadingElement";
 import ListOfFriendsElement from "../parts/ListOfFriendsElement";
+import { useDropzone } from "react-dropzone";
 
 export default function Chats({ socket }) {
   const userObj = JSON.parse(localStorage.getItem("userSaika"));
@@ -17,7 +18,6 @@ export default function Chats({ socket }) {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const userDataLocal = useSelector((state) => state.user.user);
   const userData = isLoggedIn ? userDataLocal : { _id: sessionStorage.getItem("iduseranonymous") };
-  console.log(userData);
 
   const geserList = () => {
     const listChats = document.querySelector(".chats .friends");
@@ -68,11 +68,11 @@ export default function Chats({ socket }) {
       })
         .then((result) => {
           if (result.data) {
-            if (isLoggedIn) {
-              socket.emit("data_user", userData._id);
-            }
             let dataAnggota = result.data.anggota.map((el) => el.iduser);
             dataAnggota.length === 1 ? setIsSisaAnggota(false) : setIsSisaAnggota(true);
+
+            socket.emit("data_user", userData._id);
+
             if (!dataAnggota.includes(userData._id)) {
               setIsNotAnggota(true);
               console.log("kamu gamasuk room nih");
@@ -105,28 +105,46 @@ export default function Chats({ socket }) {
     setLimitAnonymous(false);
   };
 
+  const [ketFoto, setKetFoto] = useState({ ket: "", status: "hide", file: null });
+  const [dataOptional, setDataOptional] = useState({ chatImage: "" });
+  let refInputImage = useRef(null);
+  console.log(ketFoto);
   const sendMessage = () => {
+    const data = new FormData();
+    data.append("file", ketFoto.file);
+    data.append("idroom", param.idroom);
+    data.append("iduser", userData._id);
+    data.append("pesanKirim", pesanKirim);
+    data.append("username", isLoggedIn ? dataUser.username : userData._id);
+    data.append("uploadFile", ketFoto.file ? true : false);
+
     const dataKirim = {
       idroom: param.idroom,
       iduser: userData._id,
       pesanKirim: pesanKirim,
       username: isLoggedIn ? dataUser.username : userData._id,
+      uploadFile: ketFoto.file ? true : false,
+      image: ketFoto.file ? ketFoto.file : "",
     };
 
     let pesanMasuk = {
       iduser: userData._id,
       pesan: pesanKirim,
+      uploadFile: ketFoto.file ? true : false,
+      image: dataOptional.chatImage,
     };
     if (localStorage.getItem("limitAnonymous")) {
       setLimitAnonymous(true);
     } else {
-      let chatsArray = [pesanMasuk, ...dataChatLoading];
-      setDataChatLoading(chatsArray);
-
-      socket.emit("send_message", dataKirim);
+      if (dataKirim.pesanKirim || dataKirim.image) {
+        let chatsArray = [pesanMasuk, ...dataChatLoading];
+        setDataChatLoading(chatsArray);
+        socket.emit("send_message", dataKirim);
+      }
     }
     const inputPesan = document.querySelector(".chats .input-chats .input-pesan");
     inputPesan.value = "";
+    closeImageDrop();
   };
 
   const [isAttGetOut, setIsAttGetOut] = useState(false);
@@ -137,7 +155,6 @@ export default function Chats({ socket }) {
       iduser: userData._id,
       nama: isLoggedIn ? dataUser.nama : userData._id,
     };
-    console.log(dataKirim, "datakirimnih esss");
     socket.emit("keluar_room", dataKirim);
     socket.emit("anggota_keluar", dataKirim);
   };
@@ -154,12 +171,14 @@ export default function Chats({ socket }) {
     socket.on("data_user_receive", (data) => {
       setDataUser(data);
     });
+
+    // NGECEK APAKAH ADA PESAN BARU ATAU TIDAK, SEGALA AKTIFITAS DALAM CHAT
     socket.on("pesan_terima", (data) => {
       setDataChatLoading([]);
       setDataRoom(data);
 
       let checkLimitAnonymous = data?.chats.filter((el) => el.iduser === userData._id && el.pesan && el.iduser.includes("anonymous"));
-      if (checkLimitAnonymous.length > 8) {
+      if (checkLimitAnonymous.length > 10) {
         setLimitAnonymous(true);
         localStorage.setItem("limitAnonymous", true);
       } else {
@@ -168,6 +187,7 @@ export default function Chats({ socket }) {
       }
     });
 
+    // NGECEK KALO MISAL ADA TEMEN YANG KELUAR , KALO SISA 1 YA BERARTI UDAH GABISA CHATAN , MUNCUL POPUP UNTUK KELUAR
     socket.on("data_anggota_sisa", (data) => {
       setDataRoom(data);
       let dataAnggota = data.anggota.map((el) => el.iduser);
@@ -192,19 +212,22 @@ export default function Chats({ socket }) {
       }
     });
 
+    // NGECEK APAKAH USER MASIH DALAM ANGGOTA, KALO TIDAK MAKA KELUAR
     socket.on("data_anggota", (data) => {
       setDataRoom(data);
-      let dataAnggota = data.anggota.map((el) => el.iduser);
       if (data.anggota.length === 1) {
-        setShow(false);
         setIsSisaAnggota(false);
       } else {
-        if (dataAnggota.includes(userData._id)) {
-          setShow(true);
-        } else {
-          setShow(false);
-        }
         setIsSisaAnggota(true);
+      }
+    });
+
+    // NGECEK APAKAH ADA USER BARU, KALO IYA MAKA TAMPIL MODAL SAPA TEMAN BARU
+    socket.on("data_anggota_baru", (data) => {
+      if (data) {
+        setShow(true);
+      } else {
+        setShow(false);
       }
     });
   }, []);
@@ -318,9 +341,9 @@ export default function Chats({ socket }) {
       method: "DELETE",
       withCredentials: true,
       url: `http://localhost:3001/chat/${param.idroom}`,
-      headers: {
-        Authorization: `Bearer ${userObj.token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${userObj.token}`,
+      // },
     }).then(() => {
       navigate("/find");
     });
@@ -338,19 +361,18 @@ export default function Chats({ socket }) {
       data: {
         iduser: userData._id,
         fotoUser: "",
-        namauser: dataUser.nama,
-        usernameuser: dataUser.username ? dataUser.username : "@anonymous",
+        namauser: isLoggedIn ? dataUser.nama : userData._id,
+        usernameuser: isLoggedIn ? dataUser.nama : userData._id,
       },
       url: `http://localhost:3001/rejoinchats/${param.idroom}`,
-      headers: {
-        Authorization: `Bearer ${userObj.token}`,
-      },
+      // headers: {
+      //   Authorization: `Bearer ${userObj.token}`,
+      // },
     })
       .then((res) => {
         if (res.data.status === "finish") {
-          console.log(res.data);
           socket.emit("data_anggota", res.data.idroom);
-          socket.emit("anggota_masuk", { idroom: res.data.idroom, iduser: userData._id });
+          socket.emit("anggota_masuk", { idroom: res.data.idroom, iduser: userData._id, namauser: isLoggedIn ? dataUser.nama : userData._id });
           setIsNotAnggota(false);
           setIsLoading(false);
           setIsKeluar(false);
@@ -366,6 +388,73 @@ export default function Chats({ socket }) {
   //BUAT TAMPIL ANGGOTA CHAT NOTIF
   //TERUS DIGABUNG TAMPILnggotakeluar ama masuk
   //abis itu dibuat object yang data anggota keluarnya
+  const [hidedrag, setHidedrag] = useState(false);
+  const dragarea = document.querySelector(".box .list-chats .dragover");
+  const addEffectDragOver = (e) => {
+    // e.preventDefault();
+    if (!userData._id.includes("anonymous")) {
+      setHidedrag(true);
+    }
+    console.log("masuk");
+    // dragarea.classList.remove("d-none");
+  };
+
+  const removeEffectDragOver = (e) => {
+    // e.preventDefault();
+    setHidedrag(false);
+    console.log("keluar");
+    // dragarea.classList.add("d-none");
+  };
+
+  const getFiles = (e) => {
+    e.preventDefault();
+    console.log(e.dataTransfer);
+  };
+
+  const onDrop = useCallback((acceptedFiles) => {
+    acceptedFiles.forEach((file) => {
+      const reader = new FileReader();
+      const areaFoto = document.querySelector("p.area-foto");
+
+      reader.readAsDataURL(file);
+
+      reader.onabort = () => console.log("file reading was aborted");
+      reader.onerror = () => console.log("file reading has failed");
+      reader.onload = () => {
+        // Do whatever you want with the file contents
+        let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
+
+        setHidedrag(true);
+        if (validExtensions.includes(file.type) && file.size <= 2000000) {
+          setKetFoto({ ket: `${file.name}`, status: "show", file: file });
+          setDataOptional({ ...dataOptional, chatImage: reader.result });
+        } else {
+          areaFoto.innerHTML = "Foto Harus Berformat .png , .jpg , .jpeg dan Dibawah 2MB";
+          setKetFoto({ ket: `Foto Harus Berformat .png , .jpg , .jpeg dan Dibawah 2MB`, status: "hide", file: null });
+        }
+      };
+      // reader.readAsArrayBuffer(file);
+    });
+  }, []);
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+  const closeImageDrop = () => {
+    setKetFoto({ ket: "", status: "hide", file: null });
+    setDataOptional({ ...dataOptional, chatImage: "" });
+    setHidedrag(false);
+  };
+
+  const [isModalImageOpen, setIsModalImageOpen] = useState(false);
+  const [isDataImageOpen, setIsDataImageOpen] = useState(false);
+
+  const handleZoomImage = (e) => {
+    setIsModalImageOpen(true);
+    setIsDataImageOpen(e.target.getAttribute("imageurl"));
+  };
+
+  const handleCloseZoomImage = () => {
+    setIsModalImageOpen(false);
+  };
 
   return (
     <section className="chats">
@@ -377,6 +466,7 @@ export default function Chats({ socket }) {
             {isSisaAnggota === false ? (
               <div className="sorry mx-auto text-center pt-5">
                 <img src="/image/sorry.svg" alt="Icon animasi" />
+
                 <p className="mt-4 text-softwhite">
                   Yahh Ruang Diskusi kamu Sudah Sepi <br />
                   teman-teman mu telah meninggalkan ruang diskusi. . .
@@ -424,10 +514,29 @@ export default function Chats({ socket }) {
                               </div>
                             </div>
                             <div className="list-chats">
-                              <div className="position-relative h-100 w-100 ">
+                              <div className="position-relative h-100 w-100 " onDragEnter={addEffectDragOver}>
+                                <div className={`dragover ${hidedrag ? "" : "hide"}`} {...getRootProps()} onDragEnter={addEffectDragOver} onDragLeave={removeEffectDragOver} onDragOver={getFiles}>
+                                  <p className={`area-foto  text-secondary ${ketFoto.status === "hide" ? "" : "d-none"} `}>Seret foto ke area ini atau tekan tombol unggah dibawah ini. Pastikan foto telah memenuhi standar kualitas SAIKA.</p>
+                                  <div class="image">
+                                    <img src={dataOptional.chatImage} className={`${ketFoto.status === "hide" ? "d-none" : ""} ketfoto`} />
+                                  </div>
+                                </div>
+                                <Button isSecondary className={`close-image ${ketFoto.status === "hide" ? "d-none" : ""} `} onClick={closeImageDrop}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                                  </svg>
+                                </Button>
+
+                                <input type="file" {...getInputProps()} ref={refInputImage} />
                                 <div className="chat-value ">
-                                  {/* {tampilPesan()} */}
-                                  <ChatElement dataChatLoading={dataChatLoading} dataChat={dataRoom} userData={isLoggedIn ? userData : { _id: sessionStorage.getItem("iduseranonymous") }} typeChat={"notpersonal"} isLoggedIn={isLoggedIn} />
+                                  <ChatElement
+                                    dataChatLoading={dataChatLoading}
+                                    dataChat={dataRoom}
+                                    userData={isLoggedIn ? userData : { _id: sessionStorage.getItem("iduseranonymous") }}
+                                    typeChat={"notpersonal"}
+                                    isLoggedIn={isLoggedIn}
+                                    handleZoomImage={handleZoomImage}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -437,6 +546,12 @@ export default function Chats({ socket }) {
                                 <Button className="btn shadow-none text-cream" onClick={sendMessage}>
                                   <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class={`bi bi-send-fill text-cream `} viewBox="0 0 16 16" style={{ transform: "rotate(45deg)" }}>
                                     <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                                  </svg>
+                                </Button>
+                                <Button className={`btn shadow-none text-cream imgbutton ${userData._id.includes("anonymous") ? "disabled" : ""}`} onClick={() => refInputImage.current.click()}>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-image text-softwhite" viewBox="0 0 16 16">
+                                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
                                   </svg>
                                 </Button>
                               </div>
@@ -473,9 +588,6 @@ export default function Chats({ socket }) {
                                     </div>
                                     <div className="friend">
                                       <p className="p-0 m-0">Saya</p>
-                                      {/* <Button type="link" href="/">
-                                        {isLoggedIn ? userData.username : sessionStorage.getItem("iduseranonymous")}
-                                      </Button> */}
                                     </div>
                                   </div>
                                 </div>
@@ -489,7 +601,6 @@ export default function Chats({ socket }) {
                                   rejectFriend={rejectFriend}
                                   addFriend={addFriend}
                                 />
-                                {/* {showListOfFriends()} */}
                               </div>
                             </div>
                           </div>
@@ -512,6 +623,17 @@ export default function Chats({ socket }) {
               <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
             </svg>
             <span>Room sudah tidak ada</span>
+          </div>
+        </ModalElement>
+
+        <ModalElement size={"lg"} isDongker isCentered show={isModalImageOpen} funcModal={handleCloseZoomImage} heading={"Iamge"}>
+          <div class="image-zoom d-flex justify-content-center position-relative">
+            <Button className="btn fw-bold shadow-none p-0 text-cream d-block ms-auto position-absolute" onClick={handleCloseZoomImage} style={{ fontSize: "14px", top: "10px", right: "10px" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+              </svg>
+            </Button>
+            <img src={isDataImageOpen} alt="Data Image Zoom" />
           </div>
         </ModalElement>
 

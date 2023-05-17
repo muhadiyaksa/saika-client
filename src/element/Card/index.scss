@@ -10,16 +10,17 @@
   border: none;
   border-radius: 10px !important;
   transition: 0.5s;
-  box-shadow: 0px 2px 15px rgba(255, 255, 255, 0.2);
-  &:hover {
-    box-shadow: 0px 2px 25px rgba(255, 255, 255, 0.3);
-    transform: translateY(-10px);
+  &.isshadow {
+    box-shadow: 0px 2px 15px rgba(255, 255, 255, 0.2);
   }
-  @media (min-width: 992px) {
-    min-height: 285px;
+  &.isanimation {
+    &:hover {
+      box-shadow: 0px 2px 25px rgba(255, 255, 255, 0.3);
+      transform: translateY(-10px);
+    }
   }
-  @media (min-width: 1400px) {
-    min-height: 305px;
+  &.ishorisontal {
+    max-width: 260px;
   }
   .image {
     height: 180px;
@@ -82,5 +83,12 @@
       width: 80px;
       font-size: 15px;
     }
+  }
+
+  @media (min-width: 992px) {
+    min-height: 285px;
+  }
+  @media (min-width: 1400px) {
+    min-height: 305px;
   }
 }

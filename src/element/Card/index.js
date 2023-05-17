@@ -4,9 +4,14 @@ import { changeDateFormat } from "../../utils/numberFormat";
 import "./index.scss";
 
 export default function Card(props) {
+  const className = [props.className];
+
+  if (props.isShadow) className.push("isshadow");
+  if (props.isAnimation) className.push("isanimation");
+  if (props.isHorisontal) className.push("ishorisontal");
   return (
-    <a href={props.linkUrl} className="text-decoration-none text-dark">
-      <div className="card ">
+    <a href={props.linkUrl} className={`text-decoration-none text-dark`}>
+      <div className={`card  ${className.join(" ")}`}>
         <div className="kategori">
           <span>{props.kategori}</span>
         </div>
@@ -40,4 +45,8 @@ Card.propTypes = {
   kategori: propTypes.string,
   paymentType: propTypes.string,
   price: propTypes.string,
+  isShadow: propTypes.string,
+  isAnimation: propTypes.string,
+  isHorisontal: propTypes.string,
+  className: propTypes.string,
 };

@@ -47,6 +47,7 @@ export default function Loading({ socket }) {
     // countDown();
 
     const getDataRoom = (type, dataUser) => {
+      console.log(dataUser);
       let y = 0;
       let down = 20;
       let x = setInterval(() => {
@@ -66,7 +67,7 @@ export default function Loading({ socket }) {
             kategori: query.get("kategori"),
             tipeUser: "registered",
             iduser: userData._id,
-            fotoUser: dataUser.fotoUser?.fotoUrl,
+            fotoUser: dataUser.fotoUser.fotoUrl,
             namauser: dataUser.nama,
             usernameuser: dataUser.username ? dataUser.username : "@anonymous",
             percobaan: y,

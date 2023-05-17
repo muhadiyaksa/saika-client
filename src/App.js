@@ -17,18 +17,6 @@ const Loading = lazy(() => import("./pages/Loading"));
 const PersonalChat = lazy(() => import("./pages/PersonalChat"));
 const ForgetPassword = lazy(() => import("./pages/ForgetPassword"));
 
-// import LandingPage from "./pages/Landingpage";
-// import Login from "./pages/Login";
-// import Regist from "./pages/Regist";
-// import List from "./pages/List";
-// import Detail from "./pages/Detail";
-// import EventRegist from "./pages/EventRegist";
-// import SearchFriends from "./pages/SearchFriends";
-// import Chats from "./pages/Chats";
-// import Loading from "./pages/Loading";
-// import PersonalChat from "./pages/PersonalChat";
-// import ForgetPassword from "./pages/ForgetPassword";
-
 function App() {
   const socket = io.connect("http://localhost:3001");
 

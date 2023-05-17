@@ -64,6 +64,7 @@ export default function List({ socket }) {
           return (
             <div className="item column-3 row-1">
               <Card
+                isShadow={true}
                 linkUrl={`/detail/${el.eventId}`}
                 imgSrc={el.eventImage}
                 judul={el.eventName}

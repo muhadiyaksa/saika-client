@@ -50,7 +50,7 @@ export default function SearchFriends({ socket }) {
         kategori,
         tipeUser: "registered",
         iduser: userData._id,
-        fotoUser: "",
+        fotoUser: dataUser.fotoUser.fotoUrl,
         namauser: dataUser.nama,
         usernameuser: dataUser.username ? dataUser.username : "@anonymous",
         percobaan: 0,
@@ -76,6 +76,10 @@ export default function SearchFriends({ socket }) {
       console.log(res.data);
       if (res.data.status === "waiting") {
         navigate(`/waiting?kategori=${kategori}`);
+      } else if (res.data.status === "finish") {
+        navigate(`/live/${res.data.idroom}`);
+      } else {
+        console.log(res.data);
       }
     });
   };
@@ -107,8 +111,8 @@ export default function SearchFriends({ socket }) {
           </div>
 
           <div className="row">
-            <div className="col-md">
-              <div className="tema text-center   py-4 mb-3">
+            <div className="col-md ">
+              <div className="tema  text-center   py-4 mb-3">
                 <div className="row align-items-center ">
                   <div className="col col-md-auto  image text-end ms-auto text-md-center">
                     <img src="/image/multimedia.svg" alt="Multimedia" />
